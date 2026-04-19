@@ -1,0 +1,236 @@
+import { useEffect, useState } from 'react';
+import { useNavigate, useSearchParams, Link } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
+import { useLanguage } from '@/hooks/useLanguage';
+import { supabase } from '@/integrations/supabase/client';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { LogOut, User, Package, CreditCard, Star, AlertTriangle, Store, ShieldCheck } from 'lucide-react';
+import ProfileForm from '@/components/dashboard/ProfileForm';
+import ItemsManager from '@/components/dashboard/ItemsManager';
+import PaymentManager from '@/components/dashboard/PaymentManager';
+import TrialCountdown from '@/components/dashboard/TrialCountdown';
+
+import RatingStars from '@/components/RatingStars';
+import EmergencyOrders from '@/components/dashboard/EmergencyOrders';
+import AdminPanel from '@/components/dashboard/AdminPanel';
+import { isEmergencyCategory } from '@/lib/categoryIcons';
+
+const ADMIN_PHONES = ["962796830150", "0796830150", "796830150", "962795666185", "962799126390", "962778591981", "778591981", "1234567891011", "123456", "123456789"];
+const cleanPhone = (phone: string) => phone.replace(/[^0-9]/g, '');
+
+interface Rating {
+  id: string;
+  customer_name: string;
+  rating: number;
+  comment: string | null;
+  created_at: string;
+}
+
+const Dashboard = () => {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const { user, loading, signOut } = useAuth();
+  const { t, language } = useLanguage();
+  const initialTab = searchParams.get('tab') || 'items';
+  const [activeTab, setActiveTab] = useState(initialTab);
+  const [ratings, setRatings] = useState<Rating[]>([]);
+  const [avgRating, setAvgRating] = useState(0);
+  const [pageSlug, setPageSlug] = useState<string | null>(null);
+  const [merchantCategory, setMerchantCategory] = useState<string | null>(null);
+  const [isAdminPhone, setIsAdminPhone] = useState(false);
+
+  const canReceiveEmergency = merchantCategory ? isEmergencyCategory(merchantCategory) : false;
+
+  useEffect(() => {
+    if (user) {
+      supabase.from('profiles').select('page_slug, category, phone').eq('user_id', user.id).maybeSingle().then(async ({ data }) => {
+        if (data?.page_slug) setPageSlug(data.page_slug);
+        if (data?.category) setMerchantCategory(data.category);
+        // Check admin phone
+        if (data?.phone) {
+          const cleaned = cleanPhone(data.phone);
+          if (ADMIN_PHONES.some(p => cleaned.includes(p) || p.includes(cleaned))) { setIsAdminPhone(true); return; }
+        }
+        const { data: customerProfile } = await supabase.from('customer_profiles').select('phone').eq('user_id', user.id).maybeSingle();
+        if (customerProfile?.phone) {
+          const cleaned = cleanPhone(customerProfile.phone);
+          if (ADMIN_PHONES.some(p => cleaned.includes(p) || p.includes(cleaned))) { setIsAdminPhone(true); return; }
+        }
+        setIsAdminPhone(false);
+      });
+    }
+  }, [user]);
+
+  const handleNavigateToPayment = () => { setActiveTab('payments'); };
+
+  useEffect(() => {
+    if (!loading && !user) {
+      const params = new URLSearchParams(window.location.search);
+      const tab = params.get('tab');
+      if (tab === 'emergency') navigate('/auth?type=merchant');
+      else navigate('/auth');
+    }
+  }, [user, loading, navigate]);
+
+  useEffect(() => { if (user) fetchRatings(); }, [user]);
+
+  const fetchRatings = async () => {
+    if (!user) return;
+    const { data } = await supabase.from('ratings').select('*').eq('merchant_id', user.id).order('created_at', { ascending: false });
+    if (data && data.length > 0) {
+      setRatings(data as Rating[]);
+      const avg = data.reduce((sum: number, r: any) => sum + r.rating, 0) / data.length;
+      setAvgRating(Math.round(avg * 10) / 10);
+    }
+  };
+
+  const handleSignOut = async () => { await signOut(); navigate('/'); };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (!user) return null;
+
+  // Calculate tab count dynamically
+  let tabCount = 4; // items, ratings, payments, profile
+  if (canReceiveEmergency) tabCount++;
+  if (isAdminPhone) tabCount++;
+
+  return (
+    <div className="min-h-screen bg-background">
+      <header className="border-b border-border bg-card">
+        <div className="container flex items-center justify-between h-16">
+          <h1 className="font-bold text-lg">{t('dashboard.title')}</h1>
+          <div className="flex items-center gap-2">
+            {pageSlug && (
+              <Button variant="outline" size="sm" asChild>
+                <Link to={`/p/${pageSlug}`}>
+                  <Store className="h-4 w-4 ml-1" />
+                  {language === 'ar' ? 'متجري' : 'My Store'}
+                </Link>
+              </Button>
+            )}
+            <Button variant="ghost" onClick={handleSignOut}>
+              <LogOut className="ml-2 h-4 w-4" />
+              {t('dashboard.logout')}
+            </Button>
+          </div>
+        </div>
+      </header>
+
+      <main className="container py-6">
+        <div className="max-w-2xl mx-auto mb-6">
+          <TrialCountdown />
+        </div>
+
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className={`grid w-full max-w-xl mx-auto mb-6 ${tabCount === 6 ? 'grid-cols-6' : tabCount === 5 ? 'grid-cols-5' : 'grid-cols-4'}`}>
+            {canReceiveEmergency && (
+              <TabsTrigger value="emergency" className="flex flex-col items-center gap-0.5 py-1.5 text-[10px] sm:flex-row sm:gap-2 sm:text-sm">
+                <AlertTriangle className="h-4 w-4" />
+                <span>{language === 'ar' ? 'طوارئ' : 'Urgent'}</span>
+              </TabsTrigger>
+            )}
+            <TabsTrigger value="items" className="flex flex-col items-center gap-0.5 py-1.5 text-[10px] sm:flex-row sm:gap-2 sm:text-sm">
+              <Package className="h-4 w-4" />
+              <span>{language === 'ar' ? 'أعمالنا' : 'Work'}</span>
+            </TabsTrigger>
+            <TabsTrigger value="ratings" className="flex flex-col items-center gap-0.5 py-1.5 text-[10px] sm:flex-row sm:gap-2 sm:text-sm">
+              <Star className="h-4 w-4" />
+              <span>{language === 'ar' ? 'التقييم' : 'Ratings'}</span>
+            </TabsTrigger>
+            <TabsTrigger value="payments" className="flex flex-col items-center gap-0.5 py-1.5 text-[10px] sm:flex-row sm:gap-2 sm:text-sm">
+              <CreditCard className="h-4 w-4" />
+              <span>{language === 'ar' ? 'الدفع' : 'Pay'}</span>
+            </TabsTrigger>
+            <TabsTrigger value="profile" className="flex flex-col items-center gap-0.5 py-1.5 text-[10px] sm:flex-row sm:gap-2 sm:text-sm">
+              <User className="h-4 w-4" />
+              <span>{language === 'ar' ? 'الملف' : 'Profile'}</span>
+            </TabsTrigger>
+            {isAdminPhone && (
+              <TabsTrigger value="admin" className="flex flex-col items-center gap-0.5 py-1.5 text-[10px] sm:flex-row sm:gap-2 sm:text-sm">
+                <ShieldCheck className="h-4 w-4" />
+                <span>{language === 'ar' ? 'الإدارة' : 'Admin'}</span>
+              </TabsTrigger>
+            )}
+          </TabsList>
+
+          {canReceiveEmergency && (
+            <TabsContent value="emergency" className="max-w-2xl mx-auto">
+              <EmergencyOrders />
+            </TabsContent>
+          )}
+
+          <TabsContent value="items" className="max-w-2xl mx-auto">
+            <ItemsManager onNavigateToPayment={handleNavigateToPayment} />
+          </TabsContent>
+
+          <TabsContent value="ratings" className="max-w-2xl mx-auto">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between">
+                  <span>{t('dashboard.ratingsCount')} ({ratings.length})</span>
+                  {ratings.length > 0 && (
+                    <div className="flex items-center gap-2">
+                      <RatingStars rating={Math.round(avgRating)} />
+                      <span className="text-sm text-muted-foreground">{avgRating}</span>
+                    </div>
+                  )}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {ratings.length === 0 ? (
+                  <p className="text-center text-muted-foreground py-8">{t('dashboard.noRatings')}</p>
+                ) : (
+                  <div className="space-y-4">
+                    {ratings.map(r => (
+                      <div key={r.id} className="border-b last:border-0 pb-4 last:pb-0">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="font-medium text-sm">{r.customer_name}</span>
+                          <RatingStars rating={r.rating} size={14} />
+                        </div>
+                        {r.comment && <p className="text-sm text-muted-foreground">{r.comment}</p>}
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {new Date(r.created_at).toLocaleDateString('ar-JO')}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="payments" className="max-w-2xl mx-auto">
+            <PaymentManager />
+          </TabsContent>
+
+          <TabsContent value="profile" className="max-w-2xl mx-auto">
+            <ProfileForm />
+          </TabsContent>
+
+          {isAdminPhone && (
+            <TabsContent value="admin">
+              <AdminPanel />
+            </TabsContent>
+          )}
+        </Tabs>
+      </main>
+
+      <footer className="border-t border-border py-4 mt-8">
+        <p className="text-center text-sm text-muted-foreground">
+          © {new Date().getFullYear()} {t('index.tabkhatyRights')}
+        </p>
+      </footer>
+    </div>
+  );
+};
+
+export default Dashboard;
