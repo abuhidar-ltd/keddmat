@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { CATEGORIES, getSubcategories } from "@/lib/categoryIcons";
 import logoImage from "@/assets/logo-khadamat.png";
 import EmergencyRequestModal from "@/components/EmergencyRequestModal";
-import { AlertTriangle, MessageCircle } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const Index = () => {
@@ -83,7 +83,7 @@ const Index = () => {
               <button
                 key={svc.labelKey}
                 onClick={() => handleCategoryClick(svc.category)}
-                className={`group relative flex items-center gap-4 p-5 rounded-2xl glass-card transition-all duration-300 hover:scale-[1.03] hover:-translate-y-1 cursor-pointer animate-fade-in stagger-${i + 1}`}
+                className={`group relative flex items-center gap-4 p-5 h-[60px] rounded-2xl glass-card transition-all duration-300 hover:scale-[1.03] hover:-translate-y-1 cursor-pointer animate-fade-in stagger-${i + 1}`}
                 style={{
                   borderColor: `${svc.hex}30`,
                   boxShadow: `0 0 20px ${svc.hex}10`,
@@ -159,17 +159,6 @@ const Index = () => {
           </div>
         </DialogContent>
       </Dialog>
-
-      {/* Floating WhatsApp Contact Button */}
-      <a
-        href="https://wa.me/962799126390?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%20%D8%A8%D9%83%20%D9%81%D9%8A%20%D8%AE%D8%AF%D9%85%D8%A7%D8%AA.%20%D9%83%D9%8A%D9%81%20%D9%8A%D9%85%D9%83%D9%86%D9%86%D8%A7%20%D9%85%D8%B3%D8%A7%D8%B9%D8%AF%D8%AA%D9%83%D8%9F"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="fixed bottom-6 start-6 z-50 flex items-center gap-2 w-[140px] h-[40px] bg-[#25D366] hover:bg-[#20BD5A] text-white px-5 rounded-full shadow-lg hover:shadow-xl transition-all hover:scale-105 font-bold text-sm"
-      >
-        <MessageCircle className="h-5 w-5" />
-        {t('index.contactKhadamat')}
-      </a>
 
       <footer className="border-t border-border py-6 bg-white/50 backdrop-blur-sm relative z-10">
         <div className="container text-center space-y-3 px-4">
