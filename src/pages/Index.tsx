@@ -174,8 +174,11 @@ const Index = () => {
       <footer className="border-t border-border py-6 bg-white/50 backdrop-blur-sm relative z-10">
         <div className="container text-center space-y-3 px-4">
           <div className="flex justify-center items-center gap-6">
-            <Link to="/terms" className="text-sm text-muted-foreground hover:text-primary transition-colors">{t('index.termsConditions')}</Link>
+            <Link to="/terms" className="text-sm text-black hover:text-primary transition-colors">{t('index.termsConditions')}</Link>
           </div>
+          <p className="text-[15px] text-black max-w-lg mx-auto">
+            باستخدامك للموقع أنت توافق على الشروط والأحكام
+          </p>
           <p className="text-xs text-muted-foreground">© {new Date().getFullYear()} {t('index.tabkhatyRights')}</p>
         </div>
       </footer>
