@@ -83,7 +83,7 @@ const Index = () => {
               <button
                 key={svc.labelKey}
                 onClick={() => handleCategoryClick(svc.category)}
-                className={`group relative flex items-center gap-4 p-5 h-[60px] rounded-2xl glass-card transition-all duration-300 hover:scale-[1.03] hover:-translate-y-1 cursor-pointer animate-fade-in stagger-${i + 1}`}
+                className={`group relative flex items-center gap-4 p-5 h-[70px] rounded-2xl glass-card transition-all duration-300 hover:scale-[1.03] hover:-translate-y-1 cursor-pointer animate-fade-in stagger-${i + 1}`}
                 style={{
                   borderColor: `${svc.hex}30`,
                   boxShadow: `0 0 20px ${svc.hex}10`,
