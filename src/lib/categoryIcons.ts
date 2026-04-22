@@ -1,3 +1,28 @@
+/**
+ * SUBCATEGORY RENAME MIGRATION — run in Supabase SQL editor
+ * (required because `profiles.subcategories` stores raw Arabic IDs)
+ *
+ * UPDATE profiles
+ * SET subcategories = array_replace(subcategories, 'الدهان والطلاء', 'دهان الجدران و الفروشات')
+ * WHERE subcategories @> ARRAY['الدهان والطلاء'];
+ *
+ * UPDATE profiles
+ * SET subcategories = array_replace(subcategories, 'البلاط والأرضيات', 'التبليط و الباركيه')
+ * WHERE subcategories @> ARRAY['البلاط والأرضيات'];
+ *
+ * UPDATE profiles
+ * SET subcategories = array_replace(subcategories, 'برادي', 'البرادي و ورق الجدران')
+ * WHERE subcategories @> ARRAY['برادي'];
+ *
+ * UPDATE profiles
+ * SET subcategories = array_replace(subcategories, 'ترميم المنازل', 'شركات ترميم المنازل')
+ * WHERE subcategories @> ARRAY['ترميم المنازل'];
+ *
+ * UPDATE profiles
+ * SET subcategories = array_replace(subcategories, 'التصميم الداخلي', 'شركات التصميم الداخلي')
+ * WHERE subcategories @> ARRAY['التصميم الداخلي'];
+ */
+
 import { Plug, Wrench, Hammer, Paintbrush, Droplets, Truck, Anvil, Settings, Construction, HardHat, type LucideIcon } from "lucide-react";
 
 export interface CategoryInfo {
@@ -40,6 +65,7 @@ export const EMERGENCY_CATEGORIES = [
   "صهاريج مياه",
   "ميكانيكي طرقات",
   "ونشات",
+  "حداد، زجاج، ألمنيوم",
 ];
 
 export const isEmergencyCategory = (category: string): boolean => {
@@ -58,15 +84,16 @@ export interface SubCategory {
 
 export const CATEGORY_SUBCATEGORIES: Record<string, SubCategory[]> = {
   'ديكور منزلي': [
-    { id: 'الدهان والطلاء', labelAr: 'الدهان والطلاء', labelEn: 'Painting & Coating' },
-    { id: 'البلاط والأرضيات', labelAr: 'البلاط والأرضيات', labelEn: 'Tiling & Flooring' },
+    { id: 'دهان الجدران و الفروشات', labelAr: 'دهان الجدران و الفروشات', labelEn: 'Wall Painting & Coating' },
+    { id: 'التبليط و الباركيه', labelAr: 'التبليط و الباركيه', labelEn: 'Tiling & Parquet' },
     { id: 'ديكور الأسقف والجدران', labelAr: 'ديكور الأسقف والجدران', labelEn: 'Ceiling & Wall Decor' },
-    { id: 'برادي', labelAr: 'برادي', labelEn: 'Curtains' },
+    { id: 'البرادي و ورق الجدران', labelAr: 'البرادي و ورق الجدران', labelEn: 'Curtains & Wallpaper' },
     { id: 'التنجيد', labelAr: 'التنجيد', labelEn: 'Upholstery' },
     { id: 'خدمات العزل', labelAr: 'خدمات العزل', labelEn: 'Insulation Services' },
-    { id: 'التصميم الداخلي', labelAr: 'التصميم الداخلي', labelEn: 'Interior Design' },
+    { id: 'شركات التصميم الداخلي', labelAr: 'شركات التصميم الداخلي', labelEn: 'Interior Design Companies' },
     { id: 'ديكورات الحدائق', labelAr: 'ديكورات الحدائق', labelEn: 'Garden Decor' },
-    { id: 'ترميم المنازل', labelAr: 'ترميم المنازل', labelEn: 'Home Renovation' },
+    { id: 'شركات ترميم المنازل', labelAr: 'شركات ترميم المنازل', labelEn: 'Home Renovation Companies' },
+    { id: 'الاثاث المستعمل', labelAr: 'الاثاث المستعمل', labelEn: 'Used Furniture' },
   ],
   'نجّار': [
     { id: 'نجار متنقل', labelAr: 'نجار متنقل', labelEn: 'Mobile Carpenter' },

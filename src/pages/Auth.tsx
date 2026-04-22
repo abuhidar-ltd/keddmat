@@ -34,15 +34,18 @@ const Auth = () => {
   const { toast } = useToast();
 
   const typeParam = searchParams.get('type');
-  // Customer auth has been removed — auth page is merchant-only
+  const redirectParam = searchParams.get('redirect');
+  // Customer auth has been removed — auth page is merchant-only for *registration*,
+  // but customers must still be able to reach the login form when a redirect target
+  // is provided (e.g. the cart requires login before confirming an order).
   const isTypeLocked = true;
   const [accountType, setAccountType] = useState<UserType>('merchant');
 
   useEffect(() => {
-    if (typeParam === 'customer') {
+    if (typeParam === 'customer' && !redirectParam) {
       navigate('/', { replace: true });
     }
-  }, [typeParam, navigate]);
+  }, [typeParam, redirectParam, navigate]);
   
   const loginSchema = z.object({
     phone: z.string().min(8, t('auth.phoneInvalid')).max(20, t('auth.phoneTooLong')),
@@ -113,7 +116,9 @@ const Auth = () => {
 
   useEffect(() => {
     if (user && !loading) {
-      if (authUserType === 'merchant') {
+      if (redirectParam) {
+        navigate(redirectParam, { replace: true });
+      } else if (authUserType === 'merchant') {
         navigate('/dashboard', { replace: true });
       } else {
         navigate('/', { replace: true });
@@ -123,7 +128,7 @@ const Auth = () => {
     if (params.get('agreed') === 'true') {
       setRegisterData(prev => ({ ...prev, agreeToTerms: true }));
     }
-  }, [user, loading, navigate]);
+  }, [user, loading, navigate, redirectParam, authUserType]);
 
   useEffect(() => {
     if (accountType === 'customer') {

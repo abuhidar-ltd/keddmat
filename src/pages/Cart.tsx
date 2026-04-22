@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { Checkbox } from '@/components/ui/checkbox';
 import { useCart, CartItem } from '@/hooks/useCart';
 import { useAuth } from '@/hooks/useAuth';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -19,6 +20,7 @@ const Cart = () => {
   const { t, language } = useLanguage();
   const [submittingMerchant, setSubmittingMerchant] = useState<string | null>(null);
   const [customerInfo, setCustomerInfo] = useState<{ name: string; phone: string } | null>(null);
+  const [termsAgreed, setTermsAgreed] = useState(false);
 
   useEffect(() => {
     const fetchCustomerInfo = async () => {
@@ -30,7 +32,8 @@ const Cart = () => {
   }, [user]);
 
   const handleConfirmOrder = async (merchantId: string, merchantItems: CartItem[], total: number) => {
-    if (!user) { toast({ title: t('cart.loginToConfirm'), description: t('cart.loginToContinue'), variant: 'destructive' }); navigate('/auth?type=customer'); return; }
+    if (!user) { toast({ title: t('cart.loginToConfirm'), description: t('cart.loginToContinue'), variant: 'destructive' }); navigate('/auth?redirect=/cart'); return; }
+    if (!termsAgreed) { toast({ title: t('auth.agreeRequired'), variant: 'destructive' }); return; }
     const userPhone = user?.email?.replace('.customer@phone.local', '').replace('.merchant@phone.local', '').replace('@phone.local', '') || '';
     const customerName = customerInfo?.name || userPhone || 'زائر';
     const customerPhone = customerInfo?.phone || userPhone || '';
@@ -90,7 +93,7 @@ const Cart = () => {
                   <CardTitle className="text-lg flex items-center gap-2"><Package className="h-5 w-5 text-primary" />{group.merchant_name}</CardTitle>
                   <div className="flex gap-2">
                     {group.merchant_slug && <Button asChild size="sm" variant="outline"><Link to={`/p/${group.merchant_slug}`}><ExternalLink className="h-4 w-4 mx-1" />{t('cart.viewCookPage')}</Link></Button>}
-                    <Button size="sm" className="bg-success hover:bg-success/90" onClick={() => handleConfirmOrder(merchantId, group.items, group.total)} disabled={submittingMerchant === merchantId}>
+                    <Button size="sm" className="bg-success hover:bg-success/90" onClick={() => handleConfirmOrder(merchantId, group.items, group.total)} disabled={submittingMerchant === merchantId || !user || !termsAgreed}>
                       {submittingMerchant === merchantId ? <Loader2 className="h-4 w-4 animate-spin mx-1" /> : <CheckCircle className="h-4 w-4 mx-1" />}{t('cart.confirmOrder')}
                     </Button>
                   </div>
@@ -116,6 +119,29 @@ const Cart = () => {
                 ))}
                 <Separator />
                 <div className="flex items-center justify-between font-bold"><span>{t('cart.subtotal')}:</span><span className="text-primary text-lg">{group.total.toFixed(2)} {group.items[0]?.currency || 'د.أ'}</span></div>
+                {!user && (
+                  <div className="rounded-lg border border-destructive/40 bg-destructive/5 p-3 text-sm">
+                    <p className="mb-2 font-semibold text-destructive">{t('cart.loginToConfirm')}</p>
+                    <p className="mb-3 text-muted-foreground">{t('cart.loginToContinue')}</p>
+                    <Button size="sm" onClick={() => navigate('/auth?redirect=/cart')}>
+                      {t('header.login')}
+                    </Button>
+                  </div>
+                )}
+                <div className="flex items-start gap-2 rounded-lg bg-secondary/50 p-3">
+                  <Checkbox
+                    id={`terms-${merchantId}`}
+                    checked={termsAgreed}
+                    onCheckedChange={(v) => setTermsAgreed(!!v)}
+                    className="mt-0.5"
+                  />
+                  <label htmlFor={`terms-${merchantId}`} className="text-sm leading-relaxed cursor-pointer">
+                    {t('auth.agreeTerms')}{' '}
+                    <Link to="/terms" className="text-primary underline font-semibold">
+                      {t('auth.termsLink')}
+                    </Link>
+                  </label>
+                </div>
               </CardContent>
             </Card>
           ))}

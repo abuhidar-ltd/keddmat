@@ -14,7 +14,8 @@ import { Loader2, Copy, ExternalLink, Camera, ImagePlus, X } from 'lucide-react'
 import PhoneInput from '@/components/PhoneInput';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ALL_CATEGORIES, isEmergencyCategory } from '@/lib/categoryIcons';
+import { Checkbox } from '@/components/ui/checkbox';
+import { ALL_CATEGORIES, isEmergencyCategory, getSubcategories } from '@/lib/categoryIcons';
 
 interface Profile {
   id: string; display_name: string | null; bio: string | null; phone: string;
@@ -22,6 +23,7 @@ interface Profile {
   page_slug: string | null; avatar_url: string | null; cover_url: string | null;
   service_location: string | null; working_hours: string | null;
   store_name: string | null; emergency_mode: boolean; category: string | null;
+  subcategories: string[] | null;
 }
 
 const ProfileForm = () => {
@@ -77,6 +79,7 @@ const ProfileForm = () => {
       has_delivery: profile.has_delivery, page_enabled: true, page_slug: profile.page_slug,
       service_location: (profile as any).service_location, working_hours: (profile as any).working_hours,
       store_name: (profile as any).store_name, emergency_mode: profile.emergency_mode,
+      category: profile.category, subcategories: profile.subcategories || [],
     }).eq('user_id', user.id);
     setSaving(false);
     if (error) toast({ title: t('profile.error'), description: t('profile.saveError'), variant: 'destructive' });
@@ -84,6 +87,31 @@ const ProfileForm = () => {
   };
 
   const copyPageLink = () => { if (profile?.page_slug) { navigator.clipboard.writeText(`${window.location.origin}/p/${profile.page_slug}`); toast({ title: t('profile.linkCopied') }); } };
+
+  const handleCategoryChange = (newCategory: string) => {
+    if (!profile) return;
+    const wasEmergencyEligible = isEmergencyCategory(profile.category || '');
+    const isEmergencyEligible = isEmergencyCategory(newCategory);
+    const nextEmergencyMode = isEmergencyEligible ? profile.emergency_mode : false;
+    setProfile({ ...profile, category: newCategory, subcategories: [], emergency_mode: nextEmergencyMode });
+    if (wasEmergencyEligible && !isEmergencyEligible && profile.emergency_mode) {
+      toast({
+        title: language === 'ar' ? 'تم إيقاف وضع الطوارئ' : 'Emergency mode disabled',
+        description: language === 'ar'
+          ? 'الفئة الجديدة غير مؤهلة لخدمات الطوارئ'
+          : 'The new category is not eligible for emergency services',
+      });
+    }
+  };
+
+  const toggleSubcategory = (subId: string, checked: boolean) => {
+    if (!profile) return;
+    const current = profile.subcategories || [];
+    const next = checked
+      ? Array.from(new Set([...current, subId]))
+      : current.filter(s => s !== subId);
+    setProfile({ ...profile, subcategories: next });
+  };
 
   if (loading) return <div className="flex justify-center p-8"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
   if (!profile) return <Card><CardContent className="p-8 text-center"><p className="text-muted-foreground">{t('profile.notFound')}</p></CardContent></Card>;
@@ -132,6 +160,45 @@ const ProfileForm = () => {
             <Label htmlFor="store_name">{t('profile.storeName')}</Label>
             <Input id="store_name" placeholder={t('profile.storeNamePlaceholder')} value={(profile as any).store_name || ''} onChange={(e) => setProfile({ ...profile, store_name: e.target.value } as any)} maxLength={100} />
           </div>
+          <div className="space-y-2">
+            <Label htmlFor="category">{t('auth.serviceType')}</Label>
+            <Select value={profile.category || ''} onValueChange={handleCategoryChange}>
+              <SelectTrigger id="category">
+                <SelectValue placeholder={t('auth.selectServiceType')} />
+              </SelectTrigger>
+              <SelectContent>
+                {ALL_CATEGORIES.map(cat => (
+                  <SelectItem key={cat.category} value={cat.category}>
+                    {language === 'ar' ? cat.category : t(cat.labelKey)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          {profile.category && getSubcategories(profile.category).length > 0 && (
+            <div className="space-y-2">
+              <Label>{language === 'ar' ? 'التخصصات الفرعية' : 'Subcategories'}</Label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 rounded-lg border border-border p-3">
+                {getSubcategories(profile.category).map(sub => {
+                  const checked = (profile.subcategories || []).includes(sub.id);
+                  return (
+                    <label
+                      key={sub.id}
+                      htmlFor={`sub-${sub.id}`}
+                      className="flex items-center gap-2 cursor-pointer rounded-md p-2 hover:bg-secondary/50"
+                    >
+                      <Checkbox
+                        id={`sub-${sub.id}`}
+                        checked={checked}
+                        onCheckedChange={(v) => toggleSubcategory(sub.id, !!v)}
+                      />
+                      <span className="text-sm">{language === 'ar' ? sub.labelAr : sub.labelEn}</span>
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+          )}
           <div className="space-y-2"><Label htmlFor="bio">{t('profile.bio')}</Label><Textarea id="bio" placeholder={t('profile.bioPlaceholder')} value={profile.bio || ''} onChange={(e) => setProfile({ ...profile, bio: e.target.value })} rows={3} maxLength={500} /></div>
           <div className="space-y-2"><Label htmlFor="service_location">{t('profile.serviceLocation')}</Label><Input id="service_location" value="عمّان" disabled className="bg-muted" /></div>
           <div className="space-y-2"><Label htmlFor="working_hours">{t('profile.workingHours')}</Label><Input id="working_hours" placeholder={t('profile.workingHoursPlaceholder')} value={(profile as any).working_hours || ''} onChange={(e) => setProfile({ ...profile, working_hours: e.target.value } as any)} maxLength={200} /></div>
