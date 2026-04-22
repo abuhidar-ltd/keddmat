@@ -73,6 +73,7 @@ const ProfileForm = () => {
   const handleSave = async () => {
     if (!profile || !user) return;
     if (!profile.whatsapp_number?.trim()) { toast({ title: t('profile.error'), description: t('profile.whatsappRequired'), variant: 'destructive' }); return; }
+    if ((profile.bio?.length || 0) > 80) { toast({ title: t('profile.error'), description: 'الحد الأقصى للنبذة هو 80 حرف', variant: 'destructive' }); return; }
     setSaving(true);
     const { error } = await supabase.from('profiles').update({
       display_name: profile.display_name, bio: profile.bio, whatsapp_number: profile.whatsapp_number,
@@ -199,7 +200,25 @@ const ProfileForm = () => {
               </div>
             </div>
           )}
-          <div className="space-y-2"><Label htmlFor="bio">{t('profile.bio')}</Label><Textarea id="bio" placeholder={t('profile.bioPlaceholder')} value={profile.bio || ''} onChange={(e) => setProfile({ ...profile, bio: e.target.value })} rows={3} maxLength={500} /></div>
+          <div className="space-y-2">
+            <Label htmlFor="bio">{t('profile.bio')}</Label>
+            <Textarea
+              id="bio"
+              placeholder={t('profile.bioPlaceholder')}
+              value={profile.bio || ''}
+              onChange={(e) => {
+                if (e.target.value.length <= 80) setProfile({ ...profile, bio: e.target.value });
+              }}
+              rows={3}
+              maxLength={80}
+            />
+            <div className="flex items-center justify-between text-xs text-muted-foreground">
+              <span>الحد الأقصى 80 حرف</span>
+              <span className={(profile.bio?.length || 0) >= 80 ? 'text-destructive font-bold' : ''}>
+                {profile.bio?.length || 0}/80
+              </span>
+            </div>
+          </div>
           <div className="space-y-2"><Label htmlFor="service_location">{t('profile.serviceLocation')}</Label><Input id="service_location" value="عمّان" disabled className="bg-muted" /></div>
           <div className="space-y-2"><Label htmlFor="working_hours">{t('profile.workingHours')}</Label><Input id="working_hours" placeholder={t('profile.workingHoursPlaceholder')} value={(profile as any).working_hours || ''} onChange={(e) => setProfile({ ...profile, working_hours: e.target.value } as any)} maxLength={200} /></div>
           {isEmergencyCategory(profile.category || '') && (

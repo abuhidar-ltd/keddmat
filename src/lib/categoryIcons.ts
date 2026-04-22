@@ -21,6 +21,14 @@
  * UPDATE profiles
  * SET subcategories = array_replace(subcategories, 'التصميم الداخلي', 'شركات التصميم الداخلي')
  * WHERE subcategories @> ARRAY['التصميم الداخلي'];
+ *
+ * UPDATE profiles
+ * SET subcategories = array_replace(subcategories, 'دهان الجدران و الفروشات', 'دهان الجدران و الاثاث')
+ * WHERE 'دهان الجدران و الفروشات' = ANY(subcategories);
+ *
+ * UPDATE profiles
+ * SET category = 'عامل يومي'
+ * WHERE category = 'عامل يومي (مياومة)';
  */
 
 import { Plug, Wrench, Hammer, Paintbrush, Droplets, Truck, Anvil, Settings, Construction, HardHat, type LucideIcon } from "lucide-react";
@@ -46,7 +54,7 @@ export const CATEGORIES: CategoryInfo[] = [
   { icon: Droplets, labelKey: "service.waterTanks", category: "صهاريج مياه", color: "text-[hsl(var(--cat-plumber))]", hex: "#00BCD4" },
   { icon: Settings, labelKey: "service.roadMechanic", category: "ميكانيكي طرقات", color: "text-[hsl(var(--cat-maintenance))]", hex: "#FF6B6B" },
   { icon: Construction, labelKey: "service.towTrucks", category: "ونشات", color: "text-[hsl(var(--cat-blacksmith))]", hex: "#64B5F6" },
-  { icon: HardHat, labelKey: "service.dailyWorker", category: "عامل يومي (مياومة)", color: "text-[hsl(var(--cat-moving))]", hex: "#9C27B0" },
+  { icon: HardHat, labelKey: "service.dailyWorker", category: "عامل يومي", color: "text-[hsl(var(--cat-moving))]", hex: "#9C27B0" },
 ];
 
 // No more emergency-only categories - all are on main page now
@@ -84,7 +92,7 @@ export interface SubCategory {
 
 export const CATEGORY_SUBCATEGORIES: Record<string, SubCategory[]> = {
   'ديكور منزلي': [
-    { id: 'دهان الجدران و الفروشات', labelAr: 'دهان الجدران و الفروشات', labelEn: 'Wall Painting & Coating' },
+    { id: 'دهان الجدران و الاثاث', labelAr: 'دهان الجدران و الاثاث', labelEn: 'Wall Painting & Furniture' },
     { id: 'التبليط و الباركيه', labelAr: 'التبليط و الباركيه', labelEn: 'Tiling & Parquet' },
     { id: 'ديكور الأسقف والجدران', labelAr: 'ديكور الأسقف والجدران', labelEn: 'Ceiling & Wall Decor' },
     { id: 'البرادي و ورق الجدران', labelAr: 'البرادي و ورق الجدران', labelEn: 'Curtains & Wallpaper' },

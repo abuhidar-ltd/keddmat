@@ -119,6 +119,15 @@ const Terms = () => {
                   </div>
                 </CardContent>
               </Card>
+              <Card className="border-primary/20">
+                <CardContent className="flex gap-4 items-start pt-6">
+                  <div className="p-2.5 rounded-full bg-primary/10 shrink-0 mt-1"><Shield className="w-5 h-5 text-primary" /></div>
+                  <div>
+                    <p className="font-bold mb-1">{isAr ? '6. التراخيص والموافقات الرسمية:' : '6. Licenses and Official Approvals:'}</p>
+                    <p className="text-sm text-foreground leading-relaxed">{isAr ? 'يتحمل كل حرفي ومقدم خدمات كامل المسؤولية عن الحصول على جميع التراخيص والموافقات الرسمية اللازمة لممارسة نشاطه وفق القوانين المعمول بها في بلده، ولا تتحمل المنصة أي مسؤولية قانونية عن ذلك.' : 'Every craftsman and service provider bears full responsibility for obtaining all licenses and official approvals required to practice their activity in accordance with the applicable laws in their country. The platform bears no legal responsibility for this.'}</p>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </div>
 
