@@ -155,7 +155,7 @@ export const SERVICE_SEO_DATA: ServiceSEOData[] = [
   },
   {
     slug: 'tow-trucks',
-    category: 'ونشات',
+    category: 'ونشات سيارات',
     titleAr: 'ونشات وسحب سيارات',
     titleEn: 'Tow Trucks',
     descriptionAr: 'خدمات ونش وسحب سيارات في الأردن. سحب سيارات معطلة، نقل سيارات، ونش طريق على مدار الساعة.',

@@ -218,7 +218,7 @@ const Auth = () => {
   const isMerchantPage = accountType === 'merchant' && isTypeLocked;
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 relative auth-bg">
+    <div className="min-h-screen flex items-center justify-center p-4 relative auth-bg" style={{fontFamily:"'Tajawal','Cairo',sans-serif"}}>
       <div className="absolute top-4 right-4 z-20">
         <LanguageToggle />
       </div>
@@ -228,7 +228,7 @@ const Auth = () => {
           
           {/* Worker Image Panel - Desktop only */}
           {isMerchantPage && (
-            <div className="hidden lg:flex flex-col items-center justify-between bg-gradient-to-b from-primary to-primary/80 rounded-s-2xl p-8 min-w-[300px] max-w-[340px] relative overflow-hidden animate-fade-in">
+            <div className="hidden lg:flex flex-col items-center justify-between rounded-s-2xl p-8 min-w-[300px] max-w-[340px] relative overflow-hidden animate-fade-in" style={{background:'linear-gradient(135deg,#2D7D46,#00BCD4)'}}>
               <div className="absolute -top-10 -start-10 w-40 h-40 rounded-full bg-accent/20 blur-2xl" />
               <div className="absolute -bottom-10 -end-10 w-32 h-32 rounded-full bg-primary-foreground/10 blur-xl" />
 
@@ -332,7 +332,7 @@ const Auth = () => {
                   {errors.password && <p className="text-sm text-destructive">{errors.password}</p>}
                 </div>
                 
-                <Button type="submit" className="w-full h-12 text-base font-bold" disabled={isSubmitting}>
+                <Button type="submit" className="w-full h-12 text-base font-bold btn-cta border-0 rounded-xl" disabled={isSubmitting}>
                   {isSubmitting ? t('auth.loggingIn') : t('auth.login')}
                 </Button>
                 
@@ -565,7 +565,7 @@ const Auth = () => {
                 
                 <Button 
                   type="submit" 
-                  className="w-full h-12 text-base font-bold" 
+                  className="w-full h-12 text-base font-bold btn-cta border-0 rounded-xl" 
                   disabled={isSubmitting || (accountType === 'customer' && !phoneVerified)}
                 >
                   {accountType === 'customer' && !phoneVerified 
@@ -652,7 +652,7 @@ const Auth = () => {
               </div>
             </div>
             <div className="p-4 border-t border-border">
-              <Button onClick={() => { setRegisterData(prev => ({ ...prev, agreeToTerms: true })); setShowTerms(false); }} className="w-full font-bold h-12 text-base">
+              <Button onClick={() => { setRegisterData(prev => ({ ...prev, agreeToTerms: true })); setShowTerms(false); }} className="w-full font-bold h-12 text-base btn-cta border-0 rounded-xl">
                 {isAr ? '✓ موافق على الشروط والأحكام' : '✓ I Agree to Terms & Conditions'}
               </Button>
             </div>

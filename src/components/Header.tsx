@@ -5,17 +5,14 @@ import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
 import { supabase } from "@/integrations/supabase/client";
 import LanguageToggle from "@/components/LanguageToggle";
-import { User, Store, LogIn, Wrench } from "lucide-react";
+import { User, Store, LogIn, Wrench, Menu, X } from "lucide-react";
 import logo from "@/assets/logo-khadamat.png";
-
-
 
 const Header = () => {
   const { user, loading, userType } = useAuth();
   const { t, dir } = useLanguage();
-  
-  
   const [pageSlug, setPageSlug] = useState<string | null>(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     if (!user) { setPageSlug(null); return; }
@@ -26,16 +23,23 @@ const Header = () => {
     fetchSlug();
   }, [user]);
 
-  
-
   return (
-    <header className="sticky top-0 z-50 bg-white text-foreground shadow-md border-b border-border" dir={dir}>
-      <div className="container flex items-center justify-between h-16">
-        <Link to="/" className="flex items-center gap-2">
-          <img src={logo} alt="خدمات" className="w-12 h-12 object-contain" />
-          <span className="font-bold text-lg hidden sm:block text-[rgba(9,92,164,1)]">{t('header.tabkhaty')}</span>
+    <header className="sticky top-0 z-50 bg-white shadow-sm border-b border-[#E5E7EB]" dir={dir}>
+      <div className="container flex items-center justify-between h-16 px-4">
+        {/* Logo — right side in RTL */}
+        <Link to="/" className="flex items-center gap-2 shrink-0">
+          <img src={logo} alt="خدمات" className="w-11 h-11 object-contain" />
+          <span className="font-extrabold text-lg text-[#2D7D46] hidden sm:block">خدمات</span>
         </Link>
-        <nav className="flex items-center gap-2">
+
+        {/* Center nav links — desktop */}
+        <nav className="hidden md:flex items-center gap-6">
+          <Link to="/" className="text-sm font-semibold text-[#1A1A2E] hover:text-[#2D7D46] transition-colors">الرئيسية</Link>
+          <Link to="/browse" className="text-sm font-semibold text-[#1A1A2E] hover:text-[#2D7D46] transition-colors">تصفح الخدمات</Link>
+        </nav>
+
+        {/* Right actions — left side in RTL */}
+        <div className="flex items-center gap-2">
           <LanguageToggle />
           {loading ? (
             <div className="w-8 h-8 rounded-full bg-muted animate-pulse" />
@@ -43,38 +47,60 @@ const Header = () => {
             userType === 'merchant' ? (
               <div className="flex items-center gap-2">
                 {pageSlug && (
-              <Button variant="ghost" className="text-foreground hover:bg-primary/5" asChild>
+                  <Button variant="ghost" className="text-[#2D7D46] hover:bg-[#2D7D46]/5 hidden sm:inline-flex" asChild>
                     <Link to={`/p/${pageSlug}`}>
                       <Store className={`h-4 w-4 ${dir === 'rtl' ? 'ml-1' : 'mr-1'}`} />
                       <span>{t('header.myStore')}</span>
                     </Link>
                   </Button>
                 )}
-                <Button variant="secondary" size="lg" asChild className="font-bold bg-primary text-primary-foreground hover:bg-primary/90">
+                <Button asChild className="btn-cta px-5 py-2 text-sm hidden sm:inline-flex">
                   <Link to="/dashboard">
-                    <Wrench className={`h-5 w-5 ${dir === 'rtl' ? 'ml-2' : 'mr-2'}`} />
+                    <Wrench className={`h-4 w-4 ${dir === 'rtl' ? 'ml-1.5' : 'mr-1.5'}`} />
                     <span>{t('header.addService')}</span>
                   </Link>
                 </Button>
               </div>
             ) : userType === 'customer' ? (
-              <Button variant="ghost" className="text-foreground hover:bg-primary/5" asChild>
+              <Button variant="ghost" className="text-[#2D7D46] hover:bg-[#2D7D46]/5" asChild>
                 <Link to="/customer">
                   <User className={`h-4 w-4 ${dir === 'rtl' ? 'ml-1' : 'mr-1'}`} />
                   <span className="hidden sm:inline">{t('customer.myAccount')}</span>
                 </Link>
               </Button>
-            ) : ( <div className="w-8 h-8 rounded-full bg-muted animate-pulse" /> )
+            ) : <div className="w-8 h-8 rounded-full bg-muted animate-pulse" />
           ) : (
-            <Button className="bg-[rgba(7,166,68,0.9)] hover:bg-[rgba(7,166,68,1)] text-accent-foreground font-bold" asChild>
+            <Button className="btn-cta px-5 py-2 text-sm" asChild>
               <Link to="/auth?type=merchant">
-                <LogIn className={`h-4 w-4 ${dir === 'rtl' ? 'ml-1' : 'mr-1'}`} />
+                <LogIn className={`h-4 w-4 ${dir === 'rtl' ? 'ml-1.5' : 'mr-1.5'}`} />
                 <span>{t('header.loginProvider')}</span>
               </Link>
             </Button>
           )}
-        </nav>
+
+          {/* Mobile hamburger */}
+          <button
+            className="md:hidden p-2 rounded-lg text-[#1A1A2E] hover:bg-gray-100 transition-colors"
+            onClick={() => setMobileOpen(!mobileOpen)}
+          >
+            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+        </div>
       </div>
+
+      {/* Mobile drawer */}
+      {mobileOpen && (
+        <div className="md:hidden bg-white border-t border-[#E5E7EB] px-4 py-4 space-y-3 shadow-lg">
+          <Link to="/" onClick={() => setMobileOpen(false)} className="block text-sm font-semibold text-[#1A1A2E] hover:text-[#2D7D46] py-2">الرئيسية</Link>
+          <Link to="/browse" onClick={() => setMobileOpen(false)} className="block text-sm font-semibold text-[#1A1A2E] hover:text-[#2D7D46] py-2">تصفح الخدمات</Link>
+          {user && userType === 'merchant' && pageSlug && (
+            <Link to={`/p/${pageSlug}`} onClick={() => setMobileOpen(false)} className="block text-sm font-semibold text-[#2D7D46] py-2">{t('header.myStore')}</Link>
+          )}
+          {user && userType === 'merchant' && (
+            <Link to="/dashboard" onClick={() => setMobileOpen(false)} className="block text-sm font-bold text-[#2D7D46] py-2">{t('header.addService')}</Link>
+          )}
+        </div>
+      )}
     </header>
   );
 };

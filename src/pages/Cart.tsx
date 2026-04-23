@@ -76,68 +76,108 @@ const Cart = () => {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen bg-background"><Header /><main className="container py-16"><Card className="max-w-md mx-auto text-center"><CardContent className="py-12"><ShoppingCart className="h-16 w-16 text-muted-foreground mx-auto mb-4" /><h2 className="text-xl font-bold mb-2">{t('cart.empty')}</h2><p className="text-muted-foreground mb-6">{t('cart.noProducts')}</p><Button asChild><Link to="/browse">{t('cart.browseProducts')}</Link></Button></CardContent></Card></main></div>
+      <div className="min-h-screen bg-[#F7FAF8]">
+        <Header />
+        <main className="container py-16 px-4">
+          <Card className="max-w-md mx-auto text-center rounded-2xl border-[#E5E7EB] shadow-md">
+            <CardContent className="py-12">
+              <ShoppingCart className="h-16 w-16 text-[#2D7D46]/30 mx-auto mb-4" />
+              <h2 className="text-xl font-extrabold mb-2 text-[#1A1A2E]">{t('cart.empty')}</h2>
+              <p className="text-[#6B7280] mb-6">{t('cart.noProducts')}</p>
+              <Button asChild className="btn-cta border-0 rounded-xl px-6">
+                <Link to="/browse">{t('cart.browseProducts')}</Link>
+              </Button>
+            </CardContent>
+          </Card>
+        </main>
+      </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background"><Header />
-      <main className="container py-8">
-        <div className="flex items-center gap-2 mb-6"><Button variant="ghost" size="sm" asChild><Link to="/browse"><ArrowIcon className="h-4 w-4 mx-1" />{t('cart.continueShopping')}</Link></Button></div>
-        <h1 className="text-2xl font-bold mb-6">{t('cart.title')}</h1>
+    <div className="min-h-screen bg-[#F7FAF8]">
+      <Header />
+      <main className="container py-8 px-4">
+        <div className="flex items-center gap-2 mb-6">
+          <Button variant="ghost" size="sm" asChild className="text-[#2D7D46] hover:bg-[#2D7D46]/5">
+            <Link to="/browse"><ArrowIcon className="h-4 w-4 mx-1" />{t('cart.continueShopping')}</Link>
+          </Button>
+        </div>
+        <h1 className="text-2xl font-extrabold mb-6 text-[#1A1A2E]">{t('cart.title')}</h1>
         <div className="space-y-6 max-w-3xl">
           {Object.entries(groupedItems).map(([merchantId, group]) => (
-            <Card key={merchantId}>
-              <CardHeader className="pb-2">
+            <Card key={merchantId} className="rounded-2xl border-[#E5E7EB] shadow-md overflow-hidden">
+              {/* Card header with green accent */}
+              <CardHeader className="pb-3 bg-[#2D7D46]/5 border-b border-[#E5E7EB]">
                 <div className="flex items-center justify-between flex-wrap gap-2">
-                  <CardTitle className="text-lg flex items-center gap-2"><Package className="h-5 w-5 text-primary" />{group.merchant_name}</CardTitle>
+                  <CardTitle className="text-lg flex items-center gap-2 text-[#1A1A2E]">
+                    <Package className="h-5 w-5 text-[#2D7D46]" />{group.merchant_name}
+                  </CardTitle>
                   <div className="flex gap-2">
-                    {group.merchant_slug && <Button asChild size="sm" variant="outline"><Link to={`/p/${group.merchant_slug}`}><ExternalLink className="h-4 w-4 mx-1" />{t('cart.viewCookPage')}</Link></Button>}
-                    <Button size="sm" className="bg-success hover:bg-success/90" onClick={() => handleConfirmOrder(merchantId, group.items, group.total)} disabled={submittingMerchant === merchantId || !user || !termsAgreed}>
-                      {submittingMerchant === merchantId ? <Loader2 className="h-4 w-4 animate-spin mx-1" /> : <CheckCircle className="h-4 w-4 mx-1" />}{t('cart.confirmOrder')}
-                    </Button>
+                    {group.merchant_slug && (
+                      <Button asChild size="sm" variant="outline" className="border-[#2D7D46]/30 text-[#2D7D46] hover:bg-[#2D7D46]/5">
+                        <Link to={`/p/${group.merchant_slug}`}><ExternalLink className="h-4 w-4 mx-1" />{t('cart.viewCookPage')}</Link>
+                      </Button>
+                    )}
+                    <button
+                      onClick={() => handleConfirmOrder(merchantId, group.items, group.total)}
+                      disabled={submittingMerchant === merchantId || !user || !termsAgreed}
+                      className="btn-cta px-4 py-1.5 text-sm flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {submittingMerchant === merchantId
+                        ? <Loader2 className="h-4 w-4 animate-spin" />
+                        : <CheckCircle className="h-4 w-4" />
+                      }
+                      {t('cart.confirmOrder')}
+                    </button>
                   </div>
                 </div>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-4 pt-4">
                 {group.items.map((item) => (
                   <div key={item.id} className="flex gap-4">
-                    <div className="w-20 h-20 rounded-lg bg-muted overflow-hidden flex-shrink-0">
-                      {item.image_url ? <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center"><Package className="h-8 w-8 text-muted-foreground/30" /></div>}
+                    <div className="w-20 h-20 rounded-xl bg-[#F7FAF8] overflow-hidden flex-shrink-0 border border-[#E5E7EB]">
+                      {item.image_url
+                        ? <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" />
+                        : <div className="w-full h-full flex items-center justify-center"><Package className="h-8 w-8 text-[#2D7D46]/20" /></div>
+                      }
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-semibold truncate">{item.title}</h4>
-                      <p className="text-primary font-bold">{item.price.toFixed(2)} {item.currency}</p>
+                      <h4 className="font-semibold truncate text-[#1A1A2E]">{item.title}</h4>
+                      <p className="text-[#2D7D46] font-bold">{item.price.toFixed(2)} {item.currency}</p>
                       <div className="flex items-center gap-2 mt-2">
-                        <Button size="icon" variant="outline" className="h-7 w-7" onClick={() => updateQuantity(item.id, item.quantity - 1)}><Minus className="h-3 w-3" /></Button>
-                        <span className="w-8 text-center font-medium">{item.quantity}</span>
-                        <Button size="icon" variant="outline" className="h-7 w-7" onClick={() => updateQuantity(item.id, item.quantity + 1)}><Plus className="h-3 w-3" /></Button>
+                        <Button size="icon" variant="outline" className="h-7 w-7 border-[#E5E7EB]" onClick={() => updateQuantity(item.id, item.quantity - 1)}><Minus className="h-3 w-3" /></Button>
+                        <span className="w-8 text-center font-bold text-[#1A1A2E]">{item.quantity}</span>
+                        <Button size="icon" variant="outline" className="h-7 w-7 border-[#E5E7EB]" onClick={() => updateQuantity(item.id, item.quantity + 1)}><Plus className="h-3 w-3" /></Button>
                         <Button size="icon" variant="ghost" className="h-7 w-7 text-destructive ms-auto" onClick={() => removeItem(item.id)}><Trash2 className="h-4 w-4" /></Button>
                       </div>
                     </div>
                   </div>
                 ))}
-                <Separator />
-                <div className="flex items-center justify-between font-bold"><span>{t('cart.subtotal')}:</span><span className="text-primary text-lg">{group.total.toFixed(2)} {group.items[0]?.currency || 'د.أ'}</span></div>
+                <Separator className="bg-[#E5E7EB]" />
+                <div className="flex items-center justify-between font-bold">
+                  <span className="text-[#6B7280]">{t('cart.subtotal')}:</span>
+                  <span className="text-[#2D7D46] text-lg">{group.total.toFixed(2)} {group.items[0]?.currency || 'د.أ'}</span>
+                </div>
                 {!user && (
-                  <div className="rounded-lg border border-destructive/40 bg-destructive/5 p-3 text-sm">
-                    <p className="mb-2 font-semibold text-destructive">{t('cart.loginToConfirm')}</p>
-                    <p className="mb-3 text-muted-foreground">{t('cart.loginToContinue')}</p>
-                    <Button size="sm" onClick={() => navigate('/auth?redirect=/cart')}>
+                  <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm">
+                    <p className="mb-2 font-semibold text-red-600">{t('cart.loginToConfirm')}</p>
+                    <p className="mb-3 text-[#6B7280]">{t('cart.loginToContinue')}</p>
+                    <Button size="sm" className="btn-cta border-0 rounded-xl" onClick={() => navigate('/auth?redirect=/cart')}>
                       {t('header.login')}
                     </Button>
                   </div>
                 )}
-                <div className="flex items-start gap-2 rounded-lg bg-secondary/50 p-3">
+                <div className="flex items-start gap-3 rounded-xl bg-[#2D7D46]/5 border border-[#2D7D46]/15 p-3">
                   <Checkbox
                     id={`terms-${merchantId}`}
                     checked={termsAgreed}
                     onCheckedChange={(v) => setTermsAgreed(!!v)}
-                    className="mt-0.5"
+                    className="mt-0.5 border-[#2D7D46] data-[state=checked]:bg-[#2D7D46]"
                   />
-                  <label htmlFor={`terms-${merchantId}`} className="text-sm leading-relaxed cursor-pointer">
+                  <label htmlFor={`terms-${merchantId}`} className="text-sm leading-relaxed cursor-pointer text-[#1A1A2E]">
                     {t('auth.agreeTerms')}{' '}
-                    <Link to="/terms" className="text-primary underline font-semibold">
+                    <Link to="/terms" className="text-[#2D7D46] underline font-semibold">
                       {t('auth.termsLink')}
                     </Link>
                   </label>

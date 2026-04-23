@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Switch } from '@/components/ui/switch';
 import { useAuth } from '@/hooks/useAuth';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -10,11 +11,22 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useToast } from '@/hooks/use-toast';
 import { useImageUpload } from '@/hooks/useImageUpload';
 import { useNativeImagePicker } from '@/hooks/useNativeImagePicker';
-import { Loader2, Copy, ExternalLink, Camera, ImagePlus, X } from 'lucide-react';
+import { Loader2, Copy, ExternalLink, Camera, ImagePlus, X, Trash2 } from 'lucide-react';
 import PhoneInput from '@/components/PhoneInput';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import { ALL_CATEGORIES, isEmergencyCategory, getSubcategories } from '@/lib/categoryIcons';
 
 interface Profile {
@@ -27,13 +39,15 @@ interface Profile {
 }
 
 const ProfileForm = () => {
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
   const { toast } = useToast();
   const { t, language } = useLanguage();
   const { uploadImage, uploading, deleteImage } = useImageUpload({ maxWidth: 1200, maxHeight: 600, quality: 0.8 });
   const { pickImage, isNative } = useNativeImagePicker();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [profile, setProfile] = useState<Profile | null>(null);
   const avatarInputRef = useRef<HTMLInputElement>(null);
   const coverInputRef = useRef<HTMLInputElement>(null);
@@ -88,6 +102,26 @@ const ProfileForm = () => {
   };
 
   const copyPageLink = () => { if (profile?.page_slug) { navigator.clipboard.writeText(`${window.location.origin}/p/${profile.page_slug}`); toast({ title: t('profile.linkCopied') }); } };
+
+  const handleDeleteAccount = async () => {
+    if (!user) return;
+    setDeleting(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('delete-account');
+      if (error || (data && (data as any).error)) {
+        const message = (data as any)?.error || error?.message || 'فشل حذف الحساب';
+        toast({ title: 'خطأ', description: message, variant: 'destructive' });
+        setDeleting(false);
+        return;
+      }
+      toast({ title: 'تم حذف الحساب', description: 'تم حذف حسابك بنجاح' });
+      await signOut();
+      navigate('/');
+    } catch (err: any) {
+      toast({ title: 'خطأ', description: err?.message || 'فشل حذف الحساب', variant: 'destructive' });
+      setDeleting(false);
+    }
+  };
 
   const handleCategoryChange = (newCategory: string) => {
     if (!profile) return;
@@ -241,6 +275,46 @@ const ProfileForm = () => {
       <Button onClick={handleSave} disabled={saving} className="w-full bg-success hover:bg-success/90 text-success-foreground">
         {saving ? <><Loader2 className="mx-2 h-4 w-4 animate-spin" />{t('profile.saving')}</> : t('profile.saveChanges')}
       </Button>
+
+      <Card className="border-destructive/40">
+        <CardHeader>
+          <CardTitle className="text-destructive">حذف الحساب</CardTitle>
+          <CardDescription>
+            عند حذف حسابك سيتم حذف جميع بياناتك وملفك ومنتجاتك بشكل نهائي. لا يمكن التراجع عن هذا الإجراء.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="destructive" className="w-full" disabled={deleting}>
+                {deleting ? (
+                  <><Loader2 className="mx-2 h-4 w-4 animate-spin" />جاري الحذف...</>
+                ) : (
+                  <><Trash2 className="h-4 w-4 mx-2" />حذف الحساب</>
+                )}
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>هل أنت متأكد؟</AlertDialogTitle>
+                <AlertDialogDescription>
+                  هل أنت متأكد أنك تريد حذف حسابك؟ هذا الإجراء لا يمكن التراجع عنه.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel disabled={deleting}>إلغاء</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleDeleteAccount}
+                  disabled={deleting}
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                >
+                  نعم، احذف حسابي
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </CardContent>
+      </Card>
     </div>
   );
 };

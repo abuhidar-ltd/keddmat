@@ -175,35 +175,47 @@ const CategoryPage = () => {
   const isAr = language === 'ar';
 
   return (
-    <div className="min-h-screen bg-background bokeh-bg" dir={dir}>
-      <header className="sticky top-0 z-50 bg-card border-b border-border shadow-lg">
+    <div className="min-h-screen bg-[#F7FAF8]" dir={dir}>
+      {/* Header */}
+      <header className="sticky top-0 z-50 bg-white border-b border-[#E5E7EB] shadow-sm">
         <div className="container flex items-center justify-between h-14 px-4">
-          <button onClick={() => navigate('/')} className="flex items-center gap-2 text-primary font-bold text-sm hover:opacity-80 transition-opacity">
-            <BackArrow className="h-5 w-5" /><span>{t('header.home') || 'الرئيسية'}</span>
+          <button
+            onClick={() => navigate('/')}
+            className="flex items-center gap-2 text-[#2D7D46] font-bold text-sm hover:opacity-80 transition-opacity"
+          >
+            <BackArrow className="h-5 w-5" />
+            <span>{t('header.home') || 'الرئيسية'}</span>
           </button>
           <img src={logoImage} alt="خدمات" className="h-8 object-contain" />
           <div className="w-16" />
         </div>
       </header>
 
-      <div className="container py-6 text-center">
-        <div className="flex items-center justify-center gap-3 mb-2">
-          <CategoryIcon className={`h-8 w-8 ${categoryInfo?.color || 'text-primary'}`} />
-          <h1 className="text-2xl md:text-3xl font-extrabold text-foreground">{subcategory || category}</h1>
+      {/* Category Title */}
+      <div className="bg-white border-b border-[#E5E7EB] py-6">
+        <div className="container px-4 text-center">
+          <div className="flex items-center justify-center gap-3 mb-2">
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: `${categoryInfo?.hex || '#2D7D46'}18` }}>
+              <CategoryIcon className="h-6 w-6" style={{ color: categoryInfo?.hex || '#2D7D46' }} />
+            </div>
+            <h1 className="text-2xl md:text-3xl font-extrabold text-[#1A1A2E]">{subcategory || category}</h1>
+          </div>
+          <p className="text-[#6B7280] text-sm">
+            {subcategory ? `${category} › ${subcategory}` : (isAr ? `جميع مقدمي خدمة ${category}` : `All ${category} providers`)}
+          </p>
         </div>
-        <p className="text-muted-foreground text-sm">{subcategory ? `${category} - ${subcategory}` : (isAr ? `جميع مقدمي خدمة ${category}` : `All ${category} providers`)}</p>
       </div>
 
-      {/* Governorate Filter */}
-      <div className="container px-4 mb-4">
+      {/* Governorate Filter Chips */}
+      <div className="container px-4 py-4">
         <ScrollArea className="w-full whitespace-nowrap">
           <div className="flex gap-2 pb-2">
             <button
               onClick={() => setSelectedGovernorate(null)}
               className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-bold transition-all border ${
                 !selectedGovernorate
-                  ? 'bg-primary text-primary-foreground border-primary shadow-lg'
-                  : 'bg-card text-foreground border-border hover:border-primary/50'
+                  ? 'bg-[#2D7D46] text-white border-[#2D7D46] shadow-md'
+                  : 'bg-white text-[#1A1A2E] border-[#E5E7EB] hover:border-[#2D7D46]/50'
               }`}
             >
               <LayoutGrid className="h-4 w-4" />
@@ -215,8 +227,8 @@ const CategoryPage = () => {
                 onClick={() => setSelectedGovernorate(gov.value)}
                 className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-bold transition-all border ${
                   selectedGovernorate === gov.value
-                    ? 'bg-primary text-primary-foreground border-primary shadow-lg'
-                    : 'bg-card text-foreground border-border hover:border-primary/50'
+                    ? 'bg-[#2D7D46] text-white border-[#2D7D46] shadow-md'
+                    : 'bg-white text-[#1A1A2E] border-[#E5E7EB] hover:border-[#2D7D46]/50'
                 }`}
               >
                 <MapPin className="h-3.5 w-3.5" />
@@ -232,7 +244,7 @@ const CategoryPage = () => {
         {loading ? (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {[...Array(6)].map((_, i) => (
-              <Card key={i} className="overflow-hidden animate-pulse">
+              <Card key={i} className="overflow-hidden animate-pulse rounded-2xl">
                 <CardContent className="p-6 flex flex-col items-center space-y-3">
                   <div className="w-16 h-16 rounded-full bg-muted" />
                   <div className="h-4 bg-muted rounded w-3/4" />
@@ -243,36 +255,36 @@ const CategoryPage = () => {
           </div>
         ) : providers.length === 0 ? (
           <div className="text-center py-20">
-            <CategoryIcon className={`h-16 w-16 mx-auto mb-4 ${categoryInfo?.color || 'text-muted-foreground'}`} />
-            <h3 className="text-xl font-semibold mb-2">{isAr ? 'لا يوجد مقدمي خدمة حالياً' : 'No providers found'}</h3>
-            <p className="text-muted-foreground">{isAr ? 'سيتم إضافة مقدمي خدمة قريباً' : 'Providers will be added soon'}</p>
+            <CategoryIcon className="h-16 w-16 mx-auto mb-4 text-[#2D7D46]/40" />
+            <h3 className="text-xl font-semibold mb-2 text-[#1A1A2E]">{isAr ? 'لا يوجد مقدمي خدمة حالياً' : 'No providers found'}</h3>
+            <p className="text-[#6B7280]">{isAr ? 'سيتم إضافة مقدمي خدمة قريباً' : 'Providers will be added soon'}</p>
           </div>
         ) : (
           <>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {providers.map((provider) => (
                 <Link key={provider.user_id} to={`/p/${provider.page_slug}`}>
-                  <Card className="overflow-hidden group hover:shadow-lg transition-all hover:-translate-y-1 cursor-pointer">
+                  <Card className="overflow-hidden group hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer rounded-2xl bg-white border border-[#E5E7EB]">
                     <CardContent className="p-5 flex flex-col items-center text-center space-y-3">
-                      <Avatar className="w-16 h-16 border-2 border-primary/20">
+                      <Avatar className="w-16 h-16 ring-2 ring-[#2D7D46]/30 ring-offset-2">
                         {provider.avatar_url ? (
                           <AvatarImage src={provider.avatar_url} alt={provider.display_name} />
                         ) : null}
-                        <AvatarFallback className="bg-primary/10">
-                          <CategoryIcon className={`h-8 w-8 ${categoryInfo?.color || 'text-primary'}`} />
+                        <AvatarFallback className="bg-[#2D7D46]/10">
+                          <CategoryIcon className="h-8 w-8 text-[#2D7D46]" />
                         </AvatarFallback>
                       </Avatar>
-                      <h3 className="font-bold text-sm text-foreground">{provider.store_name || provider.display_name}</h3>
+                      <h3 className="font-bold text-sm text-gray-800">{provider.store_name || provider.display_name}</h3>
                       {(provider.rating_count || 0) > 0 && (
                         <div className="flex items-center gap-1 text-xs">
-                          <Star className="h-3.5 w-3.5 fill-accent text-accent" />
-                          <span className="font-bold text-foreground">{(provider.avg_rating || 0).toFixed(1)}</span>
-                          <span className="text-muted-foreground">({provider.rating_count})</span>
+                          <Star className="h-3.5 w-3.5 fill-yellow-400 text-yellow-400" />
+                          <span className="font-bold text-gray-800">{(provider.avg_rating || 0).toFixed(1)}</span>
+                          <span className="text-gray-600">({provider.rating_count})</span>
                         </div>
                       )}
                       {provider.service_location && (
-                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                          <MapPin className="h-3 w-3" />
+                        <div className="flex items-center gap-1 text-xs text-gray-600">
+                          <MapPin className="h-3 w-3 text-[#2D7D46]" />
                           <span>{provider.service_location}</span>
                         </div>
                       )}
@@ -282,9 +294,11 @@ const CategoryPage = () => {
               ))}
             </div>
             {hasMore ? (
-              <div ref={sentinelRef} className="flex justify-center py-8">{loadingMore && <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />}</div>
+              <div ref={sentinelRef} className="flex justify-center py-8">
+                {loadingMore && <Loader2 className="h-6 w-6 animate-spin text-[#2D7D46]" />}
+              </div>
             ) : providers.length > 0 && (
-              <p className="text-center text-muted-foreground py-8 text-sm">{isAr ? 'لا يوجد المزيد' : 'No more results'}</p>
+              <p className="text-center text-[#6B7280] py-8 text-sm">{isAr ? 'لا يوجد المزيد' : 'No more results'}</p>
             )}
           </>
         )}

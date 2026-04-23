@@ -90,8 +90,8 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2D7D46]"></div>
       </div>
     );
   }
@@ -104,20 +104,21 @@ const Dashboard = () => {
   if (isAdminPhone) tabCount++;
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b border-border bg-card">
-        <div className="container flex items-center justify-between h-16">
-          <h1 className="font-bold text-lg">{t('dashboard.title')}</h1>
+    <div className="min-h-screen bg-[#F7FAF8]">
+      {/* Dashboard header */}
+      <header className="bg-white border-b border-[#E5E7EB] shadow-sm">
+        <div className="container flex items-center justify-between h-16 px-4">
+          <h1 className="font-extrabold text-lg text-[#2D7D46]">{t('dashboard.title')}</h1>
           <div className="flex items-center gap-2">
             {pageSlug && (
-              <Button variant="outline" size="sm" asChild>
+              <Button variant="outline" size="sm" asChild className="border-[#2D7D46] text-[#2D7D46] hover:bg-[#2D7D46]/5">
                 <Link to={`/p/${pageSlug}`}>
                   <Store className="h-4 w-4 ml-1" />
                   {language === 'ar' ? 'متجري' : 'My Store'}
                 </Link>
               </Button>
             )}
-            <Button variant="ghost" onClick={handleSignOut}>
+            <Button variant="ghost" onClick={handleSignOut} className="text-[#6B7280] hover:text-[#1A1A2E]">
               <LogOut className="ml-2 h-4 w-4" />
               {t('dashboard.logout')}
             </Button>
@@ -125,37 +126,37 @@ const Dashboard = () => {
         </div>
       </header>
 
-      <main className="container py-6">
+      <main className="container py-6 px-4">
         <div className="max-w-2xl mx-auto mb-6">
           <TrialCountdown />
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className={`grid w-full max-w-xl mx-auto mb-6 ${tabCount === 6 ? 'grid-cols-6' : tabCount === 5 ? 'grid-cols-5' : 'grid-cols-4'}`}>
+          <TabsList className={`grid w-full max-w-xl mx-auto mb-6 bg-white border border-[#E5E7EB] rounded-2xl p-1 shadow-sm ${tabCount === 6 ? 'grid-cols-6' : tabCount === 5 ? 'grid-cols-5' : 'grid-cols-4'}`}>
             {canReceiveEmergency && (
-              <TabsTrigger value="emergency" className="flex flex-col items-center gap-0.5 py-1.5 text-[10px] sm:flex-row sm:gap-2 sm:text-sm">
+              <TabsTrigger value="emergency" className="flex flex-col items-center gap-0.5 py-2 text-[10px] sm:flex-row sm:gap-2 sm:text-sm rounded-xl data-[state=active]:bg-[#2D7D46] data-[state=active]:text-white data-[state=active]:shadow-md">
                 <AlertTriangle className="h-4 w-4" />
                 <span>{language === 'ar' ? 'طوارئ' : 'Urgent'}</span>
               </TabsTrigger>
             )}
-            <TabsTrigger value="items" className="flex flex-col items-center gap-0.5 py-1.5 text-[10px] sm:flex-row sm:gap-2 sm:text-sm">
+            <TabsTrigger value="items" className="flex flex-col items-center gap-0.5 py-2 text-[10px] sm:flex-row sm:gap-2 sm:text-sm rounded-xl data-[state=active]:bg-[#2D7D46] data-[state=active]:text-white data-[state=active]:shadow-md">
               <Package className="h-4 w-4" />
               <span>{language === 'ar' ? 'أعمالنا' : 'Work'}</span>
             </TabsTrigger>
-            <TabsTrigger value="ratings" className="flex flex-col items-center gap-0.5 py-1.5 text-[10px] sm:flex-row sm:gap-2 sm:text-sm">
+            <TabsTrigger value="ratings" className="flex flex-col items-center gap-0.5 py-2 text-[10px] sm:flex-row sm:gap-2 sm:text-sm rounded-xl data-[state=active]:bg-[#2D7D46] data-[state=active]:text-white data-[state=active]:shadow-md">
               <Star className="h-4 w-4" />
               <span>{language === 'ar' ? 'التقييم' : 'Ratings'}</span>
             </TabsTrigger>
-            <TabsTrigger value="payments" className="flex flex-col items-center gap-0.5 py-1.5 text-[10px] sm:flex-row sm:gap-2 sm:text-sm">
+            <TabsTrigger value="payments" className="flex flex-col items-center gap-0.5 py-2 text-[10px] sm:flex-row sm:gap-2 sm:text-sm rounded-xl data-[state=active]:bg-[#2D7D46] data-[state=active]:text-white data-[state=active]:shadow-md">
               <CreditCard className="h-4 w-4" />
               <span>{language === 'ar' ? 'الدفع' : 'Pay'}</span>
             </TabsTrigger>
-            <TabsTrigger value="profile" className="flex flex-col items-center gap-0.5 py-1.5 text-[10px] sm:flex-row sm:gap-2 sm:text-sm">
+            <TabsTrigger value="profile" className="flex flex-col items-center gap-0.5 py-2 text-[10px] sm:flex-row sm:gap-2 sm:text-sm rounded-xl data-[state=active]:bg-[#2D7D46] data-[state=active]:text-white data-[state=active]:shadow-md">
               <User className="h-4 w-4" />
               <span>{language === 'ar' ? 'الملف' : 'Profile'}</span>
             </TabsTrigger>
             {isAdminPhone && (
-              <TabsTrigger value="admin" className="flex flex-col items-center gap-0.5 py-1.5 text-[10px] sm:flex-row sm:gap-2 sm:text-sm">
+              <TabsTrigger value="admin" className="flex flex-col items-center gap-0.5 py-2 text-[10px] sm:flex-row sm:gap-2 sm:text-sm rounded-xl data-[state=active]:bg-[#2D7D46] data-[state=active]:text-white data-[state=active]:shadow-md">
                 <ShieldCheck className="h-4 w-4" />
                 <span>{language === 'ar' ? 'الإدارة' : 'Admin'}</span>
               </TabsTrigger>
@@ -173,31 +174,31 @@ const Dashboard = () => {
           </TabsContent>
 
           <TabsContent value="ratings" className="max-w-2xl mx-auto">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center justify-between">
+            <Card className="rounded-2xl border-[#E5E7EB] shadow-sm">
+              <CardHeader className="border-b border-[#E5E7EB] bg-[#2D7D46]/5 rounded-t-2xl">
+                <CardTitle className="flex items-center justify-between text-[#1A1A2E]">
                   <span>{t('dashboard.ratingsCount')} ({ratings.length})</span>
                   {ratings.length > 0 && (
                     <div className="flex items-center gap-2">
                       <RatingStars rating={Math.round(avgRating)} />
-                      <span className="text-sm text-muted-foreground">{avgRating}</span>
+                      <span className="text-sm text-[#6B7280]">{avgRating}</span>
                     </div>
                   )}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 {ratings.length === 0 ? (
-                  <p className="text-center text-muted-foreground py-8">{t('dashboard.noRatings')}</p>
+                  <p className="text-center text-[#6B7280] py-8">{t('dashboard.noRatings')}</p>
                 ) : (
-                  <div className="space-y-4">
+                  <div className="space-y-4 mt-4">
                     {ratings.map(r => (
-                      <div key={r.id} className="border-b last:border-0 pb-4 last:pb-0">
+                      <div key={r.id} className="border-b border-[#E5E7EB] last:border-0 pb-4 last:pb-0">
                         <div className="flex items-center justify-between mb-1">
-                          <span className="font-medium text-sm">{r.customer_name}</span>
+                          <span className="font-semibold text-sm text-[#1A1A2E]">{r.customer_name}</span>
                           <RatingStars rating={r.rating} size={14} />
                         </div>
-                        {r.comment && <p className="text-sm text-muted-foreground">{r.comment}</p>}
-                        <p className="text-xs text-muted-foreground mt-1">
+                        {r.comment && <p className="text-sm text-[#6B7280]">{r.comment}</p>}
+                        <p className="text-xs text-[#6B7280] mt-1">
                           {new Date(r.created_at).toLocaleDateString('ar-JO')}
                         </p>
                       </div>
@@ -224,8 +225,8 @@ const Dashboard = () => {
         </Tabs>
       </main>
 
-      <footer className="border-t border-border py-4 mt-8">
-        <p className="text-center text-sm text-muted-foreground">
+      <footer className="border-t border-[#E5E7EB] py-4 mt-8 bg-white">
+        <p className="text-center text-sm text-[#6B7280]">
           © {new Date().getFullYear()} {t('index.tabkhatyRights')}
         </p>
       </footer>

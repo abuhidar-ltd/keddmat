@@ -29,6 +29,10 @@
  * UPDATE profiles
  * SET category = 'عامل يومي'
  * WHERE category = 'عامل يومي (مياومة)';
+ *
+ * UPDATE profiles
+ * SET category = 'ونشات سيارات'
+ * WHERE category = 'ونشات';
  */
 
 import { Plug, Wrench, Hammer, Paintbrush, Droplets, Truck, Anvil, Settings, Construction, HardHat, type LucideIcon } from "lucide-react";
@@ -53,7 +57,7 @@ export const CATEGORIES: CategoryInfo[] = [
   { icon: Anvil, labelKey: "service.blacksmith", category: "حداد، زجاج، ألمنيوم", color: "text-[hsl(var(--cat-blacksmith))]", hex: "#64B5F6" },
   { icon: Droplets, labelKey: "service.waterTanks", category: "صهاريج مياه", color: "text-[hsl(var(--cat-plumber))]", hex: "#00BCD4" },
   { icon: Settings, labelKey: "service.roadMechanic", category: "ميكانيكي طرقات", color: "text-[hsl(var(--cat-maintenance))]", hex: "#FF6B6B" },
-  { icon: Construction, labelKey: "service.towTrucks", category: "ونشات", color: "text-[hsl(var(--cat-blacksmith))]", hex: "#64B5F6" },
+  { icon: Construction, labelKey: "service.towTrucks", category: "ونشات سيارات", color: "text-[hsl(var(--cat-blacksmith))]", hex: "#64B5F6" },
   { icon: HardHat, labelKey: "service.dailyWorker", category: "عامل يومي", color: "text-[hsl(var(--cat-moving))]", hex: "#9C27B0" },
 ];
 
@@ -72,7 +76,7 @@ export const EMERGENCY_CATEGORIES = [
   "صيانة الأجهزة المنزلية",
   "صهاريج مياه",
   "ميكانيكي طرقات",
-  "ونشات",
+  "ونشات سيارات",
   "حداد، زجاج، ألمنيوم",
 ];
 
