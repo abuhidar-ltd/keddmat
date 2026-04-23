@@ -301,7 +301,7 @@ const Index = () => {
               </h4>
               <div className="flex gap-3">
                 <a
-                  href="#"
+                  href="https://www.facebook.com/share/1C81VLBJKH/?mibextid=wwXIfr"
                   className="w-9 h-9 rounded-full bg-white/10 hover:bg-[#00BCD4]/30 flex items-center justify-center transition-colors"
                   aria-label="Facebook"
                 >

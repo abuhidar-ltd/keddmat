@@ -158,16 +158,16 @@ const ProfileForm = () => {
       <Card className="overflow-hidden">
         <CardHeader className="p-0">
           <div className="relative h-40 bg-gradient-to-br from-primary/20 to-accent/20">
-            {profile.cover_url ? <img src={profile.cover_url} alt="" className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-muted-foreground"><ImagePlus className="h-12 w-12 opacity-50" /></div>}
-            <div className="absolute top-2 start-2 flex gap-2">
+            {profile.cover_url ? <img src={profile.cover_url} alt="" className="absolute inset-0 w-full h-full object-cover z-0" /> : <div className="absolute inset-0 w-full h-full flex items-center justify-center text-muted-foreground z-0"><ImagePlus className="h-12 w-12 opacity-50" /></div>}
+            <div className="absolute top-2 start-2 flex gap-2 z-20">
               <Button size="sm" variant="secondary" onClick={handleNativeCoverPick} disabled={uploading} className="shadow-lg">{uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}<span className="mx-1">{t('profile.changeCover')}</span></Button>
               {profile.cover_url && <Button size="icon" variant="destructive" onClick={removeCover} className="shadow-lg h-8 w-8"><X className="h-4 w-4" /></Button>}
             </div>
-            <div className="absolute -bottom-12 end-6">
+            <div className="absolute -bottom-12 end-6 z-20">
               <div className="relative">
-                {profile.avatar_url ? <img src={profile.avatar_url} alt="" className="w-24 h-24 rounded-2xl object-cover border-4 border-background shadow-xl" /> : <div className="w-24 h-24 rounded-2xl bg-card border-4 border-background shadow-xl flex items-center justify-center"><span className="text-4xl">👤</span></div>}
-                <Button size="icon" variant="secondary" onClick={handleNativeAvatarPick} disabled={uploading} className="absolute -bottom-2 -start-2 h-8 w-8 rounded-full shadow-lg">{uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}</Button>
-                {profile.avatar_url && <Button size="icon" variant="destructive" onClick={removeAvatar} className="absolute -top-2 -start-2 h-6 w-6 rounded-full shadow-lg"><X className="h-3 w-3" /></Button>}
+                {profile.avatar_url ? <img src={profile.avatar_url} alt="" className="relative z-10 w-24 h-24 rounded-2xl object-cover border-4 border-background shadow-xl" /> : <div className="relative z-10 w-24 h-24 rounded-2xl bg-card border-4 border-background shadow-xl flex items-center justify-center"><span className="text-4xl">👤</span></div>}
+                <Button size="icon" variant="secondary" onClick={handleNativeAvatarPick} disabled={uploading} className="absolute -bottom-2 -start-2 h-8 w-8 rounded-full shadow-lg z-20">{uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}</Button>
+                {profile.avatar_url && <Button size="icon" variant="destructive" onClick={removeAvatar} className="absolute -top-2 -start-2 h-6 w-6 rounded-full shadow-lg z-20"><X className="h-3 w-3" /></Button>}
               </div>
             </div>
           </div>
