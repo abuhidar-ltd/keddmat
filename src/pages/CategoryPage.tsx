@@ -275,6 +275,9 @@ const CategoryPage = () => {
                         </AvatarFallback>
                       </Avatar>
                       <h3 className="font-bold text-sm text-gray-800">{provider.store_name || provider.display_name}</h3>
+                      {category && (
+                        <p className="text-xs text-gray-500 -mt-1">{subcategory || category}</p>
+                      )}
                       {(provider.rating_count || 0) > 0 && (
                         <div className="flex items-center gap-1 text-xs">
                           <Star className="h-3.5 w-3.5 fill-yellow-400 text-yellow-400" />

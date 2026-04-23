@@ -16,6 +16,7 @@ import { GOVERNORATES } from "@/lib/governorates";
 interface ProviderProfile {
   user_id: string;
   display_name: string;
+  store_name: string | null;
   page_slug: string;
   avatar_url: string | null;
   country: string | null;
@@ -74,7 +75,7 @@ const Browse = () => {
 
     let query = supabase
       .from('profiles')
-      .select('user_id, display_name, page_slug, avatar_url, country, service_location, category')
+      .select('user_id, display_name, store_name, page_slug, avatar_url, country, service_location, category')
       .eq('page_enabled', true);
 
     if (selectedCategory && selectedCategory !== 'all') {
@@ -113,7 +114,7 @@ const Browse = () => {
 
   const filteredProviders = providers.filter(p => {
     const query = searchQuery.toLowerCase();
-    const matchesSearch = !searchQuery || p.display_name.toLowerCase().includes(query) || (p.service_location && p.service_location.toLowerCase().includes(query));
+    const matchesSearch = !searchQuery || p.display_name.toLowerCase().includes(query) || (p.store_name && p.store_name.toLowerCase().includes(query)) || (p.service_location && p.service_location.toLowerCase().includes(query));
     return matchesSearch;
   });
 
@@ -239,7 +240,10 @@ const Browse = () => {
                             <CatIcon className="h-8 w-8 text-[#2D7D46]" />
                           </AvatarFallback>
                         </Avatar>
-                        <h3 className="font-bold text-sm text-gray-800">{provider.display_name}</h3>
+                        <h3 className="font-bold text-sm text-gray-800">{provider.store_name || provider.display_name}</h3>
+                        {provider.category && (
+                          <p className="text-xs text-gray-500 -mt-1">{provider.category}</p>
+                        )}
                         {provider.service_location && (
                           <div className="flex items-center gap-1 text-xs text-gray-600">
                             <MapPin className="h-3 w-3 text-[#2D7D46]" />
