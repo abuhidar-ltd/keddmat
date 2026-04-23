@@ -118,13 +118,13 @@ const Index = () => {
                   to="/auth?type=merchant"
                   className="btn-cta px-8 py-3 text-base inline-flex items-center gap-2"
                 >
-                  {isAr ? "ابدأ الآن ›" : "Start Now ›"}
+                  {isAr ? "ابدأ كحرفي" : "Start as a Craftsman"}
                 </Link>
                 <Link
                   to="/browse"
                   className="px-8 py-3 rounded-full border-2 border-[#2D7D46] text-[#2D7D46] font-bold text-base hover:bg-[#2D7D46]/5 transition-colors inline-flex items-center gap-2"
                 >
-                  {isAr ? "تصفح الخدمات" : "Browse Services"}
+                  {isAr ? "تصفح متاجر الحرفيين" : "Browse Craftsmen's Shops"}
                 </Link>
               </div>
             </div>
@@ -272,7 +272,7 @@ const Index = () => {
                     to="/browse"
                     className="hover:text-[#00BCD4] transition-colors"
                   >
-                    {isAr ? "تصفح الخدمات" : "Browse Services"}
+                    {isAr ? "تصفح متاجر الحرفيين" : "Browse Craftsmen's Shops"}
                   </Link>
                 </li>
                 <li>

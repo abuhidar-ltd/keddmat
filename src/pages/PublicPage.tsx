@@ -139,13 +139,15 @@ const PublicPage = () => {
       </div>
 
       {/* Cover Banner */}
-      <div className="relative h-48 md:h-64 overflow-hidden">
-        {profile?.cover_url
-          ? <img src={profile.cover_url} alt="Cover" className="w-full h-full object-cover" />
-          : <div className="w-full h-full" style={{ background: 'linear-gradient(135deg, #2D7D46, #00BCD4)' }} />
-        }
+      <div className="relative h-48 md:h-64">
+        <div className="absolute inset-0 overflow-hidden">
+          {profile?.cover_url
+            ? <img src={profile.cover_url} alt="Cover" className="w-full h-full object-cover" />
+            : <div className="w-full h-full" style={{ background: 'linear-gradient(135deg, #2D7D46, #00BCD4)' }} />
+          }
+        </div>
         {/* Avatar */}
-        <div className="absolute -bottom-12 left-1/2 -translate-x-1/2">
+        <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 z-20">
           {profile?.avatar_url
             ? <img src={profile.avatar_url} alt={profile.display_name || ''} className="w-24 h-24 md:w-28 md:h-28 rounded-2xl object-cover border-4 border-white shadow-xl ring-4 ring-[#2D7D46]/30" />
             : <div className="w-24 h-24 md:w-28 md:h-28 rounded-2xl bg-white flex items-center justify-center border-4 border-white shadow-xl ring-4 ring-[#2D7D46]/30"><span className="text-4xl">👤</span></div>
