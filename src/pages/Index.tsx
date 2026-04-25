@@ -62,14 +62,16 @@ const Index = () => {
       {/* ── Hero Section ── */}
       <section className="py-14 md:py-20 bg-white">
         <div className="container px-4">
-          <div className="flex flex-col-reverse lg:flex-row items-center gap-10 lg:gap-16">
+          <div className="flex flex-col-reverse lg:flex-row items-center gap-8 lg:gap-12">
             {/* Left: Illustration */}
-            <div className="flex-1 flex justify-center animate-float">
-              <img
-                src={logoImage}
-                alt="خدمات"
-                className="w-56 md:w-72 lg:w-80 h-auto object-contain drop-shadow-xl"
-              />
+            <div className="w-full lg:w-auto flex justify-center lg:justify-start">
+              <div className="animate-float rounded-2xl border border-[#E5E7EB] bg-white/90 p-4 md:p-5 shadow-sm">
+                <img
+                  src={logoImage}
+                  alt="خدمات"
+                  className="w-28 md:w-36 lg:w-44 h-auto object-contain"
+                />
+              </div>
             </div>
             {/* Right: Text */}
             <div className="flex-1 text-right space-y-5 animate-fade-in">
