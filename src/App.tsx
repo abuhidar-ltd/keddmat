@@ -20,6 +20,7 @@ import Cart from "./pages/Cart";
 import NotFound from "./pages/NotFound";
 import ServiceSEOPage from "./pages/ServiceSEOPage";
 import { useState } from "react";
+import { Analytics } from "@vercel/analytics/react";
 
 const App = () => {
   const [queryClient] = useState(() => new QueryClient());
@@ -53,6 +54,7 @@ const App = () => {
           </CartProvider>
         </AuthProvider>
       </LanguageProvider>
+      <Analytics />
     </QueryClientProvider>
   );
 };
