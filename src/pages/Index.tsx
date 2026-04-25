@@ -60,31 +60,28 @@ const Index = () => {
       <Header />
 
       {/* ── Hero Section ── */}
-      <section className="py-14 md:py-20 bg-white">
-        <div className="container px-4">
-          <div className="flex flex-col-reverse lg:flex-row items-center gap-8 lg:gap-12">
-            {/* Left: Illustration */}
-            <div className="w-full lg:w-auto flex justify-center lg:justify-start">
-              <div className="animate-float rounded-2xl border border-[#E5E7EB] bg-white/90 p-4 md:p-5 shadow-sm">
+      <section className="py-10 md:py-16 lg:py-20 bg-white">
+        <div className="container px-4 max-w-xl mx-auto sm:max-w-2xl lg:max-w-3xl">
+          <div className="flex flex-col items-center gap-6">
+            {/* Logo — top, compact on all breakpoints */}
+            <div className="flex shrink-0 justify-center">
+              <div className="animate-float rounded-2xl border border-[#E5E7EB] bg-white/90 p-3 sm:p-4 shadow-sm">
                 <img
                   src={logoImage}
                   alt="خدمات"
-                  className="w-28 md:w-36 lg:w-44 h-auto object-contain"
+                  className="w-32 sm:w-36 md:w-40 h-auto object-contain"
                 />
               </div>
             </div>
-            {/* Right: Text */}
-            <div className="flex-1 text-right space-y-5 animate-fade-in">
+            <div className="w-full flex-1 text-right space-y-5 animate-fade-in">
               <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold leading-snug text-[#105A8E]">
                 {isAr ? (
                   <>
                     عندك عطل بالمنزل؟
                     <br />
-                    <span className="text-[#00BCD4]">
-                      اطلب فني صيانة فوراً في منطقتك
-                    </span>
+                    <span className="text-[#165B91]">اطلب فني صيانة</span>
                     <br />
-                    <span className="text-[#2D7D46]">
+                    <span className="text-[#165B91]">
                       خلال دقائق، بدون تعب البحث
                     </span>
                   </>
@@ -92,24 +89,24 @@ const Index = () => {
                   <>
                     If you're a craftsman
                     <br />
-                    <span className="text-[#00BCD4]">
+                    <span className="text-[#165B91]">
                       and want an online presence...
                     </span>
                     <br />
-                    <span className="text-[#2D7D46]">This place is yours</span>
+                    <span className="text-[#165B91]">This place is yours</span>
                   </>
                 )}
               </h1>
-              <div className="flex gap-3 justify-end flex-nowrap">
+              <div className="flex flex-col gap-3 sm:flex-row sm:flex-nowrap sm:justify-end sm:items-stretch">
                 <Link
                   to="/browse?emergency=1"
-                  className="px-5 md:px-8 py-3 rounded-full bg-orange-500 text-white font-bold text-sm md:text-base hover:bg-orange-600 transition-colors inline-flex items-center gap-2 whitespace-nowrap"
+                  className="min-h-[52px] px-6 sm:px-7 py-3.5 rounded-full bg-orange-500 text-white font-bold text-base hover:bg-orange-600 transition-colors inline-flex items-center justify-center gap-2 w-full sm:w-auto active:opacity-95"
                 >
                   {isAr ? "اضغط لطلب صيانة طارئة" : "Emergency Order"}
                 </Link>
                 <Link
                   to="/browse"
-                  className="px-5 md:px-8 py-3 rounded-full border-2 border-[#2D7D46] text-[#2D7D46] font-bold text-sm md:text-base hover:bg-[#2D7D46]/5 transition-colors inline-flex items-center gap-2 whitespace-nowrap"
+                  className="min-h-[52px] px-6 sm:px-7 py-3.5 rounded-full border-2 border-[#165B91] text-[#165B91] font-bold text-base hover:bg-[#165B91]/5 transition-colors inline-flex items-center justify-center gap-2 w-full sm:w-auto active:opacity-95"
                 >
                   {isAr ? "تصفح متاجر الحرفيين" : "Browse Craftsmen's Shops"}
                 </Link>
@@ -138,8 +135,8 @@ const Index = () => {
                 key={f.title}
                 className="bg-white rounded-2xl shadow-md p-6 flex flex-col items-center text-center hover-lift"
               >
-                <div className="w-14 h-14 rounded-full bg-[#2D7D46]/10 flex items-center justify-center mb-4">
-                  <f.icon className="h-7 w-7 text-[#2D7D46]" />
+                <div className="w-14 h-14 rounded-full bg-[#56B36B]/10 flex items-center justify-center mb-4">
+                  <f.icon className="h-7 w-7 text-[#56B36B]" />
                 </div>
                 <h3 className="font-extrabold text-base text-[#105A8E] mb-1">
                   {f.title}
@@ -192,8 +189,8 @@ const Index = () => {
           <div className="mb-10 rounded-2xl border border-white/15 bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-6 md:p-8 shadow-lg">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 text-start">
               <div className="flex items-start gap-4 flex-1">
-                <div className="w-12 h-12 rounded-xl bg-[#2D7D46]/25 flex items-center justify-center shrink-0">
-                  <Store className="h-6 w-6 text-[#00BCD4]" />
+                <div className="w-12 h-12 rounded-xl bg-[#56B36B]/25 flex items-center justify-center shrink-0">
+                  <Store className="h-6 w-6 text-[#56B36B]" />
                 </div>
                 <div className="space-y-2 min-w-0">
                   <h3 className="font-extrabold text-lg md:text-xl text-white">
@@ -237,7 +234,7 @@ const Index = () => {
                 <li>
                   <Link
                     to="/"
-                    className="hover:text-[#00BCD4] transition-colors"
+                    className="hover:text-[#56B36B] transition-colors"
                   >
                     {isAr ? "الرئيسية" : "Home"}
                   </Link>
@@ -245,7 +242,7 @@ const Index = () => {
                 <li>
                   <Link
                     to="/browse"
-                    className="hover:text-[#00BCD4] transition-colors"
+                    className="hover:text-[#56B36B] transition-colors"
                   >
                     {isAr ? "تصفح متاجر الحرفيين" : "Browse Craftsmen's Shops"}
                   </Link>
@@ -253,7 +250,7 @@ const Index = () => {
                 <li>
                   <Link
                     to="/terms"
-                    className="hover:text-[#00BCD4] transition-colors"
+                    className="hover:text-[#56B36B] transition-colors"
                   >
                     {isAr ? "الشروط والأحكام" : "Terms & Conditions"}
                   </Link>
@@ -269,7 +266,7 @@ const Index = () => {
               <div className="flex gap-3">
                 <a
                   href="https://www.facebook.com/share/1C81VLBJKH/?mibextid=wwXIfr"
-                  className="w-9 h-9 rounded-full bg-white/10 hover:bg-[#00BCD4]/30 flex items-center justify-center transition-colors"
+                  className="w-9 h-9 rounded-full bg-white/10 hover:bg-[#56B36B]/30 flex items-center justify-center transition-colors"
                   aria-label="Facebook"
                 >
                   <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -278,7 +275,7 @@ const Index = () => {
                 </a>
                 <a
                   href="#"
-                  className="w-9 h-9 rounded-full bg-white/10 hover:bg-[#00BCD4]/30 flex items-center justify-center transition-colors"
+                  className="w-9 h-9 rounded-full bg-white/10 hover:bg-[#56B36B]/30 flex items-center justify-center transition-colors"
                   aria-label="Instagram"
                 >
                   <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -303,7 +300,7 @@ const Index = () => {
                   href="https://wa.me/+962799126390"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-full bg-white/10 hover:bg-[#00BCD4]/30 flex items-center justify-center transition-colors"
+                  className="w-9 h-9 rounded-full bg-white/10 hover:bg-[#56B36B]/30 flex items-center justify-center transition-colors"
                   aria-label="WhatsApp"
                 >
                   <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -317,7 +314,7 @@ const Index = () => {
           <div className="border-t border-white/10 pt-6 text-center">
             <p className="text-gray-400 text-xs">
               باستخدامك للموقع أنت توافق على{" "}
-              <Link to="/terms" className="text-[#00BCD4] hover:underline">
+              <Link to="/terms" className="text-[#56B36B] hover:underline">
                 {isAr ? "الشروط والأحكام" : "Terms & Conditions"}
               </Link>{" "}
               و سياسة الخصوصية
@@ -352,12 +349,12 @@ const Index = () => {
                     );
                   }}
                   className="flex flex-col items-center gap-2 p-4 rounded-xl bg-white border border-[#E5E7EB] shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all"
-                  style={{ borderColor: `${catInfo?.hex || "#2D7D46"}25` }}
+                  style={{ borderColor: `${catInfo?.hex || "#56B36B"}25` }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = `${catInfo?.hex || "#2D7D46"}60`;
+                    e.currentTarget.style.borderColor = `${catInfo?.hex || "#56B36B"}60`;
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = `${catInfo?.hex || "#2D7D46"}25`;
+                    e.currentTarget.style.borderColor = `${catInfo?.hex || "#56B36B"}25`;
                   }}
                 >
                   <span className="text-sm font-bold text-center text-[#105A8E]">

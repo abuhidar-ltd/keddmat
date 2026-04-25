@@ -228,7 +228,7 @@ const Auth = () => {
           
           {/* Worker Image Panel - Desktop only */}
           {isMerchantPage && (
-            <div className="hidden lg:flex flex-col items-center justify-between rounded-s-2xl p-8 min-w-[300px] max-w-[340px] relative overflow-hidden animate-fade-in" style={{background:'linear-gradient(135deg,#2D7D46,#00BCD4)'}}>
+            <div className="hidden lg:flex flex-col items-center justify-between rounded-s-2xl p-8 min-w-[300px] max-w-[340px] relative overflow-hidden animate-fade-in" style={{background:'linear-gradient(135deg,#56B36B,#56B36B)'}}>
               <div className="absolute -top-10 -start-10 w-40 h-40 rounded-full bg-accent/20 blur-2xl" />
               <div className="absolute -bottom-10 -end-10 w-32 h-32 rounded-full bg-primary-foreground/10 blur-xl" />
 

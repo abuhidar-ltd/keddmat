@@ -125,7 +125,7 @@ const Browse = () => {
       {/* Section header */}
       <div className="bg-white border-b border-[#E5E7EB] py-6">
         <div className="container px-4 text-center">
-          <h1 className="text-2xl md:text-3xl font-extrabold text-[#2D7D46] mb-1">
+          <h1 className="text-2xl md:text-3xl font-extrabold text-[#56B36B] mb-1">
             {dir === 'rtl' ? 'تصفح مقدمي الخدمات' : 'Browse Service Providers'}
           </h1>
           <p className="text-[#6B7280] text-sm">
@@ -144,8 +144,8 @@ const Browse = () => {
                 onClick={() => setSelectedGovernorate(null)}
                 className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-bold transition-all border ${
                   !selectedGovernorate
-                    ? 'bg-[#2D7D46] text-white border-[#2D7D46] shadow-md'
-                    : 'bg-white text-[#1A1A2E] border-[#E5E7EB] hover:border-[#2D7D46]/50'
+                    ? 'bg-[#56B36B] text-white border-[#56B36B] shadow-md'
+                    : 'bg-white text-[#1A1A2E] border-[#E5E7EB] hover:border-[#56B36B]/50'
                 }`}
               >
                 <LayoutGrid className="h-4 w-4" />
@@ -157,8 +157,8 @@ const Browse = () => {
                   onClick={() => setSelectedGovernorate(gov.value)}
                   className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-bold transition-all border ${
                     selectedGovernorate === gov.value
-                      ? 'bg-[#2D7D46] text-white border-[#2D7D46] shadow-md'
-                      : 'bg-white text-[#1A1A2E] border-[#E5E7EB] hover:border-[#2D7D46]/50'
+                      ? 'bg-[#56B36B] text-white border-[#56B36B] shadow-md'
+                      : 'bg-white text-[#1A1A2E] border-[#E5E7EB] hover:border-[#56B36B]/50'
                   }`}
                 >
                   <MapPin className="h-3.5 w-3.5" />
@@ -211,7 +211,7 @@ const Browse = () => {
           </div>
         ) : filteredProviders.length === 0 ? (
           <div className="text-center py-20">
-            <LayoutGrid className="h-16 w-16 mx-auto text-[#2D7D46]/40 mb-4" />
+            <LayoutGrid className="h-16 w-16 mx-auto text-[#56B36B]/40 mb-4" />
             <h3 className="text-xl font-semibold mb-2 text-[#1A1A2E]">{t('browse.noDishes')}</h3>
             <p className="text-gray-700">{t('browse.tryChangingFilters')}</p>
           </div>
@@ -225,10 +225,10 @@ const Browse = () => {
                   <Link key={provider.user_id} to={`/p/${provider.page_slug}`}>
                     <Card className="overflow-hidden group hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer rounded-2xl bg-white border border-[#E5E7EB]">
                       <CardContent className="p-5 flex flex-col items-center text-center space-y-3">
-                        <Avatar className="w-16 h-16 ring-2 ring-[#2D7D46]/30 ring-offset-2">
+                        <Avatar className="w-16 h-16 ring-2 ring-[#56B36B]/30 ring-offset-2">
                           {provider.avatar_url ? <AvatarImage src={provider.avatar_url} alt={provider.display_name} /> : null}
-                          <AvatarFallback className="bg-[#2D7D46]/10">
-                            <CatIcon className="h-8 w-8 text-[#2D7D46]" />
+                          <AvatarFallback className="bg-[#56B36B]/10">
+                            <CatIcon className="h-8 w-8 text-[#56B36B]" />
                           </AvatarFallback>
                         </Avatar>
                         <h3 className="font-bold text-sm text-gray-800">{provider.store_name || provider.display_name}</h3>
@@ -237,11 +237,11 @@ const Browse = () => {
                         )}
                         {provider.service_location && (
                           <div className="flex items-center gap-1 text-xs text-gray-600">
-                            <MapPin className="h-3 w-3 text-[#2D7D46]" />
+                            <MapPin className="h-3 w-3 text-[#56B36B]" />
                             <span>{provider.service_location}</span>
                           </div>
                         )}
-                        <span className="text-xs font-semibold text-white bg-[#2D7D46] px-3 py-0.5 rounded-full">
+                        <span className="text-xs font-semibold text-white bg-[#56B36B] px-3 py-0.5 rounded-full">
                           {dir === 'rtl' ? 'تواصل' : 'Contact'}
                         </span>
                       </CardContent>
@@ -252,7 +252,7 @@ const Browse = () => {
             </div>
             {hasMore ? (
               <div ref={sentinelRef} className="flex justify-center py-8">
-                {loadingMore && <Loader2 className="h-6 w-6 animate-spin text-[#2D7D46]" />}
+                {loadingMore && <Loader2 className="h-6 w-6 animate-spin text-[#56B36B]" />}
               </div>
             ) : providers.length > 0 && (
               <p className="text-center text-gray-700 py-8 text-sm">{t('browse.noMore') || 'لا يوجد المزيد'}</p>

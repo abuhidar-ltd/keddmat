@@ -18,8 +18,8 @@ const CategoryFilter = ({ selectedCategory, onCategoryChange }: CategoryFilterPr
             onClick={() => onCategoryChange('all')}
             className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-bold transition-all border ${
               isAllSelected
-                ? 'bg-[#2D7D46] text-white border-[#2D7D46] shadow-md'
-                : 'bg-white text-[#1A1A2E] border-[#E5E7EB] hover:border-[#2D7D46]/50'
+                ? 'bg-[#56B36B] text-white border-[#56B36B] shadow-md'
+                : 'bg-white text-[#1A1A2E] border-[#E5E7EB] hover:border-[#56B36B]/50'
             }`}
           >
             <LayoutGrid className="h-4 w-4" />
@@ -34,8 +34,8 @@ const CategoryFilter = ({ selectedCategory, onCategoryChange }: CategoryFilterPr
                 onClick={() => onCategoryChange(cat.category)}
                 className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-bold transition-all border ${
                   isSelected
-                    ? 'bg-[#2D7D46] text-white border-[#2D7D46] shadow-md'
-                    : 'bg-white text-[#1A1A2E] border-[#E5E7EB] hover:border-[#2D7D46]/50'
+                    ? 'bg-[#56B36B] text-white border-[#56B36B] shadow-md'
+                    : 'bg-white text-[#1A1A2E] border-[#E5E7EB] hover:border-[#56B36B]/50'
                 }`}
               >
                 <Icon className="h-4 w-4" />

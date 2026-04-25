@@ -86,7 +86,7 @@ const Customer = () => {
   };
 
   if (loading || (user && userType === null) || loadingProfile) {
-    return (<div className="min-h-screen flex items-center justify-center bg-white"><Loader2 className="h-8 w-8 animate-spin text-[#2D7D46]" /></div>);
+    return (<div className="min-h-screen flex items-center justify-center bg-white"><Loader2 className="h-8 w-8 animate-spin text-[#56B36B]" /></div>);
   }
   if (!user || userType !== 'customer') return null;
 
@@ -101,10 +101,10 @@ const Customer = () => {
           </Button>
         </div>
         <Card className="max-w-2xl mx-auto rounded-2xl border-[#E5E7EB] shadow-md overflow-hidden">
-          <CardHeader className="bg-[#2D7D46]/5 border-b border-[#E5E7EB]">
+          <CardHeader className="bg-[#56B36B]/5 border-b border-[#E5E7EB]">
             <CardTitle className="flex items-center gap-3 text-[#1A1A2E]">
-              <div className="w-10 h-10 rounded-full bg-white ring-2 ring-[#2D7D46]/30 flex items-center justify-center shadow-sm">
-                <User className="h-5 w-5 text-[#2D7D46]" />
+              <div className="w-10 h-10 rounded-full bg-white ring-2 ring-[#56B36B]/30 flex items-center justify-center shadow-sm">
+                <User className="h-5 w-5 text-[#56B36B]" />
               </div>
               {t('customer.profile')}
             </CardTitle>
@@ -116,7 +116,7 @@ const Customer = () => {
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
                 placeholder={t('customer.namePlaceholder')}
-                className="border-[#E5E7EB] focus:border-[#2D7D46] focus:ring-[#2D7D46]/20 rounded-xl"
+                className="border-[#E5E7EB] focus:border-[#56B36B] focus:ring-[#56B36B]/20 rounded-xl"
               />
             </div>
             <div className="space-y-2">

@@ -128,7 +128,7 @@ const PublicPage = () => {
     }
   };
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center bg-white"><Loader2 className="h-8 w-8 animate-spin text-[#2D7D46]" /></div>;
+  if (loading) return <div className="min-h-screen flex items-center justify-center bg-white"><Loader2 className="h-8 w-8 animate-spin text-[#56B36B]" /></div>;
   if (notFound) return <div className="min-h-screen flex flex-col items-center justify-center bg-white p-4" dir={dir}><h1 className="text-2xl font-bold mb-2 text-[#1A1A2E]">{t('public.notFound')}</h1><p className="text-[#6B7280] text-center">{t('public.notAvailable')}</p></div>;
 
   return (
@@ -143,14 +143,14 @@ const PublicPage = () => {
         <div className="absolute inset-0 overflow-hidden">
           {profile?.cover_url
             ? <img src={profile.cover_url} alt="Cover" className="w-full h-full object-cover" />
-            : <div className="w-full h-full" style={{ background: 'linear-gradient(135deg, #2D7D46, #00BCD4)' }} />
+            : <div className="w-full h-full" style={{ background: 'linear-gradient(135deg, #56B36B, #56B36B)' }} />
           }
         </div>
         {/* Avatar */}
         <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 z-20">
           {profile?.avatar_url
-            ? <img src={profile.avatar_url} alt={profile.display_name || ''} className="w-24 h-24 md:w-28 md:h-28 rounded-2xl object-cover border-4 border-white shadow-xl ring-4 ring-[#2D7D46]/30" />
-            : <div className="w-24 h-24 md:w-28 md:h-28 rounded-2xl bg-white flex items-center justify-center border-4 border-white shadow-xl ring-4 ring-[#2D7D46]/30"><span className="text-4xl">👤</span></div>
+            ? <img src={profile.avatar_url} alt={profile.display_name || ''} className="w-24 h-24 md:w-28 md:h-28 rounded-2xl object-cover border-4 border-white shadow-xl ring-4 ring-[#56B36B]/30" />
+            : <div className="w-24 h-24 md:w-28 md:h-28 rounded-2xl bg-white flex items-center justify-center border-4 border-white shadow-xl ring-4 ring-[#56B36B]/30"><span className="text-4xl">👤</span></div>
           }
         </div>
       </div>
@@ -163,7 +163,7 @@ const PublicPage = () => {
             {profile?.display_name || t('public.noName')}
           </h2>
           {profile?.category && (
-            <p className="text-base font-semibold text-[#2D7D46] mb-2">
+            <p className="text-base font-semibold text-[#56B36B] mb-2">
               {profile.category}{profile.subcategories && profile.subcategories.length > 0 ? ` - ${(() => {
                 const subId = profile.subcategories![0];
                 const subInfo = getSubcategories(profile.category || '').find(s => s.id === subId);
@@ -181,23 +181,23 @@ const PublicPage = () => {
           )}
           {profile?.whatsapp_number && (
             <div className="flex items-center justify-center gap-2 mb-4">
-              <div className="flex items-center gap-2 bg-[#2D7D46]/8 border border-[#2D7D46]/20 px-4 py-2 rounded-xl">
-                <Phone className="h-4 w-4 text-[#2D7D46]" />
+              <div className="flex items-center gap-2 bg-[#56B36B]/8 border border-[#56B36B]/20 px-4 py-2 rounded-xl">
+                <Phone className="h-4 w-4 text-[#56B36B]" />
                 <span className="font-medium text-[#1A1A2E]" dir="ltr">{profile.whatsapp_number}</span>
-                <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-[#2D7D46]/10" onClick={copyPhone}>
-                  {copied ? <Check className="h-4 w-4 text-[#2D7D46]" /> : <Copy className="h-4 w-4 text-[#6B7280]" />}
+                <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-[#56B36B]/10" onClick={copyPhone}>
+                  {copied ? <Check className="h-4 w-4 text-[#56B36B]" /> : <Copy className="h-4 w-4 text-[#6B7280]" />}
                 </Button>
               </div>
             </div>
           )}
           <div className="flex flex-wrap items-center justify-center gap-3 mt-3">
             {profile?.service_location && (
-              <div className="flex items-center gap-2 bg-[#2D7D46]/10 text-[#2D7D46] px-4 py-2 rounded-xl border border-[#2D7D46]/20">
+              <div className="flex items-center gap-2 bg-[#56B36B]/10 text-[#56B36B] px-4 py-2 rounded-xl border border-[#56B36B]/20">
                 <MapPin className="h-4 w-4" /><span className="text-sm font-bold">{profile.service_location}</span>
               </div>
             )}
             {profile?.working_hours && (
-              <div className="flex items-center gap-2 bg-[#00BCD4]/10 text-[#00838f] px-4 py-2 rounded-xl border border-[#00BCD4]/20">
+              <div className="flex items-center gap-2 bg-[#56B36B]/10 text-[#3d8550] px-4 py-2 rounded-xl border border-[#56B36B]/20">
                 <Clock className="h-4 w-4" /><span className="text-sm font-bold">{profile.working_hours}</span>
               </div>
             )}
@@ -214,7 +214,7 @@ const PublicPage = () => {
             <div className="h-px flex-1 max-w-16 bg-[#E5E7EB]" />
           </div>
           <div className="flex gap-4 justify-center max-w-md mx-auto">
-            <Button onClick={handleCall} size="lg" className="flex-1 gap-2 bg-[#2D7D46] hover:bg-[#245f37] text-white rounded-xl shadow-md">
+            <Button onClick={handleCall} size="lg" className="flex-1 gap-2 bg-[#56B36B] hover:bg-[#49995f] text-white rounded-xl shadow-md">
               <Phone className="h-4 w-4" />{t('public.call')}
             </Button>
             <Button onClick={handleWhatsApp} size="lg" className="flex-1 gap-2 bg-[#25D366] hover:bg-[#20BD5A] text-white rounded-xl shadow-md">
@@ -244,12 +244,12 @@ const PublicPage = () => {
                 <Card key={item.id} className="overflow-hidden group hover:shadow-xl hover:-translate-y-1 transition-all duration-300 rounded-2xl border-[#E5E7EB] bg-white">
                   {hasGallery
                     ? <ImageGallery mainImage={item.image_url} images={galleryUrls} alt={item.title} />
-                    : <div className="aspect-square bg-[#F7FAF8] flex items-center justify-center"><Package className="h-12 w-12 text-[#2D7D46]/20" /></div>
+                    : <div className="aspect-square bg-[#F7FAF8] flex items-center justify-center"><Package className="h-12 w-12 text-[#56B36B]/20" /></div>
                   }
                   <CardContent className="p-3">
                     <h3 className="font-semibold text-sm line-clamp-1 mb-1 text-[#1A1A2E]">{item.title}</h3>
                     {item.description && <p className="text-xs text-[#6B7280] line-clamp-3 leading-relaxed">{item.description}</p>}
-                    {item.price > 0 && <p className="text-sm font-bold text-[#2D7D46] mt-2">{item.price} {dir === 'rtl' ? 'د.أ' : 'JOD'}</p>}
+                    {item.price > 0 && <p className="text-sm font-bold text-[#56B36B] mt-2">{item.price} {dir === 'rtl' ? 'د.أ' : 'JOD'}</p>}
                   </CardContent>
                 </Card>
               );
@@ -257,7 +257,7 @@ const PublicPage = () => {
           </div>
         )}
         {hasMore
-          ? <div ref={sentinelRef} className="flex justify-center py-8">{loadingMore && <Loader2 className="h-6 w-6 animate-spin text-[#2D7D46]" />}</div>
+          ? <div ref={sentinelRef} className="flex justify-center py-8">{loadingMore && <Loader2 className="h-6 w-6 animate-spin text-[#56B36B]" />}</div>
           : items.length > 0 && <p className="text-center text-[#6B7280] py-8 text-sm">{dir === 'rtl' ? 'لا يوجد المزيد' : 'No more items'}</p>
         }
       </section>
