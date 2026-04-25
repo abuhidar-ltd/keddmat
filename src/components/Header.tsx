@@ -5,7 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
 import { supabase } from "@/integrations/supabase/client";
 import LanguageToggle from "@/components/LanguageToggle";
-import { User, Store, LogIn, Wrench, Menu, X } from "lucide-react";
+import { User, Store, Wrench, Menu, X } from "lucide-react";
 import logo from "@/assets/logo-khadamat.png";
 
 const Header = () => {
@@ -69,14 +69,7 @@ const Header = () => {
                 </Link>
               </Button>
             ) : <div className="w-8 h-8 rounded-full bg-muted animate-pulse" />
-          ) : (
-            <Button className="btn-cta px-5 py-2 text-sm" asChild>
-              <Link to="/auth?type=merchant">
-                <LogIn className={`h-4 w-4 ${dir === 'rtl' ? 'ml-1.5' : 'mr-1.5'}`} />
-                <span>{t('header.loginProvider')}</span>
-              </Link>
-            </Button>
-          )}
+          ) : null}
 
           {/* Mobile hamburger */}
           <button

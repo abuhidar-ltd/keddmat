@@ -5,7 +5,7 @@ import Header from "@/components/Header";
 import { Link, useNavigate } from "react-router-dom";
 import { CATEGORIES, getSubcategories } from "@/lib/categoryIcons";
 import logoImage from "@/assets/logo-khadamat.png";
-import { Store, Users, ShieldCheck, TrendingUp, Award } from "lucide-react";
+import { Store, Users } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -41,31 +41,17 @@ const Index = () => {
   const features = [
     {
       icon: Store,
-      title: isAr ? "متجرك الخاص" : "Your Own Store",
+      title: isAr ? "فنيون قريبون منك" : "Nearby Technicians",
       desc: isAr
-        ? "متجر خاص فيك تعرض فيه شغلك وخدماتك ومنتجاتك"
-        : "Your own shop to showcase your work and services",
+        ? "اعثر على فنيين وصيّانة منزلية داخل منطقتك بسرعة"
+        : "Find home maintenance technicians in your area quickly",
     },
     {
       icon: Users,
-      title: isAr ? "عملاء أكثر" : "More Customers",
+      title: isAr ? "اختيار أسهل" : "Easier Choice",
       desc: isAr
-        ? "وصل لخدمة أكثر عدد ممكن من العملاء في منطقتك"
-        : "Reach more customers in your area easily",
-    },
-    {
-      icon: ShieldCheck,
-      title: isAr ? "ثقة ومصداقية" : "Trust & Credibility",
-      desc: isAr
-        ? "تقييمات وآراء العملاء تزيد ثقة الناس بخدماتك"
-        : "Ratings and reviews build trust in your services",
-    },
-    {
-      icon: TrendingUp,
-      title: isAr ? "أعمال أكثر" : "More Business",
-      desc: isAr
-        ? "احصل على طلبات أكثر وزود دخلك بسهولة"
-        : "Get more orders and grow your income easily",
+        ? "قارن بين مقدمي الخدمة واختر الأنسب لاحتياجك"
+        : "Compare service providers and pick what fits your needs",
     },
   ];
 
@@ -87,14 +73,18 @@ const Index = () => {
             </div>
             {/* Right: Text */}
             <div className="flex-1 text-right space-y-5 animate-fade-in">
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold leading-snug text-[#1A1A2E]">
+              <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold leading-snug text-[#105A8E]">
                 {isAr ? (
                   <>
-                    إذا كنت حرفي وحابب يكون
+                    عندك عطل بالمنزل؟
                     <br />
-                    <span className="text-[#00BCD4]">إلك حضور أونلاين...</span>
+                    <span className="text-[#00BCD4]">
+                      اطلب فني صيانة فوراً في منطقتك
+                    </span>
                     <br />
-                    <span className="text-[#2D7D46]">هذا المكان إلك</span>
+                    <span className="text-[#2D7D46]">
+                      خلال دقائق، بدون تعب البحث
+                    </span>
                   </>
                 ) : (
                   <>
@@ -108,21 +98,16 @@ const Index = () => {
                   </>
                 )}
               </h1>
-              <p className="text-[#6B7280] text-base md:text-lg leading-relaxed max-w-md">
-                {isAr
-                  ? "مع خدمات صار عندك متجر رقمي خاص فيك تعرض فيه شغلك وخدماتك وتبيع منتجاتك بسهولة، والعملاء بيشوفوا شغلك ويتواصلوا معك مباشرة"
-                  : "With Khadamat you get your own digital store to showcase your work, services and products easily — customers see your work and contact you directly"}
-              </p>
-              <div className="flex gap-3 justify-end flex-wrap">
+              <div className="flex gap-3 justify-end flex-nowrap">
                 <Link
-                  to="/auth?type=merchant"
-                  className="btn-cta px-8 py-3 text-base inline-flex items-center gap-2"
+                  to="/browse?emergency=1"
+                  className="px-5 md:px-8 py-3 rounded-full bg-orange-500 text-white font-bold text-sm md:text-base hover:bg-orange-600 transition-colors inline-flex items-center gap-2 whitespace-nowrap"
                 >
-                  {isAr ? "ابدأ كحرفي" : "Start as a Craftsman"}
+                  {isAr ? "اضغط لطلب صيانة طارئة" : "Emergency Order"}
                 </Link>
                 <Link
                   to="/browse"
-                  className="px-8 py-3 rounded-full border-2 border-[#2D7D46] text-[#2D7D46] font-bold text-base hover:bg-[#2D7D46]/5 transition-colors inline-flex items-center gap-2"
+                  className="px-5 md:px-8 py-3 rounded-full border-2 border-[#2D7D46] text-[#2D7D46] font-bold text-sm md:text-base hover:bg-[#2D7D46]/5 transition-colors inline-flex items-center gap-2 whitespace-nowrap"
                 >
                   {isAr ? "تصفح متاجر الحرفيين" : "Browse Craftsmen's Shops"}
                 </Link>
@@ -135,17 +120,17 @@ const Index = () => {
       {/* ── Features Strip ── */}
       <section className="py-14 md:py-16 section-alt">
         <div className="container px-4 text-center">
-          <h2 className="text-2xl md:text-3xl font-extrabold text-[#1A1A2E] mb-3">
+          <h2 className="text-2xl md:text-3xl font-extrabold text-[#105A8E] mb-3">
             {isAr
-              ? "كل شغلك بمكان واحد... بدون تشتت"
-              : "All Your Work in One Place... Without Confusion"}
+              ? "كل خدمات الصيانه المنزليه بموقع"
+              : "All Maintenance Services Within Reach"}
           </h2>
           <p className="text-[#6B7280] mb-10 text-base">
             {isAr
-              ? "منصة بتخليك تبين بشكل احترافي وتوصل لعملاء أكثر بثقة أعلى"
-              : "A platform that makes you look professional and reach more customers with higher trust"}
+              ? "منصة تساعدك تلاقي الفني المناسب بسرعة، بثقة، وبدون تعب"
+              : "A platform that helps you find the right technician quickly and confidently"}
           </p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
+          <div className="grid grid-cols-2 md:grid-cols-2 gap-5 max-w-2xl mx-auto">
             {features.map((f) => (
               <div
                 key={f.title}
@@ -154,7 +139,7 @@ const Index = () => {
                 <div className="w-14 h-14 rounded-full bg-[#2D7D46]/10 flex items-center justify-center mb-4">
                   <f.icon className="h-7 w-7 text-[#2D7D46]" />
                 </div>
-                <h3 className="font-extrabold text-base text-[#1A1A2E] mb-1">
+                <h3 className="font-extrabold text-base text-[#105A8E] mb-1">
                   {f.title}
                 </h3>
                 <p className="text-gray-700 text-xs leading-relaxed">
@@ -169,7 +154,7 @@ const Index = () => {
       {/* ── Category Grid ── */}
       <section className="py-14 md:py-16 bg-white">
         <div className="container px-4">
-          <h2 className="text-2xl md:text-3xl font-extrabold text-[#1A1A2E] text-center mb-2">
+          <h2 className="text-2xl md:text-3xl font-extrabold text-[#105A8E] text-center mb-2">
             {isAr ? "اختر نوع الخدمة" : "Choose Service Type"}
           </h2>
           <p className="text-[#6B7280] text-center mb-10">
@@ -190,7 +175,7 @@ const Index = () => {
                 >
                   <svc.icon className="h-7 w-7" style={{ color: svc.hex }} />
                 </div>
-                <span className="text-sm font-bold text-[#1A1A2E] leading-tight text-center">
+                <span className="text-sm font-bold text-[#105A8E] leading-tight text-center">
                   {t(svc.labelKey)}
                 </span>
               </button>
@@ -199,47 +184,35 @@ const Index = () => {
         </div>
       </section>
 
-      {/* ── Subscription CTA ── */}
-      <section className="py-14 md:py-16 section-alt">
-        <div className="container px-4">
-          <div className="max-w-2xl mx-auto text-center space-y-6">
-            <div className="flex justify-center">
-              <div className="w-20 h-20 rounded-full bg-[#2D7D46]/10 flex items-center justify-center">
-                <Award className="h-10 w-10 text-[#2D7D46]" />
-              </div>
-            </div>
-            <h2 className="text-2xl md:text-3xl font-extrabold text-[#1A1A2E] leading-snug">
-              {isAr ? (
-                <>
-                  <span className="text-[#2D7D46]">الاشتراك مجاني</span> حالياً{" "}
-                  <span className="text-[#00BCD4]">لفترة محدودة</span>
-                </>
-              ) : (
-                <>
-                  <span className="text-[#2D7D46]">Subscription is free</span>{" "}
-                  right now{" "}
-                  <span className="text-[#00BCD4]">for a limited time</span>
-                </>
-              )}
-            </h2>
-            <p className="text-[#6B7280] text-base">
-              {isAr
-                ? "سجل الآن واستفد من جميع الميزات بدون أي رسوم"
-                : "Register now and enjoy all features with no charges"}
-            </p>
-            <Link
-              to="/auth?type=merchant"
-              className="btn-cta px-10 py-3.5 text-base inline-flex items-center gap-2"
-            >
-              {isAr ? "سجل الآن ›" : "Register Now ›"}
-            </Link>
-          </div>
-        </div>
-      </section>
-
       {/* ── Footer ── */}
       <footer className="footer-dark text-white py-12">
         <div className="container px-4">
+          <div className="mb-10 rounded-2xl border border-white/15 bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-6 md:p-8 shadow-lg">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 text-start">
+              <div className="flex items-start gap-4 flex-1">
+                <div className="w-12 h-12 rounded-xl bg-[#2D7D46]/25 flex items-center justify-center shrink-0">
+                  <Store className="h-6 w-6 text-[#00BCD4]" />
+                </div>
+                <div className="space-y-2 min-w-0">
+                  <h3 className="font-extrabold text-lg md:text-xl text-white">
+                    {isAr ? "أنت حرفي أو مقدم خدمة؟" : "Are you a craftsman or service provider?"}
+                  </h3>
+                  <p className="text-gray-300 text-sm leading-relaxed">
+                    {isAr
+                      ? "سجّل متجرك على المنصة واعرض خدماتك وتواصل مع العملاء بسهولة."
+                      : "Register your shop on the platform, list your services, and connect with customers easily."}
+                  </p>
+                </div>
+              </div>
+              <Link
+                to="/auth?type=merchant"
+                className="btn-cta px-8 py-3 text-sm md:text-base font-bold inline-flex items-center justify-center gap-2 shrink-0 w-full md:w-auto"
+              >
+                {t("header.loginProvider")}
+              </Link>
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
             {/* Logo + tagline */}
             <div className="flex flex-col items-end text-right gap-3">
@@ -273,14 +246,6 @@ const Index = () => {
                     className="hover:text-[#00BCD4] transition-colors"
                   >
                     {isAr ? "تصفح متاجر الحرفيين" : "Browse Craftsmen's Shops"}
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/auth?type=merchant"
-                    className="hover:text-[#00BCD4] transition-colors"
-                  >
-                    {isAr ? "انضم كحرفي" : "Join as Craftsman"}
                   </Link>
                 </li>
                 <li>
@@ -366,7 +331,7 @@ const Index = () => {
       <Dialog open={subcategoryOpen} onOpenChange={setSubcategoryOpen}>
         <DialogContent className="max-w-md bg-white border-[#E5E7EB] text-foreground rounded-2xl">
           <DialogHeader>
-            <DialogTitle className="text-center text-xl font-extrabold text-[#1A1A2E]">
+            <DialogTitle className="text-center text-xl font-extrabold text-[#105A8E]">
               {selectedCategory}
             </DialogTitle>
           </DialogHeader>
@@ -393,7 +358,7 @@ const Index = () => {
                     e.currentTarget.style.borderColor = `${catInfo?.hex || "#2D7D46"}25`;
                   }}
                 >
-                  <span className="text-sm font-bold text-center text-[#1A1A2E]">
+                  <span className="text-sm font-bold text-center text-[#105A8E]">
                     {language === "ar" ? sub.labelAr : sub.labelEn}
                   </span>
                 </button>

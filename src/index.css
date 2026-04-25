@@ -89,6 +89,7 @@
 .btn-cta:hover { opacity: 0.92; transform: translateY(-1px); }
 
 @layer utilities {
+  .text-\[\#6B7280\] { color: #4B5563 !important; }
   .text-price { @apply text-accent font-bold; }
   .glass-effect { @apply bg-white/90 border border-white/60 shadow-xl; }
   .glass-card { @apply bg-white/95 border border-white/60 shadow-lg rounded-2xl; }

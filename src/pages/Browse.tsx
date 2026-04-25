@@ -4,10 +4,9 @@ import { useLanguage } from "@/hooks/useLanguage";
 import Header from "@/components/Header";
 import CategoryFilter from "@/components/CategoryFilter";
 import EmergencyRequestModal from "@/components/EmergencyRequestModal";
-import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { Search, Loader2, LayoutGrid, MapPin, AlertTriangle } from "lucide-react";
+import { Loader2, LayoutGrid, MapPin, AlertTriangle } from "lucide-react";
 import { Link, useSearchParams } from "react-router-dom";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { getCategoryInfo } from "@/lib/categoryIcons";
@@ -34,7 +33,6 @@ const Browse = () => {
   const [loadingMore, setLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [searchParams] = useSearchParams();
-  const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>(searchParams.get('category') || "all");
   const [selectedGovernorate, setSelectedGovernorate] = useState<string | null>(null);
   const [emergencyOpen, setEmergencyOpen] = useState(false);
@@ -61,6 +59,12 @@ const Browse = () => {
     if (sentinelRef.current) observerRef.current.observe(sentinelRef.current);
     return () => observerRef.current?.disconnect();
   }, [loading, hasMore, loadingMore, providers.length]);
+
+  useEffect(() => {
+    if (searchParams.get('emergency') === '1') {
+      setEmergencyOpen(true);
+    }
+  }, [searchParams]);
 
   const fetchProviders = async (reset = false) => {
     if (fetchingRef.current) return;
@@ -112,11 +116,7 @@ const Browse = () => {
     fetchingRef.current = false;
   };
 
-  const filteredProviders = providers.filter(p => {
-    const query = searchQuery.toLowerCase();
-    const matchesSearch = !searchQuery || p.display_name.toLowerCase().includes(query) || (p.store_name && p.store_name.toLowerCase().includes(query)) || (p.service_location && p.service_location.toLowerCase().includes(query));
-    return matchesSearch;
-  });
+  const filteredProviders = providers;
 
   return (
     <div className="min-h-screen bg-[#F7FAF8]" dir={dir}>
@@ -134,18 +134,9 @@ const Browse = () => {
         </div>
       </div>
 
-      {/* Search + Filters */}
+      {/* Filters */}
       <div className="sticky top-16 z-40 bg-white/95 backdrop-blur-xl border-b border-[#E5E7EB] py-4 shadow-sm">
         <div className="container px-4 space-y-3">
-          <div className="relative">
-            <Search className={`absolute top-1/2 -translate-y-1/2 h-5 w-5 text-[#2D7D46] ${dir === 'rtl' ? 'right-4' : 'left-4'}`} />
-            <Input
-              placeholder={t('index.searchPlaceholder')}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className={`h-12 text-base rounded-full border-[#E5E7EB] focus:border-[#2D7D46] focus:ring-[#2D7D46]/20 ${dir === 'rtl' ? 'pr-12' : 'pl-12'}`}
-            />
-          </div>
           <CategoryFilter selectedCategory={selectedCategory} onCategoryChange={setSelectedCategory} />
           <ScrollArea className="w-full whitespace-nowrap">
             <div className="flex gap-2 pb-2">
