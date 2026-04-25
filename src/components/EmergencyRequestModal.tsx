@@ -193,7 +193,7 @@ const EmergencyRequestModal = ({ open, onOpenChange }: Props) => {
     }
   };
 
-  const handleWhatsAppClick = async (provider: ProviderProfile) => {
+  const handleWhatsAppClick = (provider: ProviderProfile) => {
     const phone = provider.whatsapp_number || provider.phone || '';
     const cleanPhone = phone.replace(/[^0-9]/g, '');
     const fullPhone = cleanPhone.startsWith('962') ? cleanPhone : `962${cleanPhone.replace(/^0/, '')}`;
@@ -202,17 +202,16 @@ const EmergencyRequestModal = ({ open, onOpenChange }: Props) => {
 
     if (!cleanPhone) return;
 
-    // Track BEFORE navigating — wait for result so toast appears
-    await trackClick(provider.user_id, 'whatsapp');
+    // Open WhatsApp synchronously so the browser doesn't block the popup
+    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
 
-    // Fire-and-forget WhatsApp notification
+    // Track + notify in the background (non-blocking)
+    trackClick(provider.user_id, 'whatsapp');
     try {
       void supabase.functions.invoke('send-whatsapp', {
         body: { to: fullPhone, message: 'مرحبا، أنا عميل من موقع خدمات أرغب بالتواصل معك - طلب طوارئ' },
       });
     } catch (e) { /* silent */ }
-
-    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
   };
 
   const handlePhoneClick = async (provider: ProviderProfile) => {
