@@ -45,7 +45,7 @@ const AdminPanel = () => {
       const data = await res.json();
       setMerchants(data.merchants || []); setReceipts(data.receipts || []); setProducts(data.products || []); setAdminRatings(data.ratings || []);
       setEmergencyDaily(data.emergencyDaily || []);
-      if (data.kpis) setKpis(data.kpis);
+      if (data.kpis) setKpis(prev => ({ ...prev, ...data.kpis }));
     } catch (error) { console.error(error); toast.error(t('common.error')); }
     finally { setLoadingData(false); }
   };
@@ -104,8 +104,8 @@ const AdminPanel = () => {
         <Card><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">{language === 'ar' ? 'عدد الحرفيين' : 'Craftsmen'}</CardTitle></CardHeader><CardContent><div className="flex items-center gap-2"><Store className="h-5 w-5 text-emerald-500" /><span className="text-2xl font-bold">{kpis.craftsmen}</span></div></CardContent></Card>
         <Card><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">{language === 'ar' ? 'ضغطات واتساب' : 'WhatsApp Clicks'}</CardTitle></CardHeader><CardContent><div className="flex items-center gap-2"><MessageCircle className="h-5 w-5 text-[#25D366]" /><span className="text-2xl font-bold">{kpis.whatsappClicks}</span></div></CardContent></Card>
         <Card><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">{language === 'ar' ? 'ضغطات الاتصال' : 'Call Clicks'}</CardTitle></CardHeader><CardContent><div className="flex items-center gap-2"><Phone className="h-5 w-5 text-blue-500" /><span className="text-2xl font-bold">{kpis.callClicks}</span></div></CardContent></Card>
-        <Card><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">{language === 'ar' ? 'طوارئ واتساب' : 'Emergency WA'}</CardTitle></CardHeader><CardContent><div className="flex items-center gap-2"><MessageCircle className="h-5 w-5 text-red-500" /><span className="text-2xl font-bold">{kpis.emergencyWhatsappClicks}</span></div></CardContent></Card>
-        <Card><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">{language === 'ar' ? 'طوارئ اتصال' : 'Emergency Calls'}</CardTitle></CardHeader><CardContent><div className="flex items-center gap-2"><Phone className="h-5 w-5 text-red-500" /><span className="text-2xl font-bold">{kpis.emergencyPhoneClicks}</span></div></CardContent></Card>
+        <Card><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">{language === 'ar' ? 'طوارئ واتساب' : 'Emergency WA'}</CardTitle></CardHeader><CardContent><div className="flex items-center gap-2"><MessageCircle className="h-5 w-5 text-red-500" /><span className="text-2xl font-bold">{kpis.emergencyWhatsappClicks || 0}</span></div></CardContent></Card>
+        <Card><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">{language === 'ar' ? 'طوارئ اتصال' : 'Emergency Calls'}</CardTitle></CardHeader><CardContent><div className="flex items-center gap-2"><Phone className="h-5 w-5 text-red-500" /><span className="text-2xl font-bold">{kpis.emergencyPhoneClicks || 0}</span></div></CardContent></Card>
       </div>
 
       {/* Emergency Clicks Daily Chart (Last 30 days) */}

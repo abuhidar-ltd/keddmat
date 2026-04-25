@@ -65,7 +65,7 @@ const Index = () => {
           <div className="flex flex-col items-center gap-6">
             {/* Logo — top, compact on all breakpoints */}
             <div className="flex shrink-0 justify-center">
-              <div className="animate-float rounded-2xl border border-[#E5E7EB] bg-white/90 p-3 sm:p-4 shadow-sm">
+              <div className="animate-float rounded-2xl bg-white/90 p-3 sm:p-4 shadow-sm">
                 <img
                   src={logoImage}
                   alt="خدمات"
@@ -100,13 +100,13 @@ const Index = () => {
               <div className="flex flex-col gap-3 sm:flex-row sm:flex-nowrap sm:justify-end sm:items-stretch w-[90%] max-w-[90%] ms-auto sm:max-w-[90%]">
                 <Link
                   to="/browse?emergency=1"
-                  className="min-h-[48px] px-5 sm:px-6 py-3 rounded-full bg-[#EA580C] text-white font-bold text-sm sm:text-base hover:bg-[#FF692E] transition-colors inline-flex items-center justify-center gap-2 w-full sm:w-auto active:opacity-95"
+                  className="h-[42px] w-[270px] px-5 sm:px-6 py-3 rounded-full bg-[#EA580C] text-white font-bold text-sm sm:text-base hover:bg-[#FF692E] transition-colors inline-flex items-center justify-center gap-2 active:opacity-95"
                 >
                   {isAr ? "اضغط لطلب صيانة طارئة" : "Emergency Order"}
                 </Link>
                 <Link
                   to="/browse"
-                  className="min-h-[48px] px-5 sm:px-6 py-3 rounded-full border-2 border-[#165B91] text-[#165B91] font-bold text-sm sm:text-base hover:bg-[#165B91]/5 transition-colors inline-flex items-center justify-center gap-2 w-full sm:w-auto active:opacity-95"
+                  className="h-[42px] w-[270px] px-5 sm:px-6 py-3 rounded-full border-2 border-[#165B91] text-[#165B91] font-bold text-sm sm:text-base hover:bg-[#165B91]/5 transition-colors inline-flex items-center justify-center gap-2 active:opacity-95"
                 >
                   {isAr ? "تصفح متاجر الحرفيين" : "Browse Craftsmen's Shops"}
                 </Link>
