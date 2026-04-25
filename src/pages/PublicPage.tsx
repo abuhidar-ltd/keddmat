@@ -138,7 +138,7 @@ const PublicPage = () => {
         });
       } catch (e) { /* silent */ }
       const msg = encodeURIComponent('مرحبا أنا عميل من خدمات');
-      window.open(`https://wa.me/${fullPhone}?text=${msg}`, '_blank', 'noopener,noreferrer');
+      window.location.assign(`https://wa.me/${fullPhone}?text=${msg}`);
     }
   };
   const copyPhone = async () => {

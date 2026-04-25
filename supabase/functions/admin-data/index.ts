@@ -174,6 +174,8 @@ serve(async (req) => {
           }
         }
         const totalEmergencyClicks = Object.values(emergencyClicksByUser).reduce((a, b) => a + b, 0);
+        const totalEmergencyWhatsapp = Object.values(emergencyWhatsappByUser).reduce((a, b) => a + b, 0);
+        const totalEmergencyPhone = Object.values(emergencyPhoneByUser).reduce((a, b) => a + b, 0);
 
         // Build last 30 days series (oldest -> newest)
         const emergencyDaily: Array<{ date: string; whatsapp: number; phone: number; total: number }> = [];
@@ -227,6 +229,8 @@ serve(async (req) => {
             whatsappClicks: whatsappClicksCount || 0,
             callClicks: callClicksCount || 0,
             emergencyClicks: totalEmergencyClicks,
+            emergencyWhatsappClicks: totalEmergencyWhatsapp,
+            emergencyPhoneClicks: totalEmergencyPhone,
           },
         }), {
           status: 200,

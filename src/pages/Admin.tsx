@@ -14,7 +14,7 @@ import NotificationBell from '@/components/NotificationBell';
 import RatingStars from '@/components/RatingStars';
 import { useAuth } from '@/hooks/useAuth';
 
-interface Merchant { id: string; user_id: string; display_name: string | null; store_name: string | null; phone: string; page_enabled: boolean; page_slug: string | null; created_at: string; whatsapp_clicks?: number; call_clicks?: number; category?: string; address?: string; }
+interface Merchant { id: string; user_id: string; display_name: string | null; store_name: string | null; phone: string; page_enabled: boolean; page_slug: string | null; created_at: string; whatsapp_clicks?: number; call_clicks?: number; emergency_whatsapp_clicks?: number; emergency_phone_clicks?: number; category?: string; address?: string; }
 interface PaymentReceipt { id: string; user_id: string; receipt_url: string; amount: number; currency: string; status: string; payment_month: string; created_at: string; merchant_name?: string; merchant_phone?: string; payment_type?: string; }
 interface Product { id: string; title: string; price: number; image_url: string | null; user_id: string; is_active: boolean; merchant_name?: string; }
 interface AdminRating { id: string; merchant_id: string; customer_name: string; rating: number; comment: string | null; created_at: string; }
@@ -31,7 +31,7 @@ const Admin = () => {
   const [receipts, setReceipts] = useState<PaymentReceipt[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [adminRatings, setAdminRatings] = useState<AdminRating[]>([]);
-  const [kpis, setKpis] = useState<{ customers: number; craftsmen: number; whatsappClicks: number; callClicks: number }>({ customers: 0, craftsmen: 0, whatsappClicks: 0, callClicks: 0 });
+  const [kpis, setKpis] = useState<{ customers: number; craftsmen: number; whatsappClicks: number; callClicks: number; emergencyWhatsappClicks: number; emergencyPhoneClicks: number }>({ customers: 0, craftsmen: 0, whatsappClicks: 0, callClicks: 0, emergencyWhatsappClicks: 0, emergencyPhoneClicks: 0 });
   const [loadingData, setLoadingData] = useState(true);
   const [selectedReceipt, setSelectedReceipt] = useState<string | null>(null);
   const [paymentFilter, setPaymentFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('all');
@@ -121,11 +121,13 @@ const Admin = () => {
 
       <main className="container py-6">
         {/* Stats Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <Card><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">عدد العملاء</CardTitle></CardHeader><CardContent><div className="flex items-center gap-2"><Users className="h-5 w-5 text-primary" /><span className="text-2xl font-bold">{kpis.customers}</span></div></CardContent></Card>
-          <Card><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">عدد الحرفيين</CardTitle></CardHeader><CardContent><div className="flex items-center gap-2"><Store className="h-5 w-5 text-emerald-500" /><span className="text-2xl font-bold">{kpis.craftsmen}</span></div></CardContent></Card>
-          <Card><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">ضغطات واتساب</CardTitle></CardHeader><CardContent><div className="flex items-center gap-2"><MessageCircle className="h-5 w-5 text-[#25D366]" /><span className="text-2xl font-bold">{kpis.whatsappClicks}</span></div></CardContent></Card>
-          <Card><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">ضغطات الاتصال</CardTitle></CardHeader><CardContent><div className="flex items-center gap-2"><Phone className="h-5 w-5 text-blue-500" /><span className="text-2xl font-bold">{kpis.callClicks}</span></div></CardContent></Card>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
+          <Card><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">{language === 'ar' ? 'عدد العملاء' : 'Customers'}</CardTitle></CardHeader><CardContent><div className="flex items-center gap-2"><Users className="h-5 w-5 text-primary" /><span className="text-2xl font-bold">{kpis.customers}</span></div></CardContent></Card>
+          <Card><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">{language === 'ar' ? 'عدد الحرفيين' : 'Craftsmen'}</CardTitle></CardHeader><CardContent><div className="flex items-center gap-2"><Store className="h-5 w-5 text-emerald-500" /><span className="text-2xl font-bold">{kpis.craftsmen}</span></div></CardContent></Card>
+          <Card><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">{language === 'ar' ? 'ضغطات واتساب' : 'WhatsApp Clicks'}</CardTitle></CardHeader><CardContent><div className="flex items-center gap-2"><MessageCircle className="h-5 w-5 text-[#25D366]" /><span className="text-2xl font-bold">{kpis.whatsappClicks}</span></div></CardContent></Card>
+          <Card><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">{language === 'ar' ? 'ضغطات الاتصال' : 'Call Clicks'}</CardTitle></CardHeader><CardContent><div className="flex items-center gap-2"><Phone className="h-5 w-5 text-blue-500" /><span className="text-2xl font-bold">{kpis.callClicks}</span></div></CardContent></Card>
+          <Card><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">{language === 'ar' ? 'طوارئ واتساب' : 'Emergency WA'}</CardTitle></CardHeader><CardContent><div className="flex items-center gap-2"><MessageCircle className="h-5 w-5 text-red-500" /><span className="text-2xl font-bold">{kpis.emergencyWhatsappClicks}</span></div></CardContent></Card>
+          <Card><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">{language === 'ar' ? 'طوارئ اتصال' : 'Emergency Calls'}</CardTitle></CardHeader><CardContent><div className="flex items-center gap-2"><Phone className="h-5 w-5 text-red-500" /><span className="text-2xl font-bold">{kpis.emergencyPhoneClicks}</span></div></CardContent></Card>
         </div>
 
         <Tabs defaultValue="merchants" className="w-full">
@@ -170,6 +172,8 @@ const Admin = () => {
                               <span className="flex items-center gap-1"><Calendar className="h-3.5 w-3.5" />{new Date(m.created_at).toLocaleDateString('ar-JO')}</span>
                               <span className="flex items-center gap-1"><MessageCircle className="h-3.5 w-3.5 text-[#25D366]" />{m.whatsapp_clicks || 0} {t('admin.whatsappClicks')}</span>
                               <span className="flex items-center gap-1"><Phone className="h-3.5 w-3.5 text-blue-500" />{m.call_clicks || 0} {language === 'ar' ? 'اتصال' : 'calls'}</span>
+                              <span className="flex items-center gap-1"><MessageCircle className="h-3.5 w-3.5 text-red-500" />{m.emergency_whatsapp_clicks || 0} {language === 'ar' ? 'طوارئ واتساب' : 'emerg. WA'}</span>
+                              <span className="flex items-center gap-1"><Phone className="h-3.5 w-3.5 text-red-500" />{m.emergency_phone_clicks || 0} {language === 'ar' ? 'طوارئ اتصال' : 'emerg. calls'}</span>
                               {m.page_slug && <a href={`/p/${m.page_slug}`} target="_blank" className="text-primary hover:underline text-xs">/{m.page_slug}</a>}
                             </div>
                           </div>
