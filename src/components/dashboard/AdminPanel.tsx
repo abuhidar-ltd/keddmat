@@ -12,7 +12,7 @@ import RatingStars from '@/components/RatingStars';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Legend } from 'recharts';
 
-interface Merchant { id: string; user_id: string; display_name: string | null; store_name: string | null; phone: string; page_enabled: boolean; page_slug: string | null; created_at: string; whatsapp_clicks?: number; emergency_clicks?: number; emergency_whatsapp_clicks?: number; emergency_phone_clicks?: number; category?: string; address?: string; }
+interface Merchant { id: string; user_id: string; display_name: string | null; store_name: string | null; phone: string; page_enabled: boolean; page_slug: string | null; created_at: string; whatsapp_clicks?: number; call_clicks?: number; emergency_clicks?: number; emergency_whatsapp_clicks?: number; emergency_phone_clicks?: number; category?: string; address?: string; }
 interface PaymentReceipt { id: string; user_id: string; receipt_url: string; amount: number; currency: string; status: string; payment_month: string; created_at: string; merchant_name?: string; merchant_phone?: string; payment_type?: string; }
 interface Product { id: string; title: string; price: number; image_url: string | null; user_id: string; is_active: boolean; merchant_name?: string; }
 interface AdminRating { id: string; merchant_id: string; customer_name: string; rating: number; comment: string | null; created_at: string; }
@@ -184,6 +184,7 @@ const AdminPanel = () => {
                             {m.address && <span className="flex items-center gap-1"><MapPin className="h-3.5 w-3.5" />{m.address}</span>}
                             <span className="flex items-center gap-1"><Calendar className="h-3.5 w-3.5" />{new Date(m.created_at).toLocaleDateString('ar-JO')}</span>
                             <span className="flex items-center gap-1"><MessageCircle className="h-3.5 w-3.5 text-[#25D366]" />{m.whatsapp_clicks || 0} {t('admin.whatsappClicks')}</span>
+                            <span className="flex items-center gap-1"><Phone className="h-3.5 w-3.5 text-blue-500" />{m.call_clicks || 0} {language === 'ar' ? 'اتصال' : 'calls'}</span>
                             <span className="flex items-center gap-1"><AlertTriangle className="h-3.5 w-3.5 text-red-500" />{m.emergency_clicks || 0} {language === 'ar' ? 'نقرة طوارئ' : 'emergency'}</span>
                             {m.page_slug && <a href={`/p/${m.page_slug}`} target="_blank" className="text-primary hover:underline text-xs">/{m.page_slug}</a>}
                           </div>

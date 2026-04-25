@@ -99,25 +99,46 @@ const PublicPage = () => {
     setLoading(false);
   };
 
-  const handleCall = () => {
+  const trackPublicClick = async (table: 'whatsapp_clicks' | 'call_clicks', merchantId: string) => {
+    const SUPABASE_URL = 'https://fooqrkdniswrzwgcytne.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZvb3Fya2RuaXN3cnp3Z2N5dG5lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3Mzg5MTMsImV4cCI6MjA4ODMxNDkxM30.px0ExibFbOMoNBw-emojn6k3UbrHsZSda4oFTWPpOis';
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal',
+        },
+        body: JSON.stringify({ merchant_id: merchantId }),
+        keepalive: true,
+      });
+    } catch (e) {
+      console.error(`${table} insert failed:`, e);
+    }
+  };
+
+  const handleCall = async () => {
     if (profile?.whatsapp_number) {
-      supabase.from('call_clicks').insert({ merchant_id: profile.user_id }).then(() => {});
-      window.location.href = `tel:+${profile.whatsapp_number.replace(/[^0-9]/g, '')}`;
+      const cleanNumber = profile.whatsapp_number.replace(/[^0-9]/g, '');
+      const fullPhone = cleanNumber.startsWith('962') ? cleanNumber : `962${cleanNumber.replace(/^0/, '')}`;
+      await trackPublicClick('call_clicks', profile.user_id);
+      setTimeout(() => { window.location.href = `tel:+${fullPhone}`; }, 300);
     }
   };
   const handleWhatsApp = async () => {
     if (profile?.whatsapp_number) {
       const cleanNumber = profile.whatsapp_number.replace(/[^0-9]/g, '');
-      supabase.from('whatsapp_clicks').insert({ merchant_id: profile.user_id }).then(() => {});
-      // Send automatic WhatsApp message to provider via API
+      const fullPhone = cleanNumber.startsWith('962') ? cleanNumber : `962${cleanNumber.replace(/^0/, '')}`;
+      await trackPublicClick('whatsapp_clicks', profile.user_id);
       try {
-        await supabase.functions.invoke('send-whatsapp', {
+        void supabase.functions.invoke('send-whatsapp', {
           body: { to: cleanNumber, message: 'مرحبا، أنا عميل من موقع خدمات أرغب بالتواصل معك' },
         });
-      } catch (e) { /* silent fail */ }
-      const fullPhone = cleanNumber.startsWith('962') ? cleanNumber : `962${cleanNumber.replace(/^0/, '')}`;
+      } catch (e) { /* silent */ }
       const msg = encodeURIComponent('مرحبا أنا عميل من خدمات');
-      window.location.assign(`https://wa.me/${fullPhone}?text=${msg}`);
+      window.open(`https://wa.me/${fullPhone}?text=${msg}`, '_blank', 'noopener,noreferrer');
     }
   };
   const copyPhone = async () => {

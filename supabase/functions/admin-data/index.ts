@@ -135,6 +135,20 @@ serve(async (req) => {
         const { count: whatsappClicksCount } = await supabase.from('whatsapp_clicks').select('id', { count: 'exact', head: true });
         const { count: callClicksCount } = await supabase.from('call_clicks').select('id', { count: 'exact', head: true });
 
+        // Per-merchant whatsapp & call clicks from dedicated tables
+        const { data: waClickRows } = await supabase.from('whatsapp_clicks').select('merchant_id');
+        const waClicksByUser: Record<string, number> = {};
+        for (const row of (waClickRows || [])) {
+          const uid = (row as any).merchant_id;
+          if (uid) waClicksByUser[uid] = (waClicksByUser[uid] || 0) + 1;
+        }
+        const { data: callClickRows } = await supabase.from('call_clicks').select('merchant_id');
+        const callClicksByUser: Record<string, number> = {};
+        for (const row of (callClickRows || [])) {
+          const uid = (row as any).merchant_id;
+          if (uid) callClicksByUser[uid] = (callClicksByUser[uid] || 0) + 1;
+        }
+
         // Emergency clicks per merchant from dedicated table (customer clicks on emergency request)
         const { data: emergencyClickRows } = await supabase
           .from('emergency_clicks')
@@ -177,7 +191,9 @@ serve(async (req) => {
         const merchants = (merchantsRes.data || []).map((m: any) => ({
           id: m.id, user_id: m.user_id, display_name: m.display_name, store_name: m.store_name || null,
           phone: m.phone, page_enabled: m.page_enabled, page_slug: m.page_slug, created_at: m.created_at,
-          whatsapp_clicks: m.whatsapp_clicks || 0, category: m.category || null, address: m.address || null,
+          whatsapp_clicks: waClicksByUser[m.user_id] || 0,
+          call_clicks: callClicksByUser[m.user_id] || 0,
+          category: m.category || null, address: m.address || null,
           emergency_clicks: emergencyClicksByUser[m.user_id] || 0,
           emergency_whatsapp_clicks: emergencyWhatsappByUser[m.user_id] || 0,
           emergency_phone_clicks: emergencyPhoneByUser[m.user_id] || 0,
