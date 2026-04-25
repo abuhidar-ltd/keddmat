@@ -119,13 +119,13 @@ const Browse = () => {
   const filteredProviders = providers;
 
   return (
-    <div className="min-h-screen bg-[#F7FAF8]" dir={dir}>
+    <div className="min-h-screen bg-[#EFF3F8]" dir={dir}>
       <Header />
 
       {/* Section header */}
       <div className="bg-white border-b border-[#E5E7EB] py-6">
         <div className="container px-4 text-center">
-          <h1 className="text-2xl md:text-3xl font-extrabold text-[#56B36B] mb-1">
+          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-[#105A8E] mb-1">
             {dir === 'rtl' ? 'تصفح مقدمي الخدمات' : 'Browse Service Providers'}
           </h1>
           <p className="text-[#6B7280] text-sm">
@@ -144,8 +144,8 @@ const Browse = () => {
                 onClick={() => setSelectedGovernorate(null)}
                 className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-bold transition-all border ${
                   !selectedGovernorate
-                    ? 'bg-[#56B36B] text-white border-[#56B36B] shadow-md'
-                    : 'bg-white text-[#1A1A2E] border-[#E5E7EB] hover:border-[#56B36B]/50'
+                    ? 'bg-[#165B91] text-white border-[#165B91] shadow-md'
+                    : 'bg-white text-[#1A1A2E] border-[#E5E7EB] hover:border-[#165B91]/50'
                 }`}
               >
                 <LayoutGrid className="h-4 w-4" />
@@ -157,8 +157,8 @@ const Browse = () => {
                   onClick={() => setSelectedGovernorate(gov.value)}
                   className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-bold transition-all border ${
                     selectedGovernorate === gov.value
-                      ? 'bg-[#56B36B] text-white border-[#56B36B] shadow-md'
-                      : 'bg-white text-[#1A1A2E] border-[#E5E7EB] hover:border-[#56B36B]/50'
+                      ? 'bg-[#165B91] text-white border-[#165B91] shadow-md'
+                      : 'bg-white text-[#1A1A2E] border-[#E5E7EB] hover:border-[#165B91]/50'
                   }`}
                 >
                   <MapPin className="h-3.5 w-3.5" />
@@ -172,7 +172,7 @@ const Browse = () => {
       </div>
 
       {/* Emergency Banner */}
-      <section className="py-5 bg-gradient-to-l from-orange-500 to-red-500">
+      <section className="py-5 bg-gradient-to-l from-[#C2410C] via-[#EA580C] to-[#F97316]">
         <div className="container px-4">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-3 text-white">
@@ -181,14 +181,14 @@ const Browse = () => {
                 <p className="font-extrabold text-lg leading-none">
                   {isAr ? 'طوارئ الصيانة' : 'Emergency Maintenance'}
                 </p>
-                <p className="text-orange-100 text-sm mt-0.5">
+                <p className="text-white/90 text-sm mt-0.5">
                   {isAr ? 'احصل على مساعدة فورية 24/7' : 'Get immediate help 24/7'}
                 </p>
               </div>
             </div>
             <button
               onClick={() => setEmergencyOpen(true)}
-              className="bg-white text-red-600 font-extrabold px-6 py-2.5 rounded-full hover:bg-orange-50 transition-colors shadow-lg"
+              className="bg-white text-[#9A3412] font-extrabold px-6 py-2.5 rounded-full hover:bg-white/90 transition-colors shadow-lg"
             >
               {isAr ? 'اضغط لطلب صيانة طارئة' : 'Request Emergency Maintenance'}
             </button>
@@ -211,7 +211,7 @@ const Browse = () => {
           </div>
         ) : filteredProviders.length === 0 ? (
           <div className="text-center py-20">
-            <LayoutGrid className="h-16 w-16 mx-auto text-[#56B36B]/40 mb-4" />
+            <LayoutGrid className="h-16 w-16 mx-auto text-[#165B91]/40 mb-4" />
             <h3 className="text-xl font-semibold mb-2 text-[#1A1A2E]">{t('browse.noDishes')}</h3>
             <p className="text-gray-700">{t('browse.tryChangingFilters')}</p>
           </div>
@@ -225,10 +225,10 @@ const Browse = () => {
                   <Link key={provider.user_id} to={`/p/${provider.page_slug}`}>
                     <Card className="overflow-hidden group hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer rounded-2xl bg-white border border-[#E5E7EB]">
                       <CardContent className="p-5 flex flex-col items-center text-center space-y-3">
-                        <Avatar className="w-16 h-16 ring-2 ring-[#56B36B]/30 ring-offset-2">
+                        <Avatar className="w-16 h-16 ring-2 ring-[#165B91]/30 ring-offset-2">
                           {provider.avatar_url ? <AvatarImage src={provider.avatar_url} alt={provider.display_name} /> : null}
-                          <AvatarFallback className="bg-[#56B36B]/10">
-                            <CatIcon className="h-8 w-8 text-[#56B36B]" />
+                          <AvatarFallback className="bg-[#165B91]/10">
+                            <CatIcon className="h-8 w-8 text-[#165B91]" />
                           </AvatarFallback>
                         </Avatar>
                         <h3 className="font-bold text-sm text-gray-800">{provider.store_name || provider.display_name}</h3>
@@ -237,11 +237,11 @@ const Browse = () => {
                         )}
                         {provider.service_location && (
                           <div className="flex items-center gap-1 text-xs text-gray-600">
-                            <MapPin className="h-3 w-3 text-[#56B36B]" />
+                            <MapPin className="h-3 w-3 text-[#165B91]" />
                             <span>{provider.service_location}</span>
                           </div>
                         )}
-                        <span className="text-xs font-semibold text-white bg-[#56B36B] px-3 py-0.5 rounded-full">
+                        <span className="text-xs font-semibold text-white bg-[#165B91] px-3 py-0.5 rounded-full">
                           {dir === 'rtl' ? 'تواصل' : 'Contact'}
                         </span>
                       </CardContent>
@@ -252,7 +252,7 @@ const Browse = () => {
             </div>
             {hasMore ? (
               <div ref={sentinelRef} className="flex justify-center py-8">
-                {loadingMore && <Loader2 className="h-6 w-6 animate-spin text-[#56B36B]" />}
+                {loadingMore && <Loader2 className="h-6 w-6 animate-spin text-[#165B91]" />}
               </div>
             ) : providers.length > 0 && (
               <p className="text-center text-gray-700 py-8 text-sm">{t('browse.noMore') || 'لا يوجد المزيد'}</p>

@@ -74,14 +74,14 @@ const Index = () => {
               </div>
             </div>
             <div className="w-full flex-1 text-right space-y-5 animate-fade-in">
-              <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold leading-snug text-[#105A8E]">
+              <h1 className="text-xl md:text-2xl lg:text-3xl font-extrabold leading-snug tracking-tight text-[#105A8E]">
                 {isAr ? (
                   <>
                     عندك عطل بالمنزل؟
                     <br />
-                    <span className="text-[#165B91]">اطلب فني صيانة</span>
+                    <span className="text-[#55AB1C]">اطلب فني صيانة</span>
                     <br />
-                    <span className="text-[#165B91]">
+                    <span className="text-[#4094D4]">
                       خلال دقائق، بدون تعب البحث
                     </span>
                   </>
@@ -97,16 +97,16 @@ const Index = () => {
                   </>
                 )}
               </h1>
-              <div className="flex flex-col gap-3 sm:flex-row sm:flex-nowrap sm:justify-end sm:items-stretch">
+              <div className="flex flex-col gap-3 sm:flex-row sm:flex-nowrap sm:justify-end sm:items-stretch w-[90%] max-w-[90%] ms-auto sm:max-w-[90%]">
                 <Link
                   to="/browse?emergency=1"
-                  className="min-h-[52px] px-6 sm:px-7 py-3.5 rounded-full bg-orange-500 text-white font-bold text-base hover:bg-orange-600 transition-colors inline-flex items-center justify-center gap-2 w-full sm:w-auto active:opacity-95"
+                  className="min-h-[48px] px-5 sm:px-6 py-3 rounded-full bg-[#EA580C] text-white font-bold text-sm sm:text-base hover:bg-[#FF692E] transition-colors inline-flex items-center justify-center gap-2 w-full sm:w-auto active:opacity-95"
                 >
                   {isAr ? "اضغط لطلب صيانة طارئة" : "Emergency Order"}
                 </Link>
                 <Link
                   to="/browse"
-                  className="min-h-[52px] px-6 sm:px-7 py-3.5 rounded-full border-2 border-[#165B91] text-[#165B91] font-bold text-base hover:bg-[#165B91]/5 transition-colors inline-flex items-center justify-center gap-2 w-full sm:w-auto active:opacity-95"
+                  className="min-h-[48px] px-5 sm:px-6 py-3 rounded-full border-2 border-[#165B91] text-[#165B91] font-bold text-sm sm:text-base hover:bg-[#165B91]/5 transition-colors inline-flex items-center justify-center gap-2 w-full sm:w-auto active:opacity-95"
                 >
                   {isAr ? "تصفح متاجر الحرفيين" : "Browse Craftsmen's Shops"}
                 </Link>
@@ -119,31 +119,29 @@ const Index = () => {
       {/* ── Features Strip ── */}
       <section className="py-14 md:py-16 section-alt">
         <div className="container px-4 text-center">
-          <h2 className="text-2xl md:text-3xl font-extrabold text-[#105A8E] mb-3">
+          <h2 className="text-2xl md:text-3xl font-extrabold text-[rgba(85,171,29,1)] mb-3">
             {isAr
               ? "كل خدمات الصيانه المنزليه بموقع"
               : "All Maintenance Services Within Reach"}
           </h2>
-          <p className="text-[#6B7280] mb-10 text-base">
+          <p className="text-[#6B7280] mb-12 md:mb-14 text-base">
             {isAr
               ? "منصة تساعدك تلاقي الفني المناسب بسرعة، بثقة، وبدون تعب"
               : "A platform that helps you find the right technician quickly and confidently"}
           </p>
-          <div className="grid grid-cols-2 md:grid-cols-2 gap-5 max-w-2xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-2 gap-3 sm:gap-4 max-w-lg mx-auto mt-2 md:mt-4">
             {features.map((f) => (
               <div
                 key={f.title}
-                className="bg-white rounded-2xl shadow-md p-6 flex flex-col items-center text-center hover-lift"
+                className="bg-white rounded-xl shadow-md p-3.5 sm:p-4 flex flex-col items-center text-center hover-lift"
               >
-                <div className="w-14 h-14 rounded-full bg-[#56B36B]/10 flex items-center justify-center mb-4">
-                  <f.icon className="h-7 w-7 text-[#56B36B]" />
+                <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#165B91]/10 flex items-center justify-center mb-2">
+                  <f.icon className="h-5 w-5 text-[#165B91]" />
                 </div>
-                <h3 className="font-extrabold text-base text-[#105A8E] mb-1">
+                <h3 className="font-extrabold text-sm text-[#105A8E] mb-0.5 leading-tight">
                   {f.title}
                 </h3>
-                <p className="text-gray-700 text-xs leading-relaxed">
-                  {f.desc}
-                </p>
+                <p className="text-gray-700 text-xs leading-snug">{f.desc}</p>
               </div>
             ))}
           </div>
@@ -189,12 +187,14 @@ const Index = () => {
           <div className="mb-10 rounded-2xl border border-white/15 bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-6 md:p-8 shadow-lg">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 text-start">
               <div className="flex items-start gap-4 flex-1">
-                <div className="w-12 h-12 rounded-xl bg-[#56B36B]/25 flex items-center justify-center shrink-0">
-                  <Store className="h-6 w-6 text-[#56B36B]" />
+                <div className="w-12 h-12 rounded-xl bg-[#165B91]/25 flex items-center justify-center shrink-0">
+                  <Store className="h-6 w-6 text-[#165B91]" />
                 </div>
                 <div className="space-y-2 min-w-0">
                   <h3 className="font-extrabold text-lg md:text-xl text-white">
-                    {isAr ? "أنت حرفي أو مقدم خدمة؟" : "Are you a craftsman or service provider?"}
+                    {isAr
+                      ? "أنت حرفي أو مقدم خدمة؟"
+                      : "Are you a craftsman or service provider?"}
                   </h3>
                   <p className="text-gray-300 text-sm leading-relaxed">
                     {isAr
@@ -234,7 +234,7 @@ const Index = () => {
                 <li>
                   <Link
                     to="/"
-                    className="hover:text-[#56B36B] transition-colors"
+                    className="hover:text-[#165B91] transition-colors"
                   >
                     {isAr ? "الرئيسية" : "Home"}
                   </Link>
@@ -242,7 +242,7 @@ const Index = () => {
                 <li>
                   <Link
                     to="/browse"
-                    className="hover:text-[#56B36B] transition-colors"
+                    className="hover:text-[#165B91] transition-colors"
                   >
                     {isAr ? "تصفح متاجر الحرفيين" : "Browse Craftsmen's Shops"}
                   </Link>
@@ -250,7 +250,7 @@ const Index = () => {
                 <li>
                   <Link
                     to="/terms"
-                    className="hover:text-[#56B36B] transition-colors"
+                    className="hover:text-[#165B91] transition-colors"
                   >
                     {isAr ? "الشروط والأحكام" : "Terms & Conditions"}
                   </Link>
@@ -266,7 +266,7 @@ const Index = () => {
               <div className="flex gap-3">
                 <a
                   href="https://www.facebook.com/share/1C81VLBJKH/?mibextid=wwXIfr"
-                  className="w-9 h-9 rounded-full bg-white/10 hover:bg-[#56B36B]/30 flex items-center justify-center transition-colors"
+                  className="w-9 h-9 rounded-full bg-white/10 hover:bg-[#165B91]/30 flex items-center justify-center transition-colors"
                   aria-label="Facebook"
                 >
                   <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -275,7 +275,7 @@ const Index = () => {
                 </a>
                 <a
                   href="#"
-                  className="w-9 h-9 rounded-full bg-white/10 hover:bg-[#56B36B]/30 flex items-center justify-center transition-colors"
+                  className="w-9 h-9 rounded-full bg-white/10 hover:bg-[#165B91]/30 flex items-center justify-center transition-colors"
                   aria-label="Instagram"
                 >
                   <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -300,7 +300,7 @@ const Index = () => {
                   href="https://wa.me/+962799126390"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-full bg-white/10 hover:bg-[#56B36B]/30 flex items-center justify-center transition-colors"
+                  className="w-9 h-9 rounded-full bg-white/10 hover:bg-[#165B91]/30 flex items-center justify-center transition-colors"
                   aria-label="WhatsApp"
                 >
                   <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -314,7 +314,7 @@ const Index = () => {
           <div className="border-t border-white/10 pt-6 text-center">
             <p className="text-gray-400 text-xs">
               باستخدامك للموقع أنت توافق على{" "}
-              <Link to="/terms" className="text-[#56B36B] hover:underline">
+              <Link to="/terms" className="text-[#165B91] hover:underline">
                 {isAr ? "الشروط والأحكام" : "Terms & Conditions"}
               </Link>{" "}
               و سياسة الخصوصية
@@ -349,12 +349,12 @@ const Index = () => {
                     );
                   }}
                   className="flex flex-col items-center gap-2 p-4 rounded-xl bg-white border border-[#E5E7EB] shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all"
-                  style={{ borderColor: `${catInfo?.hex || "#56B36B"}25` }}
+                  style={{ borderColor: `${catInfo?.hex || "#165B91"}25` }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = `${catInfo?.hex || "#56B36B"}60`;
+                    e.currentTarget.style.borderColor = `${catInfo?.hex || "#165B91"}60`;
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = `${catInfo?.hex || "#56B36B"}25`;
+                    e.currentTarget.style.borderColor = `${catInfo?.hex || "#165B91"}25`;
                   }}
                 >
                   <span className="text-sm font-bold text-center text-[#105A8E]">

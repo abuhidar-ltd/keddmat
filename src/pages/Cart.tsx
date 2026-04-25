@@ -76,12 +76,12 @@ const Cart = () => {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen bg-[#F7FAF8]">
+      <div className="min-h-screen bg-[#EFF3F8]">
         <Header />
         <main className="container py-16 px-4">
           <Card className="max-w-md mx-auto text-center rounded-2xl border-[#E5E7EB] shadow-md">
             <CardContent className="py-12">
-              <ShoppingCart className="h-16 w-16 text-[#56B36B]/30 mx-auto mb-4" />
+              <ShoppingCart className="h-16 w-16 text-[#165B91]/30 mx-auto mb-4" />
               <h2 className="text-xl font-extrabold mb-2 text-[#1A1A2E]">{t('cart.empty')}</h2>
               <p className="text-[#6B7280] mb-6">{t('cart.noProducts')}</p>
               <Button asChild className="btn-cta border-0 rounded-xl px-6">
@@ -95,11 +95,11 @@ const Cart = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#F7FAF8]">
+    <div className="min-h-screen bg-[#EFF3F8]">
       <Header />
       <main className="container py-8 px-4">
         <div className="flex items-center gap-2 mb-6">
-          <Button variant="ghost" size="sm" asChild className="text-[#56B36B] hover:bg-[#56B36B]/5">
+          <Button variant="ghost" size="sm" asChild className="text-[#165B91] hover:bg-[#165B91]/5">
             <Link to="/browse"><ArrowIcon className="h-4 w-4 mx-1" />{t('cart.continueShopping')}</Link>
           </Button>
         </div>
@@ -108,14 +108,14 @@ const Cart = () => {
           {Object.entries(groupedItems).map(([merchantId, group]) => (
             <Card key={merchantId} className="rounded-2xl border-[#E5E7EB] shadow-md overflow-hidden">
               {/* Card header with green accent */}
-              <CardHeader className="pb-3 bg-[#56B36B]/5 border-b border-[#E5E7EB]">
+              <CardHeader className="pb-3 bg-[#165B91]/5 border-b border-[#E5E7EB]">
                 <div className="flex items-center justify-between flex-wrap gap-2">
                   <CardTitle className="text-lg flex items-center gap-2 text-[#1A1A2E]">
-                    <Package className="h-5 w-5 text-[#56B36B]" />{group.merchant_name}
+                    <Package className="h-5 w-5 text-[#165B91]" />{group.merchant_name}
                   </CardTitle>
                   <div className="flex gap-2">
                     {group.merchant_slug && (
-                      <Button asChild size="sm" variant="outline" className="border-[#56B36B]/30 text-[#56B36B] hover:bg-[#56B36B]/5">
+                      <Button asChild size="sm" variant="outline" className="border-[#165B91]/30 text-[#165B91] hover:bg-[#165B91]/5">
                         <Link to={`/p/${group.merchant_slug}`}><ExternalLink className="h-4 w-4 mx-1" />{t('cart.viewCookPage')}</Link>
                       </Button>
                     )}
@@ -136,15 +136,15 @@ const Cart = () => {
               <CardContent className="space-y-4 pt-4">
                 {group.items.map((item) => (
                   <div key={item.id} className="flex gap-4">
-                    <div className="w-20 h-20 rounded-xl bg-[#F7FAF8] overflow-hidden flex-shrink-0 border border-[#E5E7EB]">
+                    <div className="w-20 h-20 rounded-xl bg-[#EFF3F8] overflow-hidden flex-shrink-0 border border-[#E5E7EB]">
                       {item.image_url
                         ? <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" />
-                        : <div className="w-full h-full flex items-center justify-center"><Package className="h-8 w-8 text-[#56B36B]/20" /></div>
+                        : <div className="w-full h-full flex items-center justify-center"><Package className="h-8 w-8 text-[#165B91]/20" /></div>
                       }
                     </div>
                     <div className="flex-1 min-w-0">
                       <h4 className="font-semibold truncate text-[#1A1A2E]">{item.title}</h4>
-                      <p className="text-[#56B36B] font-bold">{item.price.toFixed(2)} {item.currency}</p>
+                      <p className="text-[#165B91] font-bold">{item.price.toFixed(2)} {item.currency}</p>
                       <div className="flex items-center gap-2 mt-2">
                         <Button size="icon" variant="outline" className="h-7 w-7 border-[#E5E7EB]" onClick={() => updateQuantity(item.id, item.quantity - 1)}><Minus className="h-3 w-3" /></Button>
                         <span className="w-8 text-center font-bold text-[#1A1A2E]">{item.quantity}</span>
@@ -157,7 +157,7 @@ const Cart = () => {
                 <Separator className="bg-[#E5E7EB]" />
                 <div className="flex items-center justify-between font-bold">
                   <span className="text-[#6B7280]">{t('cart.subtotal')}:</span>
-                  <span className="text-[#56B36B] text-lg">{group.total.toFixed(2)} {group.items[0]?.currency || 'د.أ'}</span>
+                  <span className="text-[#165B91] text-lg">{group.total.toFixed(2)} {group.items[0]?.currency || 'د.أ'}</span>
                 </div>
                 {!user && (
                   <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm">
@@ -168,16 +168,16 @@ const Cart = () => {
                     </Button>
                   </div>
                 )}
-                <div className="flex items-start gap-3 rounded-xl bg-[#56B36B]/5 border border-[#56B36B]/15 p-3">
+                <div className="flex items-start gap-3 rounded-xl bg-[#165B91]/5 border border-[#165B91]/15 p-3">
                   <Checkbox
                     id={`terms-${merchantId}`}
                     checked={termsAgreed}
                     onCheckedChange={(v) => setTermsAgreed(!!v)}
-                    className="mt-0.5 border-[#56B36B] data-[state=checked]:bg-[#56B36B]"
+                    className="mt-0.5 border-[#165B91] data-[state=checked]:bg-[#165B91]"
                   />
                   <label htmlFor={`terms-${merchantId}`} className="text-sm leading-relaxed cursor-pointer text-[#1A1A2E]">
                     {t('auth.agreeTerms')}{' '}
-                    <Link to="/terms" className="text-[#56B36B] underline font-semibold">
+                    <Link to="/terms" className="text-[#165B91] underline font-semibold">
                       {t('auth.termsLink')}
                     </Link>
                   </label>

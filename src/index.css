@@ -4,60 +4,54 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Design System - خدمات Platform - Green Premium Theme */
+/* Design System - خدمات — logo palette: deep blue primary, mid blue interactive, amber for urgency */
 
 @layer base {
   :root {
-    /* --- Khadamat Brand Palette --- */
-    /* Brand green #56B36B → hsl(134, 38%, 52%) */
+    /* Hex refs: headline #105A8E, interactive #165B91, footer #1A3C4E */
     --background: 0 0% 100%;
-    --foreground: 229 42% 14%;
+    --foreground: 210 32% 15%;
     --card: 0 0% 100%;
-    --card-foreground: 229 42% 14%;
+    --card-foreground: 210 32% 15%;
     --popover: 0 0% 100%;
-    --popover-foreground: 229 42% 14%;
-    --primary: 134 38% 52%;
+    --popover-foreground: 210 32% 15%;
+    --primary: 207 74% 33%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 134 25% 95%;
-    --secondary-foreground: 134 42% 24%;
-    --muted: 134 15% 95%;
-    --muted-foreground: 215 14% 43%;
-    /* Accent = same brand green */
-    --accent: 134 38% 52%;
+    --secondary: 207 32% 96%;
+    --secondary-foreground: 207 55% 22%;
+    --muted: 210 28% 96%;
+    --muted-foreground: 215 16% 38%;
+    --accent: 207 74% 33%;
     --accent-foreground: 0 0% 100%;
-    --destructive: 0 75% 55%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
-    --border: 134 18% 88%;
-    --input: 134 15% 92%;
-    --ring: 134 38% 52%;
+    --border: 210 22% 90%;
+    --input: 210 22% 92%;
+    --ring: 207 74% 33%;
     --radius: 1rem;
-    --success: 134 38% 52%;
+    --success: 207 74% 33%;
     --success-foreground: 0 0% 100%;
 
-    /* Brand colors */
-    --brand-green-dark: 134 38% 52%;
-    --brand-green-mid: 134 38% 46%;
-    --brand-teal: 134 38% 52%;
     --footer-bg: #1A3C4E;
 
-    /* Category colors */
+    /* Category chips — distinct hues; cleaning no longer matches old brand green */
     --cat-electrician: 35 85% 50%;
-    --cat-plumber: 213 80% 50%;
+    --cat-plumber: 207 82% 48%;
     --cat-maintenance: 0 70% 55%;
-    --cat-cleaning: 134 38% 52%;
+    --cat-cleaning: 173 58% 39%;
     --cat-moving: 25 80% 55%;
     --cat-carpenter: 24 70% 45%;
     --cat-decor: 280 60% 55%;
     --cat-blacksmith: 220 70% 45%;
 
     --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 229 42% 14%;
-    --sidebar-primary: 134 38% 52%;
+    --sidebar-foreground: 210 32% 15%;
+    --sidebar-primary: 207 74% 33%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 134 25% 95%;
-    --sidebar-accent-foreground: 134 42% 24%;
-    --sidebar-border: 134 18% 88%;
-    --sidebar-ring: 134 38% 52%;
+    --sidebar-accent: 207 32% 96%;
+    --sidebar-accent-foreground: 207 55% 22%;
+    --sidebar-border: 210 22% 90%;
+    --sidebar-ring: 207 74% 33%;
   }
 }
 
@@ -78,9 +72,9 @@
   }
 }
 
-/* CTA Gradient helper */
+/* CTA Gradient helper — logo blues */
 .btn-cta {
-  background: linear-gradient(135deg, #56B36B, #4a9e5c);
+  background: linear-gradient(135deg, #165B91, #105A8E);
   color: #fff;
   font-weight: 700;
   border-radius: 9999px;
@@ -94,28 +88,28 @@
   .glass-effect { @apply bg-white/90 border border-white/60 shadow-xl; }
   .glass-card { @apply bg-white/95 border border-white/60 shadow-lg rounded-2xl; }
   .hover-lift { @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-xl; }
-  .gradient-text { @apply bg-clip-text text-transparent bg-gradient-to-l from-[#56B36B] to-[#6bc77e]; }
+  .gradient-text { @apply bg-clip-text text-transparent bg-gradient-to-l from-[#105A8E] to-[#165B91]; }
   .text-hero { @apply text-primary font-extrabold; }
-  .glow-card { @apply shadow-[0_8px_30px_hsl(134_38%_52%_/_0.12)]; }
-  .section-alt { background-color: #F7FAF8; }
+  .glow-card { @apply shadow-[0_8px_30px_hsl(207_74%_33%_/_0.12)]; }
+  .section-alt { background-color: #EFF3F8; }
   .footer-dark { background-color: #1A3C4E; }
 
   .bokeh-bg {
     position: relative;
     background:
-      radial-gradient(circle at 0% 100%, hsl(134 38% 65% / 0.08) 0%, transparent 40%),
-      radial-gradient(circle at 100% 0%, hsl(134 38% 60% / 0.08) 0%, transparent 40%),
-      radial-gradient(circle at 50% 50%, hsl(134 30% 97%) 0%, hsl(0 0% 100%) 70%);
+      radial-gradient(circle at 0% 100%, hsl(207 74% 45% / 0.07) 0%, transparent 40%),
+      radial-gradient(circle at 100% 0%, hsl(207 60% 50% / 0.06) 0%, transparent 40%),
+      radial-gradient(circle at 50% 50%, hsl(210 35% 97%) 0%, hsl(0 0% 100%) 70%);
     background-attachment: fixed;
   }
 
   .auth-bg {
     background:
-      radial-gradient(ellipse at top left, hsl(134 38% 50% / 0.25) 0%, transparent 50%),
-      radial-gradient(ellipse at bottom right, hsl(134 38% 55% / 0.20) 0%, transparent 50%),
-      radial-gradient(circle at 30% 80%, hsl(134 40% 55% / 0.15) 0%, transparent 45%),
-      radial-gradient(circle at 70% 20%, hsl(134 35% 58% / 0.15) 0%, transparent 45%),
-      linear-gradient(135deg, hsl(134 30% 93%) 0%, hsl(134 28% 95%) 50%, hsl(134 25% 92%) 100%);
+      radial-gradient(ellipse at top left, hsl(207 74% 40% / 0.18) 0%, transparent 50%),
+      radial-gradient(ellipse at bottom right, hsl(205 70% 45% / 0.14) 0%, transparent 50%),
+      radial-gradient(circle at 30% 80%, hsl(207 55% 55% / 0.1) 0%, transparent 45%),
+      radial-gradient(circle at 70% 20%, hsl(25 90% 55% / 0.06) 0%, transparent 45%),
+      linear-gradient(135deg, hsl(210 40% 96%) 0%, hsl(210 32% 97%) 50%, hsl(207 28% 94%) 100%);
     background-attachment: fixed;
   }
 }
@@ -123,13 +117,13 @@
 @keyframes fade-in { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes fade-in-right { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
 @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-@keyframes pulse-glow { 0%, 100% { box-shadow: 0 0 20px hsl(134 38% 52% / 0.2); } 50% { box-shadow: 0 0 40px hsl(134 38% 52% / 0.4); } }
+@keyframes pulse-glow { 0%, 100% { box-shadow: 0 0 20px hsl(207 74% 33% / 0.2); } 50% { box-shadow: 0 0 40px hsl(207 74% 33% / 0.35); } }
 @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
 @keyframes scale-in { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
 @keyframes slide-up { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes glow-pulse {
-  0%, 100% { filter: drop-shadow(0 0 8px hsl(134 38% 52% / 0.3)); }
-  50% { filter: drop-shadow(0 0 20px hsl(134 38% 52% / 0.5)); }
+  0%, 100% { filter: drop-shadow(0 0 8px hsl(207 74% 33% / 0.28)); }
+  50% { filter: drop-shadow(0 0 20px hsl(207 74% 33% / 0.45)); }
 }
 
 .animate-fade-in { animation: fade-in 0.7s ease-out forwards; opacity: 0; }
@@ -152,11 +146,11 @@
 .stagger-5 { animation-delay: 0.5s; }
 .stagger-6 { animation-delay: 0.6s; }
 
-.pattern-dots { background-image: radial-gradient(hsl(134 38% 52% / 0.06) 1px, transparent 1px); background-size: 20px 20px; }
-.glow-primary { box-shadow: 0 0 30px hsl(134 38% 52% / 0.15); }
-.glow-accent { box-shadow: 0 0 30px hsl(35 95% 55% / 0.15); }
+.pattern-dots { background-image: radial-gradient(hsl(207 74% 33% / 0.06) 1px, transparent 1px); background-size: 20px 20px; }
+.glow-primary { box-shadow: 0 0 30px hsl(207 74% 33% / 0.14); }
+.glow-accent { box-shadow: 0 0 30px hsl(25 95% 53% / 0.12); }
 
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { background: hsl(var(--muted)); }
 ::-webkit-scrollbar-thumb { background: hsl(var(--primary)); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: hsl(134 38% 42%); }
+::-webkit-scrollbar-thumb:hover { background: hsl(207 74% 28%); }

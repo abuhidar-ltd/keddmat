@@ -48,14 +48,14 @@ export interface CategoryInfo {
 // All main categories for homepage
 export const CATEGORIES: CategoryInfo[] = [
   { icon: Plug, labelKey: "service.electrician", category: "كهربجي", color: "text-[hsl(var(--cat-electrician))]", hex: "#FFD700" },
-  { icon: Wrench, labelKey: "service.plumber", category: "موسرجي", color: "text-[hsl(var(--cat-plumber))]", hex: "#56B36B" },
+  { icon: Wrench, labelKey: "service.plumber", category: "موسرجي", color: "text-[hsl(var(--cat-plumber))]", hex: "#165B91" },
   { icon: Settings, labelKey: "service.applianceMaintenance", category: "صيانة الأجهزة المنزلية", color: "text-[hsl(var(--cat-maintenance))]", hex: "#FF6B6B" },
-  { icon: Droplets, labelKey: "service.cleaning", category: "تنظيف ودراي كلين", color: "text-[hsl(var(--cat-cleaning))]", hex: "#56B36B" },
+  { icon: Droplets, labelKey: "service.cleaning", category: "تنظيف ودراي كلين", color: "text-[hsl(var(--cat-cleaning))]", hex: "#0F766E" },
   { icon: Truck, labelKey: "service.furnitureMoving", category: "نقل أثاث", color: "text-[hsl(var(--cat-moving))]", hex: "#FF9800" },
   { icon: Hammer, labelKey: "service.carpenter", category: "نجّار", color: "text-[hsl(var(--cat-carpenter))]", hex: "#E65100" },
   { icon: Paintbrush, labelKey: "service.homeDecor", category: "ديكور منزلي", color: "text-[hsl(var(--cat-decor))]", hex: "#FF69B4" },
   { icon: Anvil, labelKey: "service.blacksmith", category: "حداد، زجاج، ألمنيوم", color: "text-[hsl(var(--cat-blacksmith))]", hex: "#64B5F6" },
-  { icon: Droplets, labelKey: "service.waterTanks", category: "صهاريج مياه", color: "text-[hsl(var(--cat-plumber))]", hex: "#56B36B" },
+  { icon: Droplets, labelKey: "service.waterTanks", category: "صهاريج مياه", color: "text-[hsl(var(--cat-plumber))]", hex: "#165B91" },
   { icon: Settings, labelKey: "service.roadMechanic", category: "ميكانيكي طرقات", color: "text-[hsl(var(--cat-maintenance))]", hex: "#FF6B6B" },
   { icon: Construction, labelKey: "service.towTrucks", category: "ونشات سيارات", color: "text-[hsl(var(--cat-blacksmith))]", hex: "#64B5F6" },
   { icon: HardHat, labelKey: "service.dailyWorker", category: "عامل يومي", color: "text-[hsl(var(--cat-moving))]", hex: "#9C27B0" },

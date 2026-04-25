@@ -29,13 +29,13 @@ const Header = () => {
         {/* Logo — right side in RTL */}
         <Link to="/" className="flex items-center gap-2 shrink-0">
           <img src={logo} alt="خدمات" className="w-11 h-11 object-contain" />
-          <span className="font-extrabold text-lg text-[#56B36B] hidden sm:block">خدمات</span>
+          <span className="font-extrabold text-lg text-[#165B91] hidden sm:block">خدمات</span>
         </Link>
 
         {/* Center nav links — desktop */}
         <nav className="hidden md:flex items-center gap-6">
-          <Link to="/" className="text-sm font-semibold text-[#1A1A2E] hover:text-[#56B36B] transition-colors">الرئيسية</Link>
-          <Link to="/browse" className="text-sm font-semibold text-[#1A1A2E] hover:text-[#56B36B] transition-colors">تصفح الخدمات</Link>
+          <Link to="/" className="text-sm font-semibold text-[#1A1A2E] hover:text-[#165B91] transition-colors">الرئيسية</Link>
+          <Link to="/browse" className="text-sm font-semibold text-[#1A1A2E] hover:text-[#165B91] transition-colors">تصفح الخدمات</Link>
         </nav>
 
         {/* Right actions — left side in RTL */}
@@ -47,7 +47,7 @@ const Header = () => {
             userType === 'merchant' ? (
               <div className="flex items-center gap-2">
                 {pageSlug && (
-                  <Button variant="ghost" className="text-[#56B36B] hover:bg-[#56B36B]/5 hidden sm:inline-flex" asChild>
+                  <Button variant="ghost" className="text-[#165B91] hover:bg-[#165B91]/5 hidden sm:inline-flex" asChild>
                     <Link to={`/p/${pageSlug}`}>
                       <Store className={`h-4 w-4 ${dir === 'rtl' ? 'ml-1' : 'mr-1'}`} />
                       <span>{t('header.myStore')}</span>
@@ -62,7 +62,7 @@ const Header = () => {
                 </Button>
               </div>
             ) : userType === 'customer' ? (
-              <Button variant="ghost" className="text-[#56B36B] hover:bg-[#56B36B]/5" asChild>
+              <Button variant="ghost" className="text-[#165B91] hover:bg-[#165B91]/5" asChild>
                 <Link to="/customer">
                   <User className={`h-4 w-4 ${dir === 'rtl' ? 'ml-1' : 'mr-1'}`} />
                   <span className="hidden sm:inline">{t('customer.myAccount')}</span>
@@ -84,13 +84,13 @@ const Header = () => {
       {/* Mobile drawer */}
       {mobileOpen && (
         <div className="md:hidden bg-white border-t border-[#E5E7EB] px-4 py-4 space-y-3 shadow-lg">
-          <Link to="/" onClick={() => setMobileOpen(false)} className="block text-sm font-semibold text-[#1A1A2E] hover:text-[#56B36B] py-2">الرئيسية</Link>
-          <Link to="/browse" onClick={() => setMobileOpen(false)} className="block text-sm font-semibold text-[#1A1A2E] hover:text-[#56B36B] py-2">تصفح الخدمات</Link>
+          <Link to="/" onClick={() => setMobileOpen(false)} className="block text-sm font-semibold text-[#1A1A2E] hover:text-[#165B91] py-2">الرئيسية</Link>
+          <Link to="/browse" onClick={() => setMobileOpen(false)} className="block text-sm font-semibold text-[#1A1A2E] hover:text-[#165B91] py-2">تصفح الخدمات</Link>
           {user && userType === 'merchant' && pageSlug && (
-            <Link to={`/p/${pageSlug}`} onClick={() => setMobileOpen(false)} className="block text-sm font-semibold text-[#56B36B] py-2">{t('header.myStore')}</Link>
+            <Link to={`/p/${pageSlug}`} onClick={() => setMobileOpen(false)} className="block text-sm font-semibold text-[#165B91] py-2">{t('header.myStore')}</Link>
           )}
           {user && userType === 'merchant' && (
-            <Link to="/dashboard" onClick={() => setMobileOpen(false)} className="block text-sm font-bold text-[#56B36B] py-2">{t('header.addService')}</Link>
+            <Link to="/dashboard" onClick={() => setMobileOpen(false)} className="block text-sm font-bold text-[#165B91] py-2">{t('header.addService')}</Link>
           )}
         </div>
       )}

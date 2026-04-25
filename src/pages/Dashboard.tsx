@@ -91,7 +91,7 @@ const Dashboard = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#56B36B]"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#165B91]"></div>
       </div>
     );
   }
@@ -104,14 +104,14 @@ const Dashboard = () => {
   if (isAdminPhone) tabCount++;
 
   return (
-    <div className="min-h-screen bg-[#F7FAF8]">
+    <div className="min-h-screen bg-[#EFF3F8]">
       {/* Dashboard header */}
       <header className="bg-white border-b border-[#E5E7EB] shadow-sm">
         <div className="container flex items-center justify-between h-16 px-4">
-          <h1 className="font-extrabold text-lg text-[#56B36B]">{t('dashboard.title')}</h1>
+          <h1 className="font-extrabold text-lg text-[#165B91]">{t('dashboard.title')}</h1>
           <div className="flex items-center gap-2">
             {pageSlug && (
-              <Button variant="outline" size="sm" asChild className="border-[#56B36B] text-[#56B36B] hover:bg-[#56B36B]/5">
+              <Button variant="outline" size="sm" asChild className="border-[#165B91] text-[#165B91] hover:bg-[#165B91]/5">
                 <Link to={`/p/${pageSlug}`}>
                   <Store className="h-4 w-4 ml-1" />
                   {language === 'ar' ? 'متجري' : 'My Store'}
@@ -134,29 +134,29 @@ const Dashboard = () => {
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className={`grid w-full max-w-xl mx-auto mb-6 bg-white border border-[#E5E7EB] rounded-2xl p-1 shadow-sm ${tabCount === 6 ? 'grid-cols-6' : tabCount === 5 ? 'grid-cols-5' : 'grid-cols-4'}`}>
             {canReceiveEmergency && (
-              <TabsTrigger value="emergency" className="flex flex-col items-center gap-0.5 py-2 text-[10px] sm:flex-row sm:gap-2 sm:text-sm rounded-xl data-[state=active]:bg-[#56B36B] data-[state=active]:text-white data-[state=active]:shadow-md">
+              <TabsTrigger value="emergency" className="flex flex-col items-center gap-0.5 py-2 text-[10px] sm:flex-row sm:gap-2 sm:text-sm rounded-xl data-[state=active]:bg-[#165B91] data-[state=active]:text-white data-[state=active]:shadow-md">
                 <AlertTriangle className="h-4 w-4" />
                 <span>{language === 'ar' ? 'طوارئ' : 'Urgent'}</span>
               </TabsTrigger>
             )}
-            <TabsTrigger value="items" className="flex flex-col items-center gap-0.5 py-2 text-[10px] sm:flex-row sm:gap-2 sm:text-sm rounded-xl data-[state=active]:bg-[#56B36B] data-[state=active]:text-white data-[state=active]:shadow-md">
+            <TabsTrigger value="items" className="flex flex-col items-center gap-0.5 py-2 text-[10px] sm:flex-row sm:gap-2 sm:text-sm rounded-xl data-[state=active]:bg-[#165B91] data-[state=active]:text-white data-[state=active]:shadow-md">
               <Package className="h-4 w-4" />
               <span>{language === 'ar' ? 'أعمالنا' : 'Work'}</span>
             </TabsTrigger>
-            <TabsTrigger value="ratings" className="flex flex-col items-center gap-0.5 py-2 text-[10px] sm:flex-row sm:gap-2 sm:text-sm rounded-xl data-[state=active]:bg-[#56B36B] data-[state=active]:text-white data-[state=active]:shadow-md">
+            <TabsTrigger value="ratings" className="flex flex-col items-center gap-0.5 py-2 text-[10px] sm:flex-row sm:gap-2 sm:text-sm rounded-xl data-[state=active]:bg-[#165B91] data-[state=active]:text-white data-[state=active]:shadow-md">
               <Star className="h-4 w-4" />
               <span>{language === 'ar' ? 'التقييم' : 'Ratings'}</span>
             </TabsTrigger>
-            <TabsTrigger value="payments" className="flex flex-col items-center gap-0.5 py-2 text-[10px] sm:flex-row sm:gap-2 sm:text-sm rounded-xl data-[state=active]:bg-[#56B36B] data-[state=active]:text-white data-[state=active]:shadow-md">
+            <TabsTrigger value="payments" className="flex flex-col items-center gap-0.5 py-2 text-[10px] sm:flex-row sm:gap-2 sm:text-sm rounded-xl data-[state=active]:bg-[#165B91] data-[state=active]:text-white data-[state=active]:shadow-md">
               <CreditCard className="h-4 w-4" />
               <span>{language === 'ar' ? 'الدفع' : 'Pay'}</span>
             </TabsTrigger>
-            <TabsTrigger value="profile" className="flex flex-col items-center gap-0.5 py-2 text-[10px] sm:flex-row sm:gap-2 sm:text-sm rounded-xl data-[state=active]:bg-[#56B36B] data-[state=active]:text-white data-[state=active]:shadow-md">
+            <TabsTrigger value="profile" className="flex flex-col items-center gap-0.5 py-2 text-[10px] sm:flex-row sm:gap-2 sm:text-sm rounded-xl data-[state=active]:bg-[#165B91] data-[state=active]:text-white data-[state=active]:shadow-md">
               <User className="h-4 w-4" />
               <span>{language === 'ar' ? 'الملف' : 'Profile'}</span>
             </TabsTrigger>
             {isAdminPhone && (
-              <TabsTrigger value="admin" className="flex flex-col items-center gap-0.5 py-2 text-[10px] sm:flex-row sm:gap-2 sm:text-sm rounded-xl data-[state=active]:bg-[#56B36B] data-[state=active]:text-white data-[state=active]:shadow-md">
+              <TabsTrigger value="admin" className="flex flex-col items-center gap-0.5 py-2 text-[10px] sm:flex-row sm:gap-2 sm:text-sm rounded-xl data-[state=active]:bg-[#165B91] data-[state=active]:text-white data-[state=active]:shadow-md">
                 <ShieldCheck className="h-4 w-4" />
                 <span>{language === 'ar' ? 'الإدارة' : 'Admin'}</span>
               </TabsTrigger>
@@ -175,7 +175,7 @@ const Dashboard = () => {
 
           <TabsContent value="ratings" className="max-w-2xl mx-auto">
             <Card className="rounded-2xl border-[#E5E7EB] shadow-sm">
-              <CardHeader className="border-b border-[#E5E7EB] bg-[#56B36B]/5 rounded-t-2xl">
+              <CardHeader className="border-b border-[#E5E7EB] bg-[#165B91]/5 rounded-t-2xl">
                 <CardTitle className="flex items-center justify-between text-[#1A1A2E]">
                   <span>{t('dashboard.ratingsCount')} ({ratings.length})</span>
                   {ratings.length > 0 && (

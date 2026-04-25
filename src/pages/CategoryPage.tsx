@@ -175,13 +175,13 @@ const CategoryPage = () => {
   const isAr = language === 'ar';
 
   return (
-    <div className="min-h-screen bg-[#F7FAF8]" dir={dir}>
+    <div className="min-h-screen bg-[#EFF3F8]" dir={dir}>
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white border-b border-[#E5E7EB] shadow-sm">
         <div className="container flex items-center justify-between h-14 px-4">
           <button
             onClick={() => navigate('/')}
-            className="flex items-center gap-2 text-[#56B36B] font-bold text-sm hover:opacity-80 transition-opacity"
+            className="flex items-center gap-2 text-[#165B91] font-bold text-sm hover:opacity-80 transition-opacity"
           >
             <BackArrow className="h-5 w-5" />
             <span>{t('header.home') || 'الرئيسية'}</span>
@@ -195,8 +195,8 @@ const CategoryPage = () => {
       <div className="bg-white border-b border-[#E5E7EB] py-6">
         <div className="container px-4 text-center">
           <div className="flex items-center justify-center gap-3 mb-2">
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: `${categoryInfo?.hex || '#56B36B'}18` }}>
-              <CategoryIcon className="h-6 w-6" style={{ color: categoryInfo?.hex || '#56B36B' }} />
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: `${categoryInfo?.hex || '#165B91'}18` }}>
+              <CategoryIcon className="h-6 w-6" style={{ color: categoryInfo?.hex || '#165B91' }} />
             </div>
             <h1 className="text-2xl md:text-3xl font-extrabold text-[#1A1A2E]">{subcategory || category}</h1>
           </div>
@@ -214,8 +214,8 @@ const CategoryPage = () => {
               onClick={() => setSelectedGovernorate(null)}
               className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-bold transition-all border ${
                 !selectedGovernorate
-                  ? 'bg-[#56B36B] text-white border-[#56B36B] shadow-md'
-                  : 'bg-white text-[#1A1A2E] border-[#E5E7EB] hover:border-[#56B36B]/50'
+                  ? 'bg-[#165B91] text-white border-[#165B91] shadow-md'
+                  : 'bg-white text-[#1A1A2E] border-[#E5E7EB] hover:border-[#165B91]/50'
               }`}
             >
               <LayoutGrid className="h-4 w-4" />
@@ -227,8 +227,8 @@ const CategoryPage = () => {
                 onClick={() => setSelectedGovernorate(gov.value)}
                 className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-bold transition-all border ${
                   selectedGovernorate === gov.value
-                    ? 'bg-[#56B36B] text-white border-[#56B36B] shadow-md'
-                    : 'bg-white text-[#1A1A2E] border-[#E5E7EB] hover:border-[#56B36B]/50'
+                    ? 'bg-[#165B91] text-white border-[#165B91] shadow-md'
+                    : 'bg-white text-[#1A1A2E] border-[#E5E7EB] hover:border-[#165B91]/50'
                 }`}
               >
                 <MapPin className="h-3.5 w-3.5" />
@@ -255,7 +255,7 @@ const CategoryPage = () => {
           </div>
         ) : providers.length === 0 ? (
           <div className="text-center py-20">
-            <CategoryIcon className="h-16 w-16 mx-auto mb-4 text-[#56B36B]/40" />
+            <CategoryIcon className="h-16 w-16 mx-auto mb-4 text-[#165B91]/40" />
             <h3 className="text-xl font-semibold mb-2 text-[#1A1A2E]">{isAr ? 'لا يوجد مقدمي خدمة حالياً' : 'No providers found'}</h3>
             <p className="text-[#6B7280]">{isAr ? 'سيتم إضافة مقدمي خدمة قريباً' : 'Providers will be added soon'}</p>
           </div>
@@ -266,12 +266,12 @@ const CategoryPage = () => {
                 <Link key={provider.user_id} to={`/p/${provider.page_slug}`}>
                   <Card className="overflow-hidden group hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer rounded-2xl bg-white border border-[#E5E7EB]">
                     <CardContent className="p-5 flex flex-col items-center text-center space-y-3">
-                      <Avatar className="w-16 h-16 ring-2 ring-[#56B36B]/30 ring-offset-2">
+                      <Avatar className="w-16 h-16 ring-2 ring-[#165B91]/30 ring-offset-2">
                         {provider.avatar_url ? (
                           <AvatarImage src={provider.avatar_url} alt={provider.display_name} />
                         ) : null}
-                        <AvatarFallback className="bg-[#56B36B]/10">
-                          <CategoryIcon className="h-8 w-8 text-[#56B36B]" />
+                        <AvatarFallback className="bg-[#165B91]/10">
+                          <CategoryIcon className="h-8 w-8 text-[#165B91]" />
                         </AvatarFallback>
                       </Avatar>
                       <h3 className="font-bold text-sm text-gray-800">{provider.store_name || provider.display_name}</h3>
@@ -287,7 +287,7 @@ const CategoryPage = () => {
                       )}
                       {provider.service_location && (
                         <div className="flex items-center gap-1 text-xs text-gray-600">
-                          <MapPin className="h-3 w-3 text-[#56B36B]" />
+                          <MapPin className="h-3 w-3 text-[#165B91]" />
                           <span>{provider.service_location}</span>
                         </div>
                       )}
@@ -298,7 +298,7 @@ const CategoryPage = () => {
             </div>
             {hasMore ? (
               <div ref={sentinelRef} className="flex justify-center py-8">
-                {loadingMore && <Loader2 className="h-6 w-6 animate-spin text-[#56B36B]" />}
+                {loadingMore && <Loader2 className="h-6 w-6 animate-spin text-[#165B91]" />}
               </div>
             ) : providers.length > 0 && (
               <p className="text-center text-[#6B7280] py-8 text-sm">{isAr ? 'لا يوجد المزيد' : 'No more results'}</p>
