@@ -123,7 +123,7 @@ const Browse = () => {
       <Header />
 
       {/* Section header */}
-      <div className="bg-white border-b border-[#E5E7EB] py-6">
+      <div className="bg-gradient-to-b from-[#EFF3F8] to-white border-b border-[#E5E7EB] py-8">
         <div className="container px-4 text-center">
           <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-[#105A8E] mb-1">
             {dir === 'rtl' ? 'تصفح مقدمي الخدمات' : 'Browse Service Providers'}
