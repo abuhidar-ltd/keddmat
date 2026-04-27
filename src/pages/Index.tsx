@@ -6,13 +6,7 @@ import EmergencyRequestModal from "@/components/EmergencyRequestModal";
 import { Link, useNavigate } from "react-router-dom";
 import { CATEGORIES, getSubcategories } from "@/lib/categoryIcons";
 import logoImage from "@/assets/logo-khadamat.png";
-import workerImage from "@/assets/worker-hero.png";
 import {
-  Clock,
-  Shield,
-  Users,
-  Star,
-  CheckCircle2,
   Phone,
   ArrowLeft,
 } from "lucide-react";
@@ -51,27 +45,11 @@ const Index = () => {
 
   const displayServices = services.slice(0, 6);
 
-  const serviceDescriptions: Record<string, { ar: string; en: string }> = {
-    "صيانة الأجهزة المنزلية": { ar: "صيانة جميع الأجهزة المنزلية", en: "Home appliance maintenance" },
-    "تنظيف ودراي كلين": { ar: "خدمة تنظيفية شاملة لمنزلك", en: "Comprehensive cleaning service" },
-    "موسرجي": { ar: "جميع أعمال السباكة باحترافية جميع الأعطال", en: "All plumbing works professionally" },
-    "كهربجي": { ar: "لمديدات وصيانة جميع الأعطال", en: "Wiring and fault maintenance" },
-    "ديكور منزلي": { ar: "دهان داخلي وخارجي بجودة عالية", en: "High quality interior & exterior painting" },
-    "نجّار": { ar: "أعمال النجارة وتركيب الأثاث", en: "Carpentry and furniture assembly" },
-  };
-
   const stats = [
     { value: "24/7", label: isAr ? "خدمة متاحة" : "Available", icon: "🕐" },
     { value: "5000+", label: isAr ? "طلب مكتمل" : "Orders Done", icon: "📋" },
     { value: "350+", label: isAr ? "حرفي محترف" : "Pro Craftsmen", icon: "👷" },
     { value: "1200+", label: isAr ? "عميل سعيد" : "Happy Clients", icon: "😊" },
-  ];
-
-  const steps = [
-    { num: 4, title: isAr ? "نصل إليك" : "We Arrive", desc: isAr ? "يصل الحرفي إلى مكانك ويبدأ العمل" : "The craftsman arrives and starts working", icon: "🏠" },
-    { num: 3, title: isAr ? "تأكيد الطلب" : "Confirm Order", desc: isAr ? "تأكيد الطلب وانتظر تواصلنا معك" : "Confirm and wait for us to contact you", icon: "✅" },
-    { num: 2, title: isAr ? "حدد الوقت" : "Set Time", desc: isAr ? "اختر الوقت والمكان المناسب لك" : "Pick the time and place that suits you", icon: "🕐" },
-    { num: 1, title: isAr ? "اختر الخدمة" : "Choose Service", desc: isAr ? "اختر الخدمة التي تحتاجها" : "Choose the service you need", icon: "🔧" },
   ];
 
   return (
@@ -81,79 +59,47 @@ const Index = () => {
       {/* ── Hero Section ── */}
       <section className="py-10 md:py-16 lg:py-20 bg-gradient-to-b from-[#EFF3F8] to-white">
         <div className="container px-4">
-          <div className="flex flex-col-reverse lg:flex-row items-center gap-8 lg:gap-12">
-            {/* Left col: Logo illustration */}
-            <div className="flex-1 flex justify-center animate-fade-in">
-              <div className="relative">
-                <div className="w-56 h-56 sm:w-64 sm:h-64 md:w-72 md:h-72 lg:w-80 lg:h-80 rounded-full bg-gradient-to-br from-[#EFF3F8] to-[#DCE8F3] flex items-center justify-center shadow-xl">
-                  <img
-                    src={logoImage}
-                    alt="خدمات"
-                    className="w-40 sm:w-48 md:w-56 lg:w-60 h-auto object-contain animate-float"
-                  />
-                </div>
-                <div className="absolute -bottom-2 -right-2 bg-white rounded-xl shadow-lg px-3 py-2 text-xs font-bold text-[#165B91] border border-[#E5E7EB]">
-                  {isAr ? "حلول احترافية لكل احتياجات منزلك" : "Professional solutions for your home"}
-                </div>
-              </div>
+          <div className="max-w-3xl mx-auto text-right space-y-5 animate-fade-in">
+            <div className="flex justify-center">
+              <img
+                src={logoImage}
+                alt="خدمات"
+                className="w-32 sm:w-36 md:w-40 h-auto object-contain"
+              />
             </div>
 
-            {/* Right col: Content */}
-            <div className="flex-1 text-right space-y-5 animate-fade-in">
-              <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold leading-snug tracking-tight text-[#105A8E]">
+            <div className="space-y-5">
+              <h1 className="text-[25px] md:text-4xl lg:text-5xl font-extrabold leading-snug tracking-tight">
                 {isAr ? (
                   <>
-                    جميع الخدمات
+                    <span className="text-[rgba(3,101,155,1)]">جميع خدمات</span>
                     <br />
-                    <span className="text-[#55AB1C]">المنزلية</span> بين يديك
+                    <span className="text-[#55AB1C]">الصيانة المنزلية</span>{" "}
+                    <span className="text-[#FB923C]">بين يديك</span>
                   </>
                 ) : (
                   <>
-                    All Home
+                    <span className="text-[#3B82C4]">All Home</span>
                     <br />
-                    <span className="text-[#55AB1C]">Services</span> At Your Fingertips
+                    <span className="text-[#FB923C]">Services</span>{" "}
+                    <span className="text-[#55AB1C]">At Your Fingertips</span>
                   </>
                 )}
               </h1>
-              <p className="text-[#6B7280] text-sm md:text-base leading-relaxed max-w-lg ms-auto">
+              <p className="text-[rgba(75,92,104,1)] font-semibold text-base md:text-lg leading-relaxed max-w-lg ms-auto">
                 {isAr
-                  ? "نحن هنا لتقديم أفضل الخدمات المنزلية بسرعة، احترافية وموثوقية عالية"
+                  ? "نحن هنا لتقديم أفضل الخدمات المنزلية بسرعة"
                   : "We are here to provide the best home services quickly, professionally and reliably"}
               </p>
 
               <div className="flex flex-col sm:flex-row gap-3 sm:justify-end">
-                <a
-                  href="https://wa.me/+962799126390"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="h-[44px] px-6 py-3 rounded-full bg-[#165B91] text-white font-bold text-sm hover:bg-[#105A8E] transition-colors inline-flex items-center justify-center gap-2"
-                >
-                  <Phone className="h-4 w-4" />
-                  {isAr ? "تواصل معنا" : "Contact Us"}
-                </a>
                 <Link
                   to="/browse"
-                  className="h-[44px] px-6 py-3 rounded-full border-2 border-[#165B91] text-[#165B91] font-bold text-sm hover:bg-[#165B91]/5 transition-colors inline-flex items-center justify-center gap-2"
+                  className="h-[48px] px-8 py-3 rounded-full border-2 border-[#165B91] text-[#165B91] font-bold text-base hover:bg-[#165B91]/5 transition-colors inline-flex items-center justify-center gap-2"
                 >
                   <ArrowLeft className="h-4 w-4" />
-                  {isAr ? "عرض الخدمات" : "View Services"}
+                  {isAr ? "تصفح متاجر الحرفيين" : "Browse Craftsmen's Shops"}
                 </Link>
-              </div>
-
-              {/* Feature badges */}
-              <div className="flex flex-wrap gap-4 justify-end pt-2">
-                {[
-                  { icon: Clock, label: isAr ? "خدمة سريعة\nعلى مدار الساعة" : "Fast 24/7\nService" },
-                  { icon: Star, label: isAr ? "أسعار\nتنافسية" : "Competitive\nPrices" },
-                  { icon: Shield, label: isAr ? "حرفيين\nمحترفين" : "Professional\nCraftsmen" },
-                ].map((badge) => (
-                  <div key={badge.label} className="flex flex-col items-center text-center gap-1.5">
-                    <div className="w-12 h-12 rounded-full bg-[#165B91]/10 flex items-center justify-center">
-                      <badge.icon className="h-5 w-5 text-[#165B91]" />
-                    </div>
-                    <span className="text-[10px] sm:text-xs font-bold text-[#1A1A2E] whitespace-pre-line leading-tight">{badge.label}</span>
-                  </div>
-                ))}
               </div>
             </div>
           </div>
@@ -161,29 +107,28 @@ const Index = () => {
       </section>
 
       {/* ── Emergency Banner ── */}
-      <section className="py-4 bg-gradient-to-l from-[#C2410C] via-[#EA580C] to-[#F97316]">
+      <section className="py-3 bg-white">
         <div className="container px-4">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="max-w-[500px] mx-auto rounded-2xl px-4 py-3 bg-gradient-to-l from-[#C2410C] via-[#EA580C] to-[#F97316]">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
             <div className="flex items-center gap-3 text-white">
-              <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center shrink-0">
                 <svg className="h-6 w-6 text-white animate-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22c1.1 0 2-.9 2-2H10a2 2 0 002 2z"/><path d="M18 16v-5a6 6 0 00-12 0v5l-2 2h16l-2-2z"/></svg>
               </div>
               <div className="text-right">
                 <p className="font-extrabold text-lg leading-tight">
                   {isAr ? "طلب صيانة منزلية طارئة" : "Emergency Home Maintenance"}
                 </p>
-                <p className="text-white/90 text-sm mt-0.5">
-                  {isAr ? "تحتاج صيانة عاجلة؟ نحن هنا لمساعدتك الآن!" : "Need urgent maintenance? We are here to help now!"}
-                </p>
               </div>
             </div>
             <button
               onClick={() => setEmergencyOpen(true)}
-              className="bg-white text-[#9A3412] font-extrabold px-6 py-2.5 rounded-full hover:bg-white/90 transition-colors shadow-lg flex items-center gap-2 shrink-0"
+              className="bg-white text-[#9A3412] font-extrabold px-4 py-2 rounded-full hover:bg-white/90 transition-colors shadow-lg flex items-center gap-2 shrink-0 text-sm sm:text-base"
             >
               <ArrowLeft className="h-4 w-4" />
               {isAr ? "اضغط لطلب صيانة منزلية طارئة" : "Request Emergency Maintenance"}
             </button>
+          </div>
           </div>
         </div>
       </section>
@@ -192,37 +137,26 @@ const Index = () => {
       <section id="services" className="py-14 md:py-16 bg-white">
         <div className="container px-4 text-center">
           <h2 className="text-2xl md:text-3xl font-extrabold text-[#105A8E] mb-2">
-            {isAr ? "خدماتنا" : "Our Services"}
+            {isAr ? "اختر الخدمة" : "Our Services"}
           </h2>
-          <p className="text-[#6B7280] mb-10 text-sm md:text-base">
-            {isAr
-              ? "اختر الخدمة التي تحتاجها ونحن نصل إليك"
-              : "Choose the service you need and we'll come to you"}
-          </p>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 max-w-4xl mx-auto">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 max-w-3xl mx-auto">
             {displayServices.map((svc, i) => {
-              const desc = serviceDescriptions[svc.category];
               return (
                 <button
                   key={svc.labelKey}
                   onClick={() => handleCategoryClick(svc.category)}
-                  className={`group flex flex-col items-center gap-2.5 p-4 rounded-2xl bg-white shadow-md border border-[#E5E7EB] hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer animate-fade-in stagger-${Math.min(i + 1, 6)}`}
+                  className={`group flex flex-col items-center gap-2 p-3 rounded-2xl bg-white shadow-md border border-[#E5E7EB] hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer animate-fade-in stagger-${Math.min(i + 1, 6)}`}
                 >
                   <div
-                    className="w-14 h-14 rounded-full flex items-center justify-center transition-all group-hover:scale-110"
+                    className="w-12 h-12 rounded-full flex items-center justify-center transition-all group-hover:scale-110"
                     style={{ background: `${svc.hex}18` }}
                   >
-                    <svc.icon className="h-7 w-7" style={{ color: svc.hex }} />
+                    <svc.icon className="h-6 w-6" style={{ color: svc.hex }} />
                   </div>
-                  <span className="text-sm font-bold text-[#105A8E] leading-tight text-center">
+                  <span className="text-sm sm:text-base font-bold text-[#105A8E] leading-tight text-center">
                     {t(svc.labelKey)}
                   </span>
-                  {desc && (
-                    <p className="text-[10px] text-[#6B7280] leading-snug text-center">
-                      {isAr ? desc.ar : desc.en}
-                    </p>
-                  )}
                 </button>
               );
             })}
@@ -238,60 +172,40 @@ const Index = () => {
         </div>
       </section>
 
-      {/* ── 24/7 Section ── */}
-      <section id="about" className="py-14 md:py-16" style={{ background: "linear-gradient(135deg, #1A3C4E, #165B91)" }}>
+      {/* ── Stats Bar ── */}
+      <section className="py-10 md:py-14 bg-white border-y border-[#E5E7EB]">
         <div className="container px-4">
-          <div className="flex flex-col-reverse lg:flex-row items-center gap-10">
-            {/* Left: Worker image + 24 badge */}
-            <div className="flex-1 flex justify-center relative">
-              <div className="relative">
-                <img
-                  src={workerImage}
-                  alt={isAr ? "فني صيانة" : "Maintenance technician"}
-                  className="w-48 sm:w-56 md:w-64 lg:w-72 h-auto object-contain rounded-2xl"
-                />
-                <div className="absolute -bottom-4 -left-4 sm:-bottom-6 sm:-left-6 w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-white shadow-xl flex flex-col items-center justify-center">
-                  <span className="text-3xl sm:text-4xl font-black text-[#165B91] leading-none">24</span>
-                  <span className="text-xs sm:text-sm font-bold text-[#6B7280]">{isAr ? "ساعة" : "Hours"}</span>
-                </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
+            {stats.map((s) => (
+              <div key={s.value} className="flex flex-col items-center text-center gap-1.5 p-3 rounded-2xl bg-[#EFF3F8]">
+                <span className="text-2xl">{s.icon}</span>
+                <span className="text-xl md:text-2xl font-black text-[#105A8E]">{s.value}</span>
+                <span className="text-[11px] font-bold text-[#6B7280]">{s.label}</span>
               </div>
-            </div>
-
-            {/* Right: Text content */}
-            <div className="flex-1 text-right space-y-4">
-              <h2 className="text-2xl md:text-3xl font-extrabold text-white">
-                {isAr ? "خدمة متاحة 24/7" : "Service Available 24/7"}
-              </h2>
-              <p className="text-white/80 text-sm md:text-base leading-relaxed max-w-md ms-auto">
-                {isAr
-                  ? "نحن متاحون على مدار الساعة لخدمتك في أي وقت وفي أي مكان"
-                  : "We are available around the clock to serve you anytime, anywhere"}
-              </p>
-              <a
-                href="https://wa.me/+962799126390"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-[#165B91] font-bold text-sm hover:bg-white/90 transition-colors shadow-lg"
-              >
-                <Phone className="h-4 w-4" />
-                {isAr ? "تواصل معنا الآن" : "Contact Us Now"}
-              </a>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ── Stats Bar ── */}
-      <section className="py-10 md:py-14 bg-white border-y border-[#E5E7EB]">
+      {/* ── Workers Signup CTA ── */}
+      <section className="py-8 md:py-10 bg-white">
         <div className="container px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
-            {stats.map((s) => (
-              <div key={s.value} className="flex flex-col items-center text-center gap-2 p-4 rounded-2xl bg-[#EFF3F8]">
-                <span className="text-3xl">{s.icon}</span>
-                <span className="text-2xl md:text-3xl font-black text-[#105A8E]">{s.value}</span>
-                <span className="text-xs font-bold text-[#6B7280]">{s.label}</span>
-              </div>
-            ))}
+          <div className="max-w-2xl mx-auto rounded-2xl border border-[#E5E7EB] bg-gradient-to-l from-[#EFF3F8] to-white p-5 md:p-6 text-center">
+            <h3 className="text-xl md:text-2xl font-extrabold text-[#105A8E]">
+              {isAr ? "هل أنت حرفي محترف؟" : "Are you a professional worker?"}
+            </h3>
+            <p className="mt-2 text-sm md:text-base text-[#6B7280]">
+              {isAr
+                ? "انضم الآن كمقدم خدمة وابدأ باستقبال طلبات جديدة يوميا"
+                : "Join now as a service provider and start receiving new requests daily"}
+            </p>
+            <Link
+              to="/auth?type=merchant"
+              className="inline-flex items-center justify-center gap-2 mt-5 px-8 py-3 rounded-full btn-cta font-bold text-sm md:text-base"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              {isAr ? "سجل كمقدم خدمة" : "Sign up as a Provider"}
+            </Link>
           </div>
         </div>
       </section>

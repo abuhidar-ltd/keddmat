@@ -141,10 +141,7 @@ const ProfileForm = () => {
 
   const toggleSubcategory = (subId: string, checked: boolean) => {
     if (!profile) return;
-    const current = profile.subcategories || [];
-    const next = checked
-      ? Array.from(new Set([...current, subId]))
-      : current.filter(s => s !== subId);
+    const next = checked ? [subId] : [];
     setProfile({ ...profile, subcategories: next });
   };
 
@@ -177,7 +174,7 @@ const ProfileForm = () => {
 
       {profile.page_slug && (
         <Card>
-          <CardHeader><CardTitle>{t('profile.pageLink')}</CardTitle></CardHeader>
+          <CardHeader><CardTitle className="text-xl">{t('profile.pageLink')}</CardTitle></CardHeader>
           <CardContent>
             <div className="flex items-center gap-2 p-3 bg-secondary rounded-lg">
               <span className="text-sm flex-1 truncate">{window.location.origin}/p/{profile.page_slug}</span>
@@ -189,7 +186,7 @@ const ProfileForm = () => {
       )}
 
       <Card>
-        <CardHeader><CardTitle>{t('profile.profileInfo')}</CardTitle><CardDescription>{t('profile.profileInfoDesc')}</CardDescription></CardHeader>
+        <CardHeader><CardTitle className="text-xl">{t('profile.profileInfo')}</CardTitle><CardDescription>{t('profile.profileInfoDesc')}</CardDescription></CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="store_name">{t('profile.storeName')}</Label>
@@ -212,7 +209,7 @@ const ProfileForm = () => {
           </div>
           {profile.category && getSubcategories(profile.category).length > 0 && (
             <div className="space-y-2">
-              <Label>{language === 'ar' ? 'التخصصات الفرعية' : 'Subcategories'}</Label>
+              <Label>{language === 'ar' ? 'التخصص الفرعي' : 'Subcategory'}</Label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 rounded-lg border border-border p-3">
                 {getSubcategories(profile.category).map(sub => {
                   const checked = (profile.subcategories || []).includes(sub.id);

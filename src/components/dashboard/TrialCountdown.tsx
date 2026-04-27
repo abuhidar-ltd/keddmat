@@ -12,7 +12,7 @@ const TrialCountdown = () => {
 
   const days = isFreeTrial ? freeTrialDaysRemaining : daysRemaining;
   const colors = {
-    bg: 'bg-success/10', text: 'text-success', border: 'border-success/30', icon: 'text-success'
+    bg: 'bg-[#55AB1C]/10', text: 'text-[#55AB1C]', border: 'border-[#55AB1C]/30', icon: 'text-[#55AB1C]'
   };
 
   const Icon = days !== null && days <= 3 ? AlertTriangle : isFreeTrial ? Gift : CheckCircle;
@@ -35,7 +35,7 @@ const TrialCountdown = () => {
       </div>
       <div className="mt-4">
         <div className="h-2 bg-muted rounded-full overflow-hidden">
-          <div className="h-full rounded-full transition-all duration-500 bg-success" style={{ width: `${Math.min(100, ((days || 0) / 30) * 100)}%` }} />
+          <div className="h-full rounded-full transition-all duration-500 bg-[#55AB1C]" style={{ width: `${Math.min(100, ((days || 0) / 30) * 100)}%` }} />
         </div>
       </div>
       {days !== null && days <= 3 && <p className={cn("mt-3 text-sm font-medium", colors.text)}>⚠️ {t('subscription.renewSoon')}</p>}
