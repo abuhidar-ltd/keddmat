@@ -296,37 +296,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* ── How It Works ── */}
-      <section id="how-it-works" className="py-14 md:py-16 section-alt">
-        <div className="container px-4 text-center">
-          <h2 className="text-2xl md:text-3xl font-extrabold text-[#105A8E] mb-10">
-            {isAr ? "كيف نعمل" : "How It Works"}
-          </h2>
-
-          <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-2 max-w-4xl mx-auto">
-            {steps.map((step, i) => (
-              <div key={step.num} className="flex items-center gap-2 md:gap-3">
-                <div className="flex flex-col items-center text-center gap-2 w-36 md:w-40">
-                  <div className="w-16 h-16 rounded-full bg-white shadow-md flex items-center justify-center text-2xl relative">
-                    {step.icon}
-                    <span className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-[#165B91] text-white text-xs font-bold flex items-center justify-center">
-                      {step.num}
-                    </span>
-                  </div>
-                  <h3 className="font-bold text-sm text-[#105A8E]">{step.title}</h3>
-                  <p className="text-[10px] text-[#6B7280] leading-snug">{step.desc}</p>
-                </div>
-                {i < steps.length - 1 && (
-                  <div className="hidden md:block text-[#165B91]/40 text-2xl font-bold mx-1">
-                    ←
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ── Footer ── */}
       <footer id="contact" className="footer-dark text-white py-12">
         <div className="container px-4">

@@ -31,7 +31,6 @@ const Header = () => {
     { label: isAr ? "الرئيسية" : "Home", to: "/" },
     { label: isAr ? "الخدمات" : "Services", to: isHome ? "#services" : "/browse" },
     { label: isAr ? "كيف نعمل" : "How It Works", to: isHome ? "#how-it-works" : "/#how-it-works" },
-    { label: isAr ? "من نحن" : "About Us", to: isHome ? "#about" : "/#about" },
     { label: isAr ? "تواصل معنا" : "Contact", to: isHome ? "#contact" : "/#contact" },
   ];
 
