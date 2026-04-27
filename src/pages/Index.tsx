@@ -92,14 +92,16 @@ const Index = () => {
                   : "We are here to provide the best home services quickly, professionally and reliably"}
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-3 sm:justify-end">
-                <Link
-                  to="/browse"
-                  className="h-[48px] px-8 py-3 rounded-full border-2 border-[#165B91] text-[#165B91] font-bold text-base hover:bg-[#165B91]/5 transition-colors inline-flex items-center justify-center gap-2"
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                  {isAr ? "تصفح متاجر الحرفيين" : "Browse Craftsmen's Shops"}
-                </Link>
+              <div className="max-w-[500px] mx-auto rounded-2xl px-4 py-3 bg-gradient-to-l from-[#C2410C] via-[#EA580C] to-[#F97316]">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+                  <button
+                    onClick={() => setEmergencyOpen(true)}
+                    className="bg-white text-[#9A3412] font-extrabold px-4 py-2 rounded-full hover:bg-white/90 transition-colors shadow-lg flex items-center gap-2 shrink-0 text-sm sm:text-base"
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                    {isAr ? "اضغط لطلب صيانة منزلية فورا" : "Request Emergency Maintenance"}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -107,28 +109,16 @@ const Index = () => {
       </section>
 
       {/* ── Emergency Banner ── */}
-      <section className="py-3 bg-white">
+      <section className="-mt-2 pt-0 pb-2 bg-white">
         <div className="container px-4">
-          <div className="max-w-[500px] mx-auto rounded-2xl px-4 py-3 bg-gradient-to-l from-[#C2410C] via-[#EA580C] to-[#F97316]">
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div className="flex items-center gap-3 text-white">
-              <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center shrink-0">
-                <svg className="h-6 w-6 text-white animate-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22c1.1 0 2-.9 2-2H10a2 2 0 002 2z"/><path d="M18 16v-5a6 6 0 00-12 0v5l-2 2h16l-2-2z"/></svg>
-              </div>
-              <div className="text-right">
-                <p className="font-extrabold text-lg leading-tight">
-                  {isAr ? "طلب صيانة منزلية طارئة" : "Emergency Home Maintenance"}
-                </p>
-              </div>
-            </div>
-            <button
-              onClick={() => setEmergencyOpen(true)}
-              className="bg-white text-[#9A3412] font-extrabold px-4 py-2 rounded-full hover:bg-white/90 transition-colors shadow-lg flex items-center gap-2 shrink-0 text-sm sm:text-base"
+          <div className="flex flex-col sm:flex-row gap-3 sm:justify-end">
+            <Link
+              to="/browse"
+              className="h-[48px] px-8 py-3 rounded-full bg-[#165B91] text-white font-bold text-base hover:bg-[#124a76] transition-colors inline-flex items-center justify-center gap-2"
             >
               <ArrowLeft className="h-4 w-4" />
-              {isAr ? "اضغط لطلب صيانة منزلية طارئة" : "Request Emergency Maintenance"}
-            </button>
-          </div>
+              {isAr ? "تصفح متاجر الحرفيين" : "Browse Craftsmen's Shops"}
+            </Link>
           </div>
         </div>
       </section>
