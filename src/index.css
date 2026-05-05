@@ -4,54 +4,44 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Design System - خدمات — logo palette: deep blue primary, mid blue interactive, amber for urgency */
+/* Design System - كدامات — green primary, teal accent */
 
 @layer base {
   :root {
-    /* Hex refs: headline #105A8E, interactive #165B91, footer #1A3C4E */
+    /* Hex refs: primary #2D7D46, medium #4CAF50, teal #00BCD4, footer #1A3C4E */
     --background: 0 0% 100%;
     --foreground: 210 32% 15%;
     --card: 0 0% 100%;
     --card-foreground: 210 32% 15%;
     --popover: 0 0% 100%;
     --popover-foreground: 210 32% 15%;
-    --primary: 207 74% 33%;
+    --primary: 145 48% 34%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 207 32% 96%;
-    --secondary-foreground: 207 55% 22%;
-    --muted: 210 28% 96%;
+    --secondary: 145 20% 96%;
+    --secondary-foreground: 145 48% 22%;
+    --muted: 145 15% 96%;
     --muted-foreground: 215 16% 38%;
-    --accent: 207 74% 33%;
+    --accent: 187 100% 42%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
     --border: 210 22% 90%;
     --input: 210 22% 92%;
-    --ring: 207 74% 33%;
+    --ring: 145 48% 34%;
     --radius: 1rem;
-    --success: 207 74% 33%;
+    --success: 122 39% 49%;
     --success-foreground: 0 0% 100%;
 
     --footer-bg: #1A3C4E;
 
-    /* Category chips — distinct hues; cleaning no longer matches old brand green */
-    --cat-electrician: 35 85% 50%;
-    --cat-plumber: 207 82% 48%;
-    --cat-maintenance: 0 70% 55%;
-    --cat-cleaning: 173 58% 39%;
-    --cat-moving: 25 80% 55%;
-    --cat-carpenter: 24 70% 45%;
-    --cat-decor: 280 60% 55%;
-    --cat-blacksmith: 220 70% 45%;
-
     --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 210 32% 15%;
-    --sidebar-primary: 207 74% 33%;
+    --sidebar-primary: 145 48% 34%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 207 32% 96%;
-    --sidebar-accent-foreground: 207 55% 22%;
+    --sidebar-accent: 145 20% 96%;
+    --sidebar-accent-foreground: 145 48% 22%;
     --sidebar-border: 210 22% 90%;
-    --sidebar-ring: 207 74% 33%;
+    --sidebar-ring: 145 48% 34%;
   }
 }
 
@@ -72,9 +62,9 @@
   }
 }
 
-/* CTA Gradient helper — logo blues */
+/* CTA Gradient helper — green to teal */
 .btn-cta {
-  background: linear-gradient(135deg, #165B91, #105A8E);
+  background: linear-gradient(135deg, #2D7D46, #00BCD4);
   color: #fff;
   font-weight: 700;
   border-radius: 9999px;
@@ -88,10 +78,10 @@
   .glass-effect { @apply bg-white/90 border border-white/60 shadow-xl; }
   .glass-card { @apply bg-white/95 border border-white/60 shadow-lg rounded-2xl; }
   .hover-lift { @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-xl; }
-  .gradient-text { @apply bg-clip-text text-transparent bg-gradient-to-l from-[#105A8E] to-[#165B91]; }
+  .gradient-text { @apply bg-clip-text text-transparent bg-gradient-to-l from-[#2D7D46] to-[#00BCD4]; }
   .text-hero { @apply text-primary font-extrabold; }
-  .glow-card { @apply shadow-[0_8px_30px_hsl(207_74%_33%_/_0.12)]; }
-  .section-alt { background-color: #EFF3F8; }
+  .glow-card { @apply shadow-[0_8px_30px_hsl(145_48%_34%_/_0.12)]; }
+  .section-alt { background-color: #F7FAF8; }
   .footer-dark { background-color: #1A3C4E; }
 
   .bokeh-bg {
