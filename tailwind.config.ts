@@ -67,6 +67,12 @@ export default {
           DEFAULT: "hsl(var(--success))",
           foreground: "hsl(var(--success-foreground))",
         },
+        brand: {
+          cyan: "#00AEEF",
+          purple: "#7B2CBF",
+          footer: "#1e1b4b",
+          surface: "#f5f3ff",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

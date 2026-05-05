@@ -17,6 +17,9 @@ import PhoneInput from '@/components/PhoneInput';
 import PaymentModal from './PaymentModal';
 import { Copy, Check, Loader2, Camera, Image as ImageIcon, Trash2, ExternalLink } from 'lucide-react';
 import type { Profile } from '@/types/keddmat';
+import { getPublicSiteUrl } from '@/lib/siteUrl';
+import { slugifyLatin, generateSlug } from '@/lib/slug';
+import { daysUntilExpiry, isPublicStoreVisible, SUBSCRIPTION_PERIOD_DAYS } from '@/lib/subscription';
 
 const StoreSettingsForm = () => {
   const { user, signOut } = useAuth();
@@ -34,6 +37,13 @@ const StoreSettingsForm = () => {
     if (user) fetchProfile();
   }, [user]);
 
+  // Auto-populate slug from store name while slug is still unset
+  useEffect(() => {
+    if (!profile.page_slug && profile.store_name) {
+      setProfile(prev => ({ ...prev, page_slug: generateSlug(profile.store_name || '') }));
+    }
+  }, [profile.store_name]);
+
   const fetchProfile = async () => {
     const { data } = await supabase.from('profiles').select('*').eq('user_id', user!.id).maybeSingle();
     if (data) {
@@ -46,7 +56,7 @@ const StoreSettingsForm = () => {
   const handleSave = async () => {
     if (!user) return;
     setSaving(true);
-    const slug = profile.page_slug?.trim() || `store-${Date.now()}`;
+    const slug = slugifyLatin(profile.page_slug?.trim() || '') || generateSlug(profile.store_name || '');
     const { error } = await supabase.from('profiles').upsert({
       user_id: user.id,
       store_name: profile.store_name || '',
@@ -88,7 +98,7 @@ const StoreSettingsForm = () => {
   };
 
   const copyLink = async () => {
-    const link = `${window.location.origin}/store/${profile.page_slug}`;
+    const link = `${getPublicSiteUrl()}/store/${profile.page_slug}`;
     await navigator.clipboard.writeText(link);
     setCopied(true);
     toast({ title: 'تم نسخ الرابط ✓' });
@@ -103,9 +113,17 @@ const StoreSettingsForm = () => {
     window.location.href = '/';
   };
 
-  if (loading) return <div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-[#2D7D46]" /></div>;
+  if (loading) return <div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-brand-purple" /></div>;
 
-  const storeLink = `${window.location.origin}/store/${profile.page_slug || ''}`;
+  const storeLink = `${getPublicSiteUrl()}/store/${profile.page_slug || ''}`;
+  const publicVisible = isPublicStoreVisible({
+    is_active: !!profile.is_active,
+    subscription_expires_at: profile.subscription_expires_at,
+  });
+  const daysLeft = daysUntilExpiry(profile.subscription_expires_at);
+  const expiryLabel = profile.subscription_expires_at
+    ? new Date(profile.subscription_expires_at).toLocaleDateString('ar-EG', { dateStyle: 'medium' })
+    : null;
 
   return (
     <div className="space-y-6 p-1">
@@ -113,13 +131,33 @@ const StoreSettingsForm = () => {
       <div className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border">
         <div>
           <p className="font-semibold text-gray-800">حالة المتجر</p>
-          {profile.is_active
-            ? <p className="text-sm text-gray-500">متجرك مرئي للجميع</p>
-            : <p className="text-sm text-gray-500">متجرك غير منشور بعد</p>}
+          {publicVisible ? (
+            <>
+              <p className="text-sm text-gray-500">متجرك منشور ويظهر للزوار</p>
+              {expiryLabel && (
+                <p className="text-xs text-brand-purple font-medium mt-1">ينتهي الاشتراك: {expiryLabel}</p>
+              )}
+              {daysLeft !== null && daysLeft <= 7 && daysLeft > 0 && (
+                <p className="text-xs text-amber-700 mt-1">تبقّى {daysLeft} يوماً — جدّد مبكراً بعيد انقطاع الرابط العام.</p>
+              )}
+              <p className="text-xs text-gray-400 mt-1">الاشتراك شهري ({SUBSCRIPTION_PERIOD_DAYS} يوماً) بعد كل دفعة يوافق عليها فريقنا.</p>
+            </>
+          ) : (
+            <>
+              <p className="text-sm text-gray-500">
+                {profile.subscription_expires_at && new Date(profile.subscription_expires_at) <= new Date()
+                  ? 'انتهت صلاحية اشتراكك — المتجر غير ظاهر للزوار حالياً'
+                  : 'متجرك غير منشور للعامة بعد'}
+              </p>
+              <p className="text-xs text-gray-400 mt-1">
+                ادفع عبر CliQ، ارفع الوصل، وبعد الموافقة يُمدَّد اشتراكك {SUBSCRIPTION_PERIOD_DAYS} يوماً (أو يُفعَّل لأول مرة).
+              </p>
+            </>
+          )}
         </div>
-        {profile.is_active
-          ? <Badge className="bg-green-500 text-white text-sm px-3 py-1">متجرك نشط ✓</Badge>
-          : <Button onClick={() => setShowPayment(true)} className="font-bold" style={{ background: 'linear-gradient(135deg, #2D7D46, #00BCD4)' }}>انشر متجرك</Button>}
+        {publicVisible
+          ? <Badge className="bg-gradient-to-r from-brand-cyan to-brand-purple text-white text-sm px-3 py-1 border-0">متجرك نشط ✓</Badge>
+          : <Button onClick={() => setShowPayment(true)} className="font-bold text-white bg-gradient-to-br from-brand-cyan to-brand-purple hover:opacity-95">انشر متجرك / تجديد</Button>}
       </div>
 
       {/* Cover upload */}
@@ -128,7 +166,7 @@ const StoreSettingsForm = () => {
         <div className="relative h-32 rounded-2xl overflow-hidden border-2 border-dashed border-gray-200 group cursor-pointer bg-gray-50">
           {profile.cover_url
             ? <img src={profile.cover_url} alt="Cover" className="w-full h-full object-cover" />
-            : <div className="w-full h-full flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #2D7D46, #00BCD4)' }}><ImageIcon className="h-10 w-10 text-white/50" /></div>}
+            : <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-brand-cyan to-brand-purple"><ImageIcon className="h-10 w-10 text-white/50" /></div>}
           <label className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
             <span className="text-white text-sm font-bold flex items-center gap-2"><Camera className="h-5 w-5" />تغيير الغلاف</span>
             <input type="file" accept="image/*" onChange={handleCoverUpload} className="hidden" />
@@ -144,7 +182,7 @@ const StoreSettingsForm = () => {
               ? <img src={profile.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
               : <div className="w-full h-full flex items-center justify-center bg-gray-200"><Camera className="h-8 w-8 text-gray-400" /></div>}
           </div>
-          <label className="absolute -bottom-1 -right-1 bg-[#2D7D46] text-white rounded-full p-1.5 cursor-pointer shadow-md">
+          <label className="absolute -bottom-1 -right-1 bg-brand-purple text-white rounded-full p-1.5 cursor-pointer shadow-md">
             <Camera className="h-3.5 w-3.5" />
             <input type="file" accept="image/*" onChange={handleAvatarUpload} className="hidden" />
           </label>
@@ -196,26 +234,27 @@ const StoreSettingsForm = () => {
         <Label className="font-semibold">رابط المتجر (slug)</Label>
         <Input
           value={profile.page_slug || ''}
-          onChange={e => setProfile(prev => ({ ...prev, page_slug: e.target.value.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') }))}
+          onChange={e => setProfile(prev => ({ ...prev, page_slug: slugifyLatin(e.target.value) }))}
           placeholder="my-store-name"
           className="h-11 rounded-xl"
           dir="ltr"
         />
+        <p className="text-xs text-gray-400">حروف لاتينية وأرقام وشرطات فقط. يُحدَّث الرابط في قاعدة البيانات عند الضغط على «حفظ التغييرات».</p>
       </div>
 
       {/* Shareable link */}
-      {profile.page_slug && (
-        <Card className="border border-[#2D7D46]/20 bg-[#2D7D46]/5 rounded-2xl">
+      {profile.page_slug && publicVisible && (
+        <Card className="border border-brand-purple/20 bg-brand-purple/5 rounded-2xl">
           <CardContent className="p-4">
-            <p className="text-sm font-semibold text-[#2D7D46] mb-2">رابط متجرك القابل للمشاركة</p>
+            <p className="text-sm font-semibold text-brand-purple mb-2">رابط متجرك القابل للمشاركة</p>
             <div className="flex items-center gap-2">
               <code className="flex-1 text-xs bg-white border rounded-lg px-3 py-2 text-gray-600 overflow-x-auto" dir="ltr">{storeLink}</code>
-              <Button variant="outline" size="icon" onClick={copyLink} className="shrink-0 rounded-xl border-[#2D7D46]/30 hover:bg-[#2D7D46]/10">
-                {copied ? <Check className="h-4 w-4 text-[#2D7D46]" /> : <Copy className="h-4 w-4 text-[#2D7D46]" />}
+              <Button variant="outline" size="icon" onClick={copyLink} className="shrink-0 rounded-xl border-brand-purple/30 hover:bg-brand-purple/10">
+                {copied ? <Check className="h-4 w-4 text-brand-purple" /> : <Copy className="h-4 w-4 text-brand-purple" />}
               </Button>
               <a href={storeLink} target="_blank" rel="noopener noreferrer">
-                <Button variant="outline" size="icon" className="shrink-0 rounded-xl border-[#2D7D46]/30 hover:bg-[#2D7D46]/10">
-                  <ExternalLink className="h-4 w-4 text-[#2D7D46]" />
+                <Button variant="outline" size="icon" className="shrink-0 rounded-xl border-brand-purple/30 hover:bg-brand-purple/10">
+                  <ExternalLink className="h-4 w-4 text-brand-purple" />
                 </Button>
               </a>
             </div>
@@ -226,8 +265,7 @@ const StoreSettingsForm = () => {
       <Button
         onClick={handleSave}
         disabled={saving || uploading}
-        className="w-full h-12 font-bold text-base rounded-xl"
-        style={{ background: 'linear-gradient(135deg, #2D7D46, #00BCD4)' }}
+        className="w-full h-12 font-bold text-base rounded-xl text-white bg-gradient-to-br from-brand-cyan to-brand-purple hover:opacity-95"
       >
         {saving ? <><Loader2 className="h-5 w-5 animate-spin ml-2" />جاري الحفظ...</> : 'حفظ التغييرات'}
       </Button>
@@ -253,7 +291,13 @@ const StoreSettingsForm = () => {
         </AlertDialog>
       </div>
 
-      <PaymentModal open={showPayment} onOpenChange={setShowPayment} />
+      <PaymentModal
+        open={showPayment}
+        onOpenChange={(open) => {
+          setShowPayment(open);
+          if (!open && user) fetchProfile();
+        }}
+      />
     </div>
   );
 };

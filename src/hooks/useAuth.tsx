@@ -1,6 +1,7 @@
 import { useState, useEffect, createContext, useContext, type ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
+import { slugifyLatin } from '@/lib/slug';
 
 interface AuthContextType {
   user: User | null;
@@ -42,7 +43,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       options: { emailRedirectTo: redirectUrl, data: { phone } },
     });
     if (!error && data.user) {
-      const slug = `store-${Date.now()}`;
+      const base = slugifyLatin(storeName || '');
+      const slug = base.length >= 3 ? `${base}-${Date.now().toString(36)}` : `store-${Date.now()}`;
       const { error: profileError } = await supabase.from('profiles').insert({
         user_id: data.user.id,
         phone,

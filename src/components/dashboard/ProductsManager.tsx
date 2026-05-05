@@ -89,13 +89,13 @@ const ProductsManager = () => {
     else { toast({ title: 'تم الحذف' }); fetchProducts(); }
   };
 
-  if (loading) return <div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-[#2D7D46]" /></div>;
+  if (loading) return <div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-brand-purple" /></div>;
 
   return (
     <div className="space-y-4 p-1">
       <div className="flex items-center justify-between">
         <p className="text-sm text-gray-500">{products.length} منتج</p>
-        <Button onClick={openAdd} className="font-bold gap-2 rounded-xl" style={{ background: 'linear-gradient(135deg, #2D7D46, #00BCD4)' }}>
+        <Button onClick={openAdd} className="font-bold gap-2 rounded-xl text-white bg-gradient-to-br from-brand-cyan to-brand-purple hover:opacity-95">
           <Plus className="h-4 w-4" />إضافة منتج +
         </Button>
       </div>
@@ -119,7 +119,7 @@ const ProductsManager = () => {
                 <h3 className="font-bold text-gray-900 text-sm line-clamp-1">{p.title}</h3>
                 {p.description && <p className="text-xs text-gray-500 line-clamp-2">{p.description}</p>}
                 <div className="flex items-center justify-between">
-                  <span className="font-extrabold text-[#2D7D46] text-sm">{p.price} JOD</span>
+                  <span className="font-extrabold text-brand-purple text-sm">{p.price} JOD</span>
                   {p.delivery_available && (
                     <Badge variant="secondary" className="text-xs bg-blue-50 text-blue-700 border-0">
                       توصيل {p.delivery_price ? `${p.delivery_price} JOD` : ''}
@@ -143,7 +143,7 @@ const ProductsManager = () => {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto" dir="rtl">
           <DialogHeader>
-            <DialogTitle className="font-bold text-[#2D7D46]">{editingId ? 'تعديل المنتج' : 'إضافة منتج جديد'}</DialogTitle>
+            <DialogTitle className="font-bold text-brand-purple">{editingId ? 'تعديل المنتج' : 'إضافة منتج جديد'}</DialogTitle>
           </DialogHeader>
 
           <div className="space-y-4">
@@ -195,7 +195,7 @@ const ProductsManager = () => {
 
           <DialogFooter className="flex gap-2 mt-2">
             <Button variant="outline" onClick={() => setDialogOpen(false)} className="flex-1 rounded-xl">إلغاء</Button>
-            <Button onClick={handleSave} disabled={saving || uploading} className="flex-1 font-bold rounded-xl" style={{ background: 'linear-gradient(135deg, #2D7D46, #00BCD4)' }}>
+            <Button onClick={handleSave} disabled={saving || uploading} className="flex-1 font-bold rounded-xl text-white bg-gradient-to-br from-brand-cyan to-brand-purple hover:opacity-95">
               {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : 'حفظ'}
             </Button>
           </DialogFooter>

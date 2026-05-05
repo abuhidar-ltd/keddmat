@@ -9,6 +9,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import { LogOut, Store, CreditCard, CheckCircle, XCircle, Trash2, Users, MessageCircle, Link2, Loader2, ShieldCheck, ToggleLeft, ToggleRight } from 'lucide-react';
+import { brand } from '@/lib/brand';
+import { BrandLogo } from '@/components/BrandLogo';
+import { computeRenewedExpiry, isPublicStoreVisible, SUBSCRIPTION_PERIOD_DAYS } from '@/lib/subscription';
 import { toast } from 'sonner';
 
 interface StoreRow {
@@ -17,6 +20,7 @@ interface StoreRow {
   page_slug: string | null;
   whatsapp_number: string | null;
   is_active: boolean;
+  subscription_expires_at: string | null;
   created_at: string;
 }
 
@@ -53,7 +57,7 @@ const Admin = () => {
   const fetchData = async () => {
     setLoadingData(true);
     const [storesRes, receiptsRes, analyticsRes] = await Promise.all([
-      supabase.from('profiles').select('user_id, store_name, page_slug, whatsapp_number, is_active, created_at').order('created_at', { ascending: false }),
+      supabase.from('profiles').select('user_id, store_name, page_slug, whatsapp_number, is_active, subscription_expires_at, created_at').order('created_at', { ascending: false }),
       supabase.from('payment_receipts').select('*').order('created_at', { ascending: false }),
       supabase.from('store_analytics').select('event_type, created_at').gte('created_at', new Date(Date.now() - 30 * 86400000).toISOString()),
     ]);
@@ -73,9 +77,19 @@ const Admin = () => {
   };
 
   const toggleActive = async (userId: string, current: boolean) => {
-    const { error } = await supabase.from('profiles').update({ is_active: !current }).eq('user_id', userId);
-    if (error) { toast.error('فشل التحديث'); return; }
-    toast.success(!current ? 'تم تفعيل المتجر' : 'تم إيقاف المتجر');
+    if (!current) {
+      const next = computeRenewedExpiry(null);
+      const { error } = await supabase
+        .from('profiles')
+        .update({ is_active: true, subscription_expires_at: next })
+        .eq('user_id', userId);
+      if (error) { toast.error('فشل التحديث'); return; }
+      toast.success(`تم تفعيل المتجر — اشتراك ${SUBSCRIPTION_PERIOD_DAYS} يوماً`);
+    } else {
+      const { error } = await supabase.from('profiles').update({ is_active: false }).eq('user_id', userId);
+      if (error) { toast.error('فشل التحديث'); return; }
+      toast.success('تم إيقاف المتجر');
+    }
     fetchData();
   };
 
@@ -88,9 +102,18 @@ const Admin = () => {
   };
 
   const approveReceipt = async (receiptId: string, userId: string) => {
+    const { data: prof } = await supabase.from('profiles').select('subscription_expires_at').eq('user_id', userId).maybeSingle();
+    const nextExpiry = computeRenewedExpiry(prof?.subscription_expires_at ?? null);
     await supabase.from('payment_receipts').update({ status: 'approved' }).eq('id', receiptId);
-    await supabase.from('profiles').update({ is_active: true }).eq('user_id', userId);
-    toast.success('تم قبول الوصل وتفعيل المتجر ✓');
+    const { error } = await supabase
+      .from('profiles')
+      .update({ is_active: true, subscription_expires_at: nextExpiry })
+      .eq('user_id', userId);
+    if (error) {
+      toast.error('فشل تحديث الاشتراك');
+      return;
+    }
+    toast.success(`تم قبول الوصل — تمديد ${SUBSCRIPTION_PERIOD_DAYS} يوماً`);
     fetchData();
   };
 
@@ -107,7 +130,9 @@ const Admin = () => {
 
   // KPIs
   const totalStores = stores.length;
-  const activeStores = stores.filter(s => s.is_active).length;
+  const activeStores = stores.filter(s =>
+    isPublicStoreVisible({ is_active: s.is_active, subscription_expires_at: s.subscription_expires_at }),
+  ).length;
   const totalWaClicks = analytics.filter(e => e.event_type === 'whatsapp_click').length;
   const totalLinkClicks = analytics.filter(e => e.event_type === 'link_click').length;
   const pendingReceipts = receipts.filter(r => r.status === 'pending').length;
@@ -128,17 +153,18 @@ const Admin = () => {
   })();
 
   if (adminLoading || !isAdmin) {
-    return <div className="min-h-screen flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-[#2D7D46]" /></div>;
+    return <div className="min-h-screen flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-brand-purple" /></div>;
   }
 
   return (
-    <div className="min-h-screen bg-[#F7FAF8]" dir="rtl">
+    <div className="min-h-screen bg-brand-surface" dir="rtl">
       {/* Header */}
-      <header className="bg-white border-b shadow-sm sticky top-0 z-40">
+      <header className="bg-white border-b border-brand-purple/10 shadow-sm sticky top-0 z-40">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <ShieldCheck className="h-5 w-5 text-[#2D7D46]" />
-            <span className="font-extrabold text-gray-900">لوحة الأدمن</span>
+          <div className="flex items-center gap-3">
+            <BrandLogo height={32} />
+            <ShieldCheck className="h-5 w-5 text-brand-purple hidden sm:block" />
+            <span className="font-extrabold text-gray-900 hidden sm:inline">لوحة الأدمن</span>
           </div>
           <div className="flex items-center gap-2">
             <Link to="/"><Button variant="outline" size="sm" className="rounded-xl text-sm">الرئيسية</Button></Link>
@@ -149,10 +175,10 @@ const Admin = () => {
 
       <main className="container mx-auto px-4 py-6 max-w-5xl">
         <Tabs defaultValue="overview">
-          <TabsList className="grid w-full grid-cols-3 rounded-2xl bg-white shadow-sm border border-gray-100 p-1 mb-6 h-auto">
-            <TabsTrigger value="overview" className="rounded-xl py-2.5 font-semibold data-[state=active]:bg-[#2D7D46] data-[state=active]:text-white">نظرة عامة</TabsTrigger>
-            <TabsTrigger value="stores" className="rounded-xl py-2.5 font-semibold data-[state=active]:bg-[#2D7D46] data-[state=active]:text-white">المتاجر</TabsTrigger>
-            <TabsTrigger value="payments" className="rounded-xl py-2.5 font-semibold data-[state=active]:bg-[#2D7D46] data-[state=active]:text-white">
+          <TabsList className="grid w-full grid-cols-3 rounded-2xl bg-white shadow-sm border border-brand-purple/10 p-1 mb-6 h-auto">
+            <TabsTrigger value="overview" className="rounded-xl py-2.5 font-semibold data-[state=active]:bg-brand-purple data-[state=active]:text-white">نظرة عامة</TabsTrigger>
+            <TabsTrigger value="stores" className="rounded-xl py-2.5 font-semibold data-[state=active]:bg-brand-purple data-[state=active]:text-white">المتاجر</TabsTrigger>
+            <TabsTrigger value="payments" className="rounded-xl py-2.5 font-semibold data-[state=active]:bg-brand-purple data-[state=active]:text-white">
               المدفوعات {pendingReceipts > 0 && <span className="bg-red-500 text-white rounded-full px-1.5 py-0.5 text-xs mr-1">{pendingReceipts}</span>}
             </TabsTrigger>
           </TabsList>
@@ -161,10 +187,10 @@ const Admin = () => {
           <TabsContent value="overview" className="space-y-6">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               {[
-                { label: 'إجمالي المتاجر', value: totalStores, icon: <Store className="h-5 w-5 text-[#2D7D46]" />, bg: 'from-green-50' },
+                { label: 'إجمالي المتاجر', value: totalStores, icon: <Store className="h-5 w-5 text-brand-purple" />, bg: 'from-violet-50' },
                 { label: 'متاجر نشطة', value: activeStores, icon: <Users className="h-5 w-5 text-blue-600" />, bg: 'from-blue-50' },
-                { label: 'نقرات واتساب', value: totalWaClicks, icon: <MessageCircle className="h-5 w-5 text-green-600" />, bg: 'from-emerald-50' },
-                { label: 'زيارات الرابط', value: totalLinkClicks, icon: <Link2 className="h-5 w-5 text-purple-600" />, bg: 'from-purple-50' },
+                { label: 'نقرات واتساب', value: totalWaClicks, icon: <MessageCircle className="h-5 w-5 text-brand-cyan" />, bg: 'from-cyan-50' },
+                { label: 'زيارات الرابط', value: totalLinkClicks, icon: <Link2 className="h-5 w-5 text-brand-purple" />, bg: 'from-violet-50' },
               ].map((stat, i) => (
                 <Card key={i} className={`border-0 shadow-md rounded-2xl bg-gradient-to-br ${stat.bg} to-white`}>
                   <CardContent className="p-4 flex items-center gap-3">
@@ -187,7 +213,7 @@ const Admin = () => {
                     <XAxis dataKey="date" tick={{ fontSize: 10 }} />
                     <YAxis allowDecimals={false} tick={{ fontSize: 10 }} />
                     <Tooltip />
-                    <Bar dataKey="تسجيل" fill="#2D7D46" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="تسجيل" fill={brand.purple} radius={[4, 4, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </CardContent>
@@ -196,22 +222,37 @@ const Admin = () => {
 
           {/* Stores Tab */}
           <TabsContent value="stores">
-            {loadingData ? <div className="flex justify-center py-12"><Loader2 className="h-7 w-7 animate-spin text-[#2D7D46]" /></div> : (
+            {loadingData ? <div className="flex justify-center py-12"><Loader2 className="h-7 w-7 animate-spin text-brand-purple" /></div> : (
               <div className="space-y-3">
                 {stores.length === 0 && <p className="text-center text-gray-400 py-10">لا توجد متاجر بعد</p>}
-                {stores.map(store => (
+                {stores.map(store => {
+                  const pub = isPublicStoreVisible({
+                    is_active: store.is_active,
+                    subscription_expires_at: store.subscription_expires_at,
+                  });
+                  const exp = store.subscription_expires_at
+                    ? new Date(store.subscription_expires_at).toLocaleDateString('ar-EG')
+                    : null;
+                  return (
                   <Card key={store.user_id} className="border-0 shadow-sm rounded-2xl bg-white">
                     <CardContent className="p-4 flex flex-col sm:flex-row sm:items-center gap-3">
                       <div className="flex-1 min-w-0">
                         <p className="font-bold text-gray-900 truncate">{store.store_name || 'بدون اسم'}</p>
                         <p className="text-xs text-gray-500 mt-0.5">{store.whatsapp_number} • {store.page_slug}</p>
                         <p className="text-xs text-gray-400">{new Date(store.created_at).toLocaleDateString('ar-EG')}</p>
+                        {exp && (
+                          <p className="text-xs text-brand-purple mt-1">ينتهي الاشتراك: {exp}</p>
+                        )}
                       </div>
-                      <div className="flex items-center gap-2 shrink-0">
-                        <Badge className={store.is_active ? 'bg-green-100 text-green-700 border-0' : 'bg-gray-100 text-gray-500 border-0'}>
-                          {store.is_active ? 'نشط' : 'غير نشط'}
-                        </Badge>
-                        {store.page_slug && (
+                      <div className="flex items-center gap-2 shrink-0 flex-wrap">
+                        {pub ? (
+                          <Badge className="bg-green-100 text-green-700 border-0">ظاهر للزوار</Badge>
+                        ) : store.is_active ? (
+                          <Badge className="bg-amber-100 text-amber-800 border-0">غير ظاهر (منتهي؟)</Badge>
+                        ) : (
+                          <Badge className="bg-gray-100 text-gray-500 border-0">غير نشط</Badge>
+                        )}
+                        {store.page_slug && pub && (
                           <a href={`/store/${store.page_slug}`} target="_blank" rel="noopener noreferrer">
                             <Button variant="outline" size="sm" className="rounded-xl h-8 text-xs">عرض</Button>
                           </a>
@@ -231,14 +272,15 @@ const Admin = () => {
                       </div>
                     </CardContent>
                   </Card>
-                ))}
+                );
+                })}
               </div>
             )}
           </TabsContent>
 
           {/* Payments Tab */}
           <TabsContent value="payments">
-            {loadingData ? <div className="flex justify-center py-12"><Loader2 className="h-7 w-7 animate-spin text-[#2D7D46]" /></div> : (
+            {loadingData ? <div className="flex justify-center py-12"><Loader2 className="h-7 w-7 animate-spin text-brand-purple" /></div> : (
               <div className="space-y-3">
                 {receipts.length === 0 && <p className="text-center text-gray-400 py-10">لا توجد وصولات بعد</p>}
                 {receipts.map(r => (

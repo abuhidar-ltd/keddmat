@@ -3,6 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
+import { brand } from '@/lib/brand';
 import { Link2, MessageCircle, Eye, Loader2 } from 'lucide-react';
 import type { StoreAnalyticsEvent, Product } from '@/types/keddmat';
 
@@ -62,24 +63,24 @@ const AnalyticsTab = () => {
     clicks: events.filter(e => e.event_type === 'whatsapp_click' && e.product_id === p.id).length,
   })).sort((a, b) => b.clicks - a.clicks);
 
-  if (loading) return <div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-[#2D7D46]" /></div>;
+  if (loading) return <div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-brand-purple" /></div>;
 
   return (
     <div className="space-y-6 p-1">
       {/* Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card className="border-0 shadow-md rounded-2xl bg-gradient-to-br from-blue-50 to-white">
+        <Card className="border-0 shadow-md rounded-2xl bg-gradient-to-br from-cyan-50 to-white">
           <CardContent className="p-5 flex items-center gap-4">
-            <div className="p-3 rounded-xl bg-blue-100"><Link2 className="h-6 w-6 text-blue-600" /></div>
+            <div className="p-3 rounded-xl bg-cyan-100"><Link2 className="h-6 w-6 text-brand-cyan" /></div>
             <div>
               <p className="text-3xl font-extrabold text-gray-900">{totalLinkClicks}</p>
               <p className="text-sm text-gray-500">زيارات الرابط</p>
             </div>
           </CardContent>
         </Card>
-        <Card className="border-0 shadow-md rounded-2xl bg-gradient-to-br from-green-50 to-white">
+        <Card className="border-0 shadow-md rounded-2xl bg-gradient-to-br from-violet-50 to-white">
           <CardContent className="p-5 flex items-center gap-4">
-            <div className="p-3 rounded-xl bg-green-100"><MessageCircle className="h-6 w-6 text-green-600" /></div>
+            <div className="p-3 rounded-xl bg-violet-100"><MessageCircle className="h-6 w-6 text-brand-purple" /></div>
             <div>
               <p className="text-3xl font-extrabold text-gray-900">{totalWaClicks}</p>
               <p className="text-sm text-gray-500">نقرات واتساب</p>
@@ -88,7 +89,7 @@ const AnalyticsTab = () => {
         </Card>
         <Card className="border-0 shadow-md rounded-2xl bg-gradient-to-br from-purple-50 to-white">
           <CardContent className="p-5 flex items-center gap-4">
-            <div className="p-3 rounded-xl bg-purple-100"><Eye className="h-6 w-6 text-purple-600" /></div>
+            <div className="p-3 rounded-xl bg-purple-100"><Eye className="h-6 w-6 text-brand-purple" /></div>
             <div>
               <p className="text-3xl font-extrabold text-gray-900">{totalViews}</p>
               <p className="text-sm text-gray-500">مشاهدات المنتجات</p>
@@ -107,9 +108,9 @@ const AnalyticsTab = () => {
               <XAxis dataKey="date" tick={{ fontSize: 10 }} />
               <YAxis allowDecimals={false} tick={{ fontSize: 10 }} />
               <Tooltip />
-              <Bar dataKey="رابط" fill="#3B82F6" radius={[3, 3, 0, 0]} />
-              <Bar dataKey="واتساب" fill="#2D7D46" radius={[3, 3, 0, 0]} />
-              <Bar dataKey="مشاهدة" fill="#A855F7" radius={[3, 3, 0, 0]} />
+              <Bar dataKey="رابط" fill={brand.cyan} radius={[3, 3, 0, 0]} />
+              <Bar dataKey="واتساب" fill={brand.purple} radius={[3, 3, 0, 0]} />
+              <Bar dataKey="مشاهدة" fill="#a855f7" radius={[3, 3, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </CardContent>
@@ -125,8 +126,8 @@ const AnalyticsTab = () => {
                 <div key={p.name} className="flex items-center justify-between gap-3">
                   <span className="text-sm text-gray-700 flex-1 min-w-0 truncate">{p.name}</span>
                   <div className="flex items-center gap-2">
-                    <div className="h-2 rounded-full bg-[#2D7D46]" style={{ width: `${Math.max(8, (p.clicks / (productWaClicks[0]?.clicks || 1)) * 80)}px` }} />
-                    <span className="text-sm font-bold text-[#2D7D46] w-8 text-end">{p.clicks}</span>
+                    <div className="h-2 rounded-full bg-brand-purple" style={{ width: `${Math.max(8, (p.clicks / (productWaClicks[0]?.clicks || 1)) * 80)}px` }} />
+                    <span className="text-sm font-bold text-brand-purple w-8 text-end">{p.clicks}</span>
                   </div>
                 </div>
               ))}

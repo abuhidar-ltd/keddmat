@@ -9,12 +9,28 @@
 ALTER TABLE public.profiles
   ADD COLUMN IF NOT EXISTS is_active boolean NOT NULL DEFAULT false;
 
-UPDATE public.profiles SET is_active = COALESCE(page_enabled, false);
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_schema = 'public' AND table_name = 'profiles' AND column_name = 'page_enabled'
+  ) THEN
+    UPDATE public.profiles SET is_active = COALESCE(page_enabled, false);
+  END IF;
+END $$;
 
 ALTER TABLE public.profiles
   ADD COLUMN IF NOT EXISTS store_description text;
 
-UPDATE public.profiles SET store_description = bio WHERE bio IS NOT NULL;
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_schema = 'public' AND table_name = 'profiles' AND column_name = 'bio'
+  ) THEN
+    UPDATE public.profiles SET store_description = COALESCE(store_description, bio) WHERE bio IS NOT NULL;
+  END IF;
+END $$;
 
 ALTER TABLE public.profiles
   DROP COLUMN IF EXISTS page_enabled,
@@ -47,9 +63,17 @@ CREATE TABLE IF NOT EXISTS public.products (
   created_at timestamptz NOT NULL DEFAULT now()
 );
 
-INSERT INTO public.products (id, user_id, title, description, price, image_url, created_at)
-SELECT id, user_id, title, description, price, image_url, created_at FROM public.items
-ON CONFLICT DO NOTHING;
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.tables
+    WHERE table_schema = 'public' AND table_name = 'items'
+  ) THEN
+    INSERT INTO public.products (id, user_id, title, description, price, image_url, created_at)
+    SELECT id, user_id, title, description, price, image_url, created_at FROM public.items
+    ON CONFLICT (id) DO NOTHING;
+  END IF;
+END $$;
 
 ALTER TABLE public.products ENABLE ROW LEVEL SECURITY;
 

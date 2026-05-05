@@ -4,8 +4,10 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { MessageCircle, Package, Loader2, Store, Truck } from 'lucide-react';
+import { MessageCircle, Package, Loader2, Store, Truck, Phone } from 'lucide-react';
+import { BrandLogo } from '@/components/BrandLogo';
 import type { Profile, Product } from '@/types/keddmat';
+import { isPublicStoreVisible } from '@/lib/subscription';
 
 const normalizePhone = (phone: string) => {
   const n = phone.replace(/[^0-9]/g, '');
@@ -25,11 +27,14 @@ const StorePage = () => {
 
   const loadStore = async () => {
     const { data } = await supabase.from('public_profiles')
-      .select('user_id, store_name, store_description, avatar_url, cover_url, page_slug, whatsapp_number, is_active')
+      .select('user_id, store_name, store_description, avatar_url, cover_url, page_slug, whatsapp_number, is_active, subscription_expires_at')
       .eq('page_slug', slug)
       .maybeSingle();
 
-    if (!data || !data.is_active) {
+    if (!data || !isPublicStoreVisible({
+      is_active: !!data.is_active,
+      subscription_expires_at: (data as Profile).subscription_expires_at ?? null,
+    })) {
       setNotFound(true);
       setLoading(false);
       return;
@@ -76,7 +81,7 @@ const StorePage = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
-        <Loader2 className="h-9 w-9 animate-spin text-[#2D7D46]" />
+        <Loader2 className="h-9 w-9 animate-spin text-brand-purple" />
       </div>
     );
   }
@@ -95,41 +100,53 @@ const StorePage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#F7FAF8]" dir="rtl">
+    <div className="min-h-screen bg-brand-surface" dir="rtl">
       {/* Cover */}
       <div className="relative h-48 md:h-64">
         {profile?.cover_url
           ? <img src={profile.cover_url} alt="Cover" className="w-full h-full object-cover" />
-          : <div className="w-full h-full" style={{ background: 'linear-gradient(135deg, #2D7D46, #00BCD4)' }} />}
+          : <div className="w-full h-full bg-gradient-to-br from-brand-cyan to-brand-purple" />}
 
         {/* Avatar */}
-        <div className="absolute -bottom-12 right-6 z-20">
-          <div className="w-24 h-24 rounded-2xl overflow-hidden border-4 border-white shadow-xl ring-2 ring-[#4CAF50]">
+        <div className="absolute -bottom-12 left-1/2 z-20 -translate-x-1/2">
+          <div className="w-24 h-24 rounded-2xl overflow-hidden border-4 border-white shadow-xl ring-2 ring-brand-purple/70">
             {profile?.avatar_url
               ? <img src={profile.avatar_url} alt={profile.store_name || ''} className="w-full h-full object-cover" />
-              : <div className="w-full h-full bg-[#2D7D46] flex items-center justify-center"><Store className="h-10 w-10 text-white" /></div>}
+              : <div className="w-full h-full bg-brand-purple flex items-center justify-center"><Store className="h-10 w-10 text-white" /></div>}
           </div>
         </div>
       </div>
 
       {/* Store info */}
       <div className="container mx-auto px-4 pt-16 pb-4">
-        <div className="mb-4">
+        <div className="mb-4 text-center">
           <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900">{profile?.store_name || 'متجر'}</h1>
           {profile?.store_description && (
             <p className="text-gray-600 mt-1 leading-relaxed">{profile.store_description}</p>
           )}
         </div>
 
-        {/* General WA button */}
+        {/* Contact buttons */}
         {profile?.whatsapp_number && (
-          <Button
-            onClick={handleGeneralWa}
-            className="gap-2 font-bold rounded-xl mb-6 bg-[#25D366] hover:bg-[#20BD5A] text-white shadow-md"
-          >
-            <MessageCircle className="h-5 w-5" />
-            تواصل عبر واتساب
-          </Button>
+          <div className="flex flex-wrap items-center justify-center gap-3 mb-6">
+            <Button
+              onClick={handleGeneralWa}
+              className="gap-2 font-bold rounded-xl bg-[#25D366] hover:bg-[#20BD5A] text-white shadow-md"
+            >
+              <MessageCircle className="h-5 w-5" />
+              تواصل عبر واتساب
+            </Button>
+            <Button
+              asChild
+              variant="outline"
+              className="gap-2 font-bold rounded-xl border-brand-purple text-brand-purple hover:bg-brand-purple/5 shadow-md"
+            >
+              <a href={`tel:+${normalizePhone(profile.whatsapp_number)}`}>
+                <Phone className="h-5 w-5" />
+                اتصال
+              </a>
+            </Button>
+          </div>
         )}
 
         {/* Products */}
@@ -141,9 +158,9 @@ const StorePage = () => {
             <p>لا توجد منتجات حالياً</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pb-12">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 pb-12">
             {products.map(product => (
-              <Card key={product.id} className="rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border-0 bg-white">
+              <Card key={product.id} className="min-w-0 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border-0 bg-white">
                 <div className="aspect-video bg-gray-100 overflow-hidden">
                   {product.image_url
                     ? <img src={product.image_url} alt={product.title} className="w-full h-full object-cover" />
@@ -155,9 +172,9 @@ const StorePage = () => {
                     <p className="text-sm text-gray-700 line-clamp-2 leading-relaxed">{product.description}</p>
                   )}
                   <div className="flex items-center justify-between">
-                    <span className="text-lg font-extrabold text-[#2D7D46]">{product.price} JOD</span>
+                    <span className="text-lg font-extrabold text-brand-purple">{product.price} JOD</span>
                     {product.delivery_available && (
-                      <Badge className="bg-blue-50 text-blue-700 border-0 gap-1 text-xs">
+                      <Badge className="bg-violet-50 text-brand-purple border-0 gap-1 text-xs">
                         <Truck className="h-3 w-3" />
                         توصيل متاح {product.delivery_price ? `${product.delivery_price} JOD` : ''}
                       </Badge>
@@ -179,8 +196,13 @@ const StorePage = () => {
       </div>
 
       {/* Footer */}
-      <footer className="border-t border-gray-100 py-4 bg-white">
-        <p className="text-center text-xs text-gray-400">مدعوم بواسطة <Link to="/" className="text-[#2D7D46] font-semibold hover:underline">خدمات</Link></p>
+      <footer className="border-t border-brand-purple/10 py-4 bg-white">
+        <p className="text-center text-xs text-gray-400 flex items-center justify-center gap-2 flex-wrap">
+          <span>مدعوم بواسطة</span>
+          <Link to="/" className="inline-flex items-center hover:opacity-90 transition-opacity">
+            <BrandLogo height={22} />
+          </Link>
+        </p>
       </footer>
     </div>
   );

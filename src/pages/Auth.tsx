@@ -8,7 +8,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
-import { Eye, EyeOff, Store, Loader2 } from 'lucide-react';
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
+import { BrandLogo } from '@/components/BrandLogo';
 import PhoneInput from '@/components/PhoneInput';
 import PasswordResetModal from '@/components/PasswordResetModal';
 import { z } from 'zod';
@@ -95,16 +96,16 @@ const Auth = () => {
     }
   };
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-[#2D7D46]" /></div>;
+  if (loading) return <div className="min-h-screen flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-brand-purple" /></div>;
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-[#F7FAF8]" dir="rtl">
-      <Card className="w-full max-w-md shadow-2xl rounded-2xl border-0">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-brand-surface" dir="rtl">
+      <Card className="w-full max-w-md shadow-2xl rounded-2xl border-0 ring-1 ring-brand-purple/10">
         <CardHeader className="text-center pb-2">
-          <div className="w-16 h-16 rounded-2xl mx-auto mb-3 flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #2D7D46, #00BCD4)' }}>
-            <Store className="h-9 w-9 text-white" />
+          <div className="mx-auto mb-2 flex justify-center">
+            <BrandLogo height={88} />
           </div>
-          <CardTitle className="text-2xl font-extrabold text-gray-900">خدمات</CardTitle>
+          <CardTitle className="text-lg font-bold text-gray-600 sr-only">خدمات</CardTitle>
           <p className="text-gray-500 text-sm">ابنِ متجرك الإلكتروني</p>
         </CardHeader>
         <CardContent>
@@ -135,12 +136,11 @@ const Auth = () => {
                   </div>
                   {errors.password && <p className="text-sm text-red-500">{errors.password}</p>}
                 </div>
-                <Button type="submit" disabled={isSubmitting} className="w-full h-12 font-bold text-base rounded-xl"
-                  style={{ background: 'linear-gradient(135deg, #2D7D46, #00BCD4)' }}>
+                <Button type="submit" disabled={isSubmitting} className="w-full h-12 font-bold text-base rounded-xl text-white bg-gradient-to-br from-brand-cyan to-brand-purple hover:opacity-95">
                   {isSubmitting ? <><Loader2 className="h-4 w-4 animate-spin ml-2" />جاري الدخول...</> : 'تسجيل الدخول'}
                 </Button>
                 <button type="button" onClick={() => setShowPasswordReset(true)}
-                  className="w-full text-sm text-[#2D7D46] hover:underline py-1">
+                  className="w-full text-sm text-brand-purple hover:underline py-1">
                   نسيت كلمة المرور؟
                 </button>
               </form>
@@ -188,21 +188,20 @@ const Auth = () => {
                 </div>
 
                 {/* Terms */}
-                <div className={`flex items-start gap-3 p-4 rounded-xl border transition-all ${regData.agreeToTerms ? 'bg-[#2D7D46]/5 border-[#2D7D46]/30' : 'bg-white border-gray-200'}`}>
+                <div className={`flex items-start gap-3 p-4 rounded-xl border transition-all ${regData.agreeToTerms ? 'bg-brand-purple/5 border-brand-purple/30' : 'bg-white border-gray-200'}`}>
                   <Checkbox id="agree-terms" checked={regData.agreeToTerms}
                     onCheckedChange={v => setRegData(p => ({ ...p, agreeToTerms: v === true }))}
                     className="mt-0.5 h-5 w-5 cursor-pointer" />
                   <label htmlFor="agree-terms" className="text-sm leading-relaxed text-gray-700 cursor-pointer">
                     أوافق على{' '}
-                    <button type="button" onClick={() => setShowTerms(true)} className="text-[#2D7D46] font-bold hover:underline">
+                    <button type="button" onClick={() => setShowTerms(true)} className="text-brand-purple font-bold hover:underline">
                       الشروط والأحكام وسياسة الخصوصية
                     </button>
                   </label>
                 </div>
                 {errors.agreeToTerms && <p className="text-sm text-red-500">{errors.agreeToTerms}</p>}
 
-                <Button type="submit" disabled={isSubmitting} className="w-full h-12 font-bold text-base rounded-xl"
-                  style={{ background: 'linear-gradient(135deg, #2D7D46, #00BCD4)' }}>
+                <Button type="submit" disabled={isSubmitting} className="w-full h-12 font-bold text-base rounded-xl text-white bg-gradient-to-br from-brand-cyan to-brand-purple hover:opacity-95">
                   {isSubmitting ? <><Loader2 className="h-4 w-4 animate-spin ml-2" />جاري الإنشاء...</> : 'إنشاء الحساب'}
                 </Button>
               </form>
@@ -210,7 +209,7 @@ const Auth = () => {
           </Tabs>
 
           <div className="text-center mt-4">
-            <Link to="/" className="text-sm text-gray-400 hover:text-[#2D7D46]">← العودة للرئيسية</Link>
+            <Link to="/" className="text-sm text-gray-400 hover:text-brand-purple">← العودة للرئيسية</Link>
           </div>
         </CardContent>
       </Card>
@@ -235,7 +234,7 @@ const Auth = () => {
             </div>
             <div className="p-4 border-t">
               <Button onClick={() => { setRegData(p => ({ ...p, agreeToTerms: true })); setShowTerms(false); }}
-                className="w-full font-bold h-11 rounded-xl" style={{ background: 'linear-gradient(135deg, #2D7D46, #00BCD4)' }}>
+                className="w-full font-bold h-11 rounded-xl text-white bg-gradient-to-br from-brand-cyan to-brand-purple hover:opacity-95">
                 ✓ موافق على الشروط والأحكام
               </Button>
             </div>

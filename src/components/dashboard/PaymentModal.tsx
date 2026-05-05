@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Upload, Loader2, CheckCircle, XCircle, Clock, FileImage } from 'lucide-react';
 import type { PaymentReceipt } from '@/types/keddmat';
+import { SUBSCRIPTION_PERIOD_DAYS } from '@/lib/subscription';
 
 interface Props {
   open: boolean;
@@ -65,7 +66,7 @@ const PaymentModal = ({ open, onOpenChange }: Props) => {
       });
       if (insertError) throw insertError;
 
-      toast({ title: 'تم رفع الوصل', description: 'سيتم تفعيل متجرك بعد مراجعة الدفعة' });
+      toast({ title: 'تم رفع الوصل', description: 'بعد الموافقة يُمدَّد اشتراكك وفق سياسة الخدمة' });
       setSelectedFile(null);
       setPreviewUrl(null);
       fetchReceipts();
@@ -85,18 +86,22 @@ const PaymentModal = ({ open, onOpenChange }: Props) => {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto" dir="rtl">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-[#2D7D46]">انشر متجرك</DialogTitle>
+          <DialogTitle className="text-xl font-bold text-brand-purple">انشر متجرك</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-5">
           {/* Instructions */}
-          <div className="bg-green-50 border border-green-200 rounded-xl p-4 space-y-2">
-            <p className="font-bold text-green-800">تعليمات الدفع</p>
-            <p className="text-sm text-green-700">للنشر، يرجى الدفع عبر CliQ على الحساب:</p>
-            <div className="bg-white border border-green-300 rounded-lg px-4 py-2 text-center">
-              <p className="text-lg font-extrabold text-green-700 tracking-wide">keddmat</p>
+          <div className="rounded-xl border border-brand-purple/25 bg-gradient-to-br from-cyan-50 via-violet-50 to-violet-100/80 p-4 space-y-2">
+            <p className="font-bold text-brand-purple">تعليمات الدفع</p>
+            <p className="text-sm text-gray-700">للنشر، يرجى الدفع عبر CliQ على الحساب:</p>
+            <div className="bg-white border border-brand-purple/30 rounded-lg px-4 py-2 text-center">
+              <p className="text-lg font-extrabold bg-gradient-to-l from-brand-cyan to-brand-purple bg-clip-text text-transparent tracking-wide">keddmat</p>
             </div>
-            <p className="text-xs text-green-600">بعد الدفع، ارفع صورة الوصل وانتظر الموافقة.</p>
+            <p className="text-xs text-gray-600">
+              بعد موافقة الإدارة على الوصل، يُمدَّد اشتراكك <strong>{SUBSCRIPTION_PERIOD_DAYS} يوماً</strong> من تاريخ انتهاء الفترة الحالية (أو من اليوم إن كانت منتهية).
+              إن كان اشتراكك لا يزال سارياً، يُضاف الشهر فوق المدة الباقية.
+            </p>
+            <p className="text-xs text-gray-600">بعد الدفع، ارفع صورة الوصل وانتظر الموافقة.</p>
           </div>
 
           {/* File Upload */}
@@ -123,8 +128,7 @@ const PaymentModal = ({ open, onOpenChange }: Props) => {
             <Button
               onClick={handleUpload}
               disabled={!selectedFile || uploading}
-              className="w-full font-bold"
-              style={{ background: 'linear-gradient(135deg, #2D7D46, #00BCD4)' }}
+              className="w-full font-bold text-white bg-gradient-to-br from-brand-cyan to-brand-purple hover:opacity-95"
             >
               {uploading ? <><Loader2 className="h-4 w-4 animate-spin ml-2" />جاري الرفع...</> : <><Upload className="h-4 w-4 ml-2" />إرسال الوصل</>}
             </Button>
