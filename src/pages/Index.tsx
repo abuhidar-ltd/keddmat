@@ -14,9 +14,12 @@ const Index = () => {
       {/* Hero */}
       <section className="bg-[#F7FAF8] py-20 px-4">
         <div className="container mx-auto text-center max-w-3xl">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight mb-6">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-snug mb-6">
             متجرك الخاص<br />
-            <span className="bg-clip-text text-transparent" style={{ backgroundImage: 'linear-gradient(135deg, #2D7D46, #00BCD4)' }}>
+            <span
+              className="inline-block bg-clip-text text-transparent pb-1 leading-normal [-webkit-background-clip:text]"
+              style={{ backgroundImage: 'linear-gradient(135deg, #2D7D46, #00BCD4)' }}
+            >
               في ثوانٍ
             </span>
           </h1>
@@ -63,7 +66,7 @@ const Index = () => {
       {/* Features */}
       <section className="py-16 px-4 bg-[#F7FAF8]">
         <div className="container mx-auto max-w-4xl">
-          <h2 className="text-3xl font-extrabold text-center text-gray-900 mb-12">لماذا كدامات؟</h2>
+          <h2 className="text-3xl font-extrabold text-center text-gray-900 mb-12">لماذا خدمات؟</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {[
               { icon: <Store className="h-7 w-7" />, title: 'متجر احترافي خاص بك', desc: 'صفحة متجر جميلة بصورة غلاف ولوجو وقائمة منتجات منظمة' },
@@ -112,7 +115,7 @@ const Index = () => {
               <Store className="h-5 w-5 text-white" />
             </div>
             <div>
-              <p className="text-white font-extrabold text-lg">كدامات</p>
+              <p className="text-white font-extrabold text-lg">خدمات</p>
               <p className="text-white/60 text-xs">ابنِ متجرك الإلكتروني</p>
             </div>
           </div>
@@ -129,7 +132,7 @@ const Index = () => {
             <Link to="/terms" className="text-white/60 text-sm hover:text-white transition-colors">الشروط والأحكام</Link>
           </div>
         </div>
-        <p className="text-center text-white/40 text-xs mt-6">© 2026 كدامات — جميع الحقوق محفوظة</p>
+        <p className="text-center text-white/40 text-xs mt-6">© 2026 خدمات — جميع الحقوق محفوظة</p>
       </footer>
     </div>
   );

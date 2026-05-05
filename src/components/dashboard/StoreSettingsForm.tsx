@@ -154,7 +154,7 @@ const StoreSettingsForm = () => {
           <Input
             value={profile.store_name || ''}
             onChange={e => setProfile(prev => ({ ...prev, store_name: e.target.value }))}
-            placeholder="مثال: متجر أبو أحمد"
+            placeholder="مثال: رنا ستورز"
             className="h-11 rounded-xl"
           />
         </div>

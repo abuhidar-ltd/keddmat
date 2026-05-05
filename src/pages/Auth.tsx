@@ -104,7 +104,7 @@ const Auth = () => {
           <div className="w-16 h-16 rounded-2xl mx-auto mb-3 flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #2D7D46, #00BCD4)' }}>
             <Store className="h-9 w-9 text-white" />
           </div>
-          <CardTitle className="text-2xl font-extrabold text-gray-900">كدامات</CardTitle>
+          <CardTitle className="text-2xl font-extrabold text-gray-900">خدمات</CardTitle>
           <p className="text-gray-500 text-sm">ابنِ متجرك الإلكتروني</p>
         </CardHeader>
         <CardContent>
@@ -152,7 +152,7 @@ const Auth = () => {
                 <div className="space-y-2">
                   <Label className="font-semibold">اسم المتجر <span className="text-red-500">*</span></Label>
                   <Input value={regData.storeName} onChange={e => setRegData(p => ({ ...p, storeName: e.target.value }))}
-                    placeholder="مثال: متجر أبو أحمد" className="h-12 text-base rounded-xl" />
+                    placeholder="مثال: رنا ستورز" className="h-12 text-base rounded-xl" />
                   {errors.storeName && <p className="text-sm text-red-500">{errors.storeName}</p>}
                 </div>
                 <div className="space-y-2">
@@ -226,12 +226,12 @@ const Auth = () => {
               <button onClick={() => setShowTerms(false)} className="text-gray-400 hover:text-gray-700 text-xl">✕</button>
             </div>
             <div className="flex-1 overflow-y-auto p-5 space-y-4 text-sm text-gray-700">
-              <p>منصة كدامات هي منصة رقمية تتيح لأي شخص إنشاء متجر إلكتروني بسيط لعرض المنتجات واستقبال الطلبات عبر واتساب.</p>
+              <p>منصة خدمات تتيح لك إنشاء صفحة متجر بسيطة لعرض منتجاتك ومشاركة رابط واحد، واستقبال استفسارات الطلبات عبر واتساب مع رسالة جاهزة للعميل.</p>
               <div className="bg-yellow-50 border border-yellow-200 p-3 rounded-xl">
                 <p className="font-bold text-yellow-800 mb-1">⚠️ ملاحظة مهمة:</p>
-                <p>المنصة لا تتحمل أي مسؤولية عن أي تعامل بين المشتري والبائع. جميع المدفوعات والاتفاقيات تتم مباشرة بين الطرفين.</p>
+                <p>المنصة وسيط تقني فقط؛ لا تتحمل مسؤولية جودة المنتجات أو التوصيل أو المدفوعات. كل الاتفاقات والتحويلات المالية تتم خارج المنصة وبين المشتري والبائع مباشرة.</p>
               </div>
-              <p>بالتسجيل، أنت توافق على أن جميع المعلومات المقدمة صحيحة وأن تعاملاتك التجارية تتم على مسؤوليتك الشخصية.</p>
+              <p>بالتسجيل، تؤكد صحة بياناتك وأن نشاطك التجاري ومخزونك وأسعارك ومسؤوليتك القانونية تقع على عاتقك.</p>
             </div>
             <div className="p-4 border-t">
               <Button onClick={() => { setRegData(p => ({ ...p, agreeToTerms: true })); setShowTerms(false); }}

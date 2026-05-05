@@ -180,7 +180,7 @@ const StorePage = () => {
 
       {/* Footer */}
       <footer className="border-t border-gray-100 py-4 bg-white">
-        <p className="text-center text-xs text-gray-400">مدعوم بواسطة <Link to="/" className="text-[#2D7D46] font-semibold hover:underline">كدامات</Link></p>
+        <p className="text-center text-xs text-gray-400">مدعوم بواسطة <Link to="/" className="text-[#2D7D46] font-semibold hover:underline">خدمات</Link></p>
       </footer>
     </div>
   );

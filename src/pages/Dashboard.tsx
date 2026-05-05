@@ -44,7 +44,7 @@ const Dashboard = () => {
             <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #2D7D46, #00BCD4)' }}>
               <Store className="h-5 w-5 text-white" />
             </div>
-            <span className="text-lg font-extrabold text-gray-900">كدامات</span>
+            <span className="text-lg font-extrabold text-gray-900">خدمات</span>
           </div>
 
           {/* Left: actions */}

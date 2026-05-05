@@ -51,6 +51,16 @@ const translations: Translations = {
   'auth.passwordMin': { ar: 'كلمة المرور يجب أن تكون 6 أحرف على الأقل', en: 'Password must be at least 6 characters' },
   'auth.agreeRequired': { ar: 'يجب الموافقة على الشروط والأحكام', en: 'You must agree to the terms' },
   'common.error': { ar: 'حدث خطأ', en: 'An error occurred' },
+  'terms.khadamat': { ar: 'خدمات', en: 'Khadamat' },
+  'terms.back': { ar: 'تسجيل الدخول', en: 'Sign in' },
+  'terms.title': { ar: 'الشروط والأحكام', en: 'Terms & Conditions' },
+  'terms.readCarefully': { ar: 'يرجى قراءة النص التالي بعناية قبل استخدام المنصة.', en: 'Please read the following carefully before using the platform.' },
+  'terms.privacyPolicy': { ar: 'سياسة الخصوصية', en: 'Privacy Policy' },
+  'terms.disclaimer': { ar: 'إخلاء المسؤولية', en: 'Disclaimer' },
+  'terms.aboutUs': { ar: 'من نحن', en: 'About Us' },
+  'terms.finalApproval': { ar: 'الموافقة النهائية', en: 'Final approval' },
+  'terms.agreeTerms': { ar: 'أوافق على الشروط والأحكام وسياسة الخصوصية', en: 'I agree to the terms and privacy policy' },
+  'index.tabkhatyRights': { ar: 'خدمات — جميع الحقوق محفوظة', en: 'Khadamat — All rights reserved' },
 };
 
 export const LanguageProvider = ({ children }: { children: ReactNode }) => <>{children}</>;
