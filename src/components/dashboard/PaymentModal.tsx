@@ -50,10 +50,13 @@ const PaymentModal = ({ open, onOpenChange }: Props) => {
   };
 
   const handleUpload = async () => {
-    if (!selectedFile || !user) return;
+    if (!selectedFile) return;
     setUploading(true);
     try {
-      const filePath = `receipts/${user.id}/${Date.now()}_${selectedFile.name}`;
+      const { data: { user: freshUser } } = await supabase.auth.getUser();
+      if (!freshUser) throw new Error('يجب تسجيل الدخول أولاً');
+
+      const filePath = `receipts/${freshUser.id}/${Date.now()}_${selectedFile.name}`;
       const { error: uploadError } = await supabase.storage
         .from('user-uploads')
         .upload(filePath, selectedFile, { upsert: true });
@@ -61,7 +64,7 @@ const PaymentModal = ({ open, onOpenChange }: Props) => {
 
       const { data: urlData } = supabase.storage.from('user-uploads').getPublicUrl(filePath);
       const { error: insertError } = await supabase.from('payment_receipts').insert({
-        user_id: user.id,
+        user_id: freshUser.id,
         receipt_image_url: urlData.publicUrl,
         status: 'pending',
       });
