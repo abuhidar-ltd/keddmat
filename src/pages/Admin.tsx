@@ -30,7 +30,7 @@ interface ReceiptRow {
   receipt_image_url: string;
   status: string;
   created_at: string;
-  store_name?: string;
+  profiles: { store_name: string; whatsapp_number: string } | null;
 }
 
 const Admin = () => {
@@ -58,19 +58,12 @@ const Admin = () => {
     setLoadingData(true);
     const [storesRes, receiptsRes, analyticsRes] = await Promise.all([
       supabase.from('profiles').select('user_id, store_name, page_slug, whatsapp_number, is_active, subscription_expires_at, created_at').order('created_at', { ascending: false }),
-      supabase.from('payment_receipts').select('*').order('created_at', { ascending: false }),
+      supabase.from('payment_receipts').select('*, profiles(store_name, whatsapp_number)').order('created_at', { ascending: false }),
       supabase.from('store_analytics').select('event_type, created_at').gte('created_at', new Date(Date.now() - 30 * 86400000).toISOString()),
     ]);
 
     setStores((storesRes.data as StoreRow[]) || []);
-
-    // Enrich receipts with store name
-    const rawReceipts = (receiptsRes.data as ReceiptRow[]) || [];
-    const enriched = rawReceipts.map(r => ({
-      ...r,
-      store_name: (storesRes.data as StoreRow[])?.find(s => s.user_id === r.user_id)?.store_name || 'غير معروف',
-    }));
-    setReceipts(enriched);
+    setReceipts((receiptsRes.data as ReceiptRow[]) || []);
 
     setAnalytics(analyticsRes.data || []);
     setLoadingData(false);
@@ -290,7 +283,7 @@ const Admin = () => {
                         <img src={r.receipt_image_url} alt="receipt" className="w-16 h-16 rounded-xl object-cover border hover:opacity-80 transition-opacity" />
                       </a>
                       <div className="flex-1 min-w-0">
-                        <p className="font-bold text-gray-900">{r.store_name}</p>
+                        <p className="font-bold text-gray-900">{r.profiles?.store_name ?? 'غير معروف'}</p>
                         <p className="text-xs text-gray-500">{new Date(r.created_at).toLocaleDateString('ar-EG')}</p>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
