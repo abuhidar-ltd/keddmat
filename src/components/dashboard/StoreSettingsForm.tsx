@@ -107,12 +107,12 @@ const StoreSettingsForm = () => {
 
   const handleDeleteAccount = async () => {
     if (!user) return;
-    await supabase.from('store_analytics').delete().eq('user_id', user.id);
-    await supabase.from('payment_receipts').delete().eq('user_id', user.id);
-    await supabase.from('products').delete().eq('user_id', user.id);
-    await supabase.from('profiles').delete().eq('user_id', user.id);
-    await supabase.rpc('delete_user');
-    await signOut();
+    const { error } = await supabase.rpc('delete_user');
+    if (error) {
+      toast({ title: 'فشل حذف الحساب', description: error.message, variant: 'destructive' });
+      return;
+    }
+    await supabase.auth.signOut();
     window.location.href = '/';
   };
 
