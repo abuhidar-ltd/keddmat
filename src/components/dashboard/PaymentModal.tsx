@@ -53,14 +53,13 @@ const PaymentModal = ({ open, onOpenChange }: Props) => {
     if (!selectedFile || !user) return;
     setUploading(true);
     try {
-      const ext = selectedFile.name.split('.').pop()?.toLowerCase() || 'jpg';
-      const fileName = `${user.id}/${Date.now()}.${ext}`;
+      const filePath = `receipts/${user.id}/${Date.now()}_${selectedFile.name}`;
       const { error: uploadError } = await supabase.storage
-        .from('receipts')
-        .upload(fileName, selectedFile, { upsert: true });
+        .from('useruploads')
+        .upload(filePath, selectedFile, { upsert: true });
       if (uploadError) throw uploadError;
 
-      const { data: urlData } = supabase.storage.from('receipts').getPublicUrl(fileName);
+      const { data: urlData } = supabase.storage.from('useruploads').getPublicUrl(filePath);
       const { error: insertError } = await supabase.from('payment_receipts').insert({
         user_id: user.id,
         receipt_image_url: urlData.publicUrl,
