@@ -2,6 +2,7 @@ import { useState, useEffect, createContext, useContext, type ReactNode } from '
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { slugifyLatin } from '@/lib/slug';
+import { digitsFromMerchantEmail, isAdminPhoneDigits } from '@/lib/adminPhones';
 
 interface AuthContextType {
   user: User | null;
@@ -13,8 +14,6 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-const ADMIN_PHONES = ['0799126390', '962799126390', '0795666158', '962795666158', '0796830150', '962796830150'];
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -56,7 +55,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (profileError) return { error: new Error(profileError.message) };
 
       const cleanPhone = phone.replace(/[^0-9]/g, '');
-      if (ADMIN_PHONES.some(p => cleanPhone === p || cleanPhone === p.replace(/^0/, ''))) {
+      if (isAdminPhoneDigits(cleanPhone)) {
         await supabase.from('user_roles').insert({ user_id: data.user.id, role: 'admin' });
       }
     }
@@ -64,8 +63,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    return { error: error ? new Error(error.message) : null };
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) return { error: new Error(error.message) };
+    const digits = digitsFromMerchantEmail(email);
+    if (data.user && digits && isAdminPhoneDigits(digits)) {
+      const { data: existing } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', data.user.id)
+        .eq('role', 'admin')
+        .maybeSingle();
+      if (!existing) {
+        await supabase.from('user_roles').insert({ user_id: data.user.id, role: 'admin' });
+      }
+    }
+    return { error: null };
   };
 
   const signOut = async () => {

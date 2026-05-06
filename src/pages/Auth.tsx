@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import { useAdmin } from '@/hooks/useAdmin';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -35,6 +36,7 @@ const registerSchema = z.object({
 const Auth = () => {
   const navigate = useNavigate();
   const { user, loading, signIn, signUp } = useAuth();
+  const { isAdmin, loading: adminLoading } = useAdmin();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPasswordReset, setShowPasswordReset] = useState(false);
@@ -49,8 +51,9 @@ const Auth = () => {
   const [showConfirmPwd, setShowConfirmPwd] = useState(false);
 
   useEffect(() => {
-    if (user && !loading) navigate('/dashboard', { replace: true });
-  }, [user, loading]);
+    if (!user || loading || adminLoading) return;
+    navigate(isAdmin ? '/admin' : '/dashboard', { replace: true });
+  }, [user, loading, adminLoading, isAdmin, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -92,11 +95,12 @@ const Auth = () => {
       }
     } else {
       toast({ title: 'تم التسجيل بنجاح!', description: 'مرحباً بك، يمكنك الآن إضافة منتجاتك' });
-      navigate('/dashboard', { replace: true });
     }
   };
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-brand-purple" /></div>;
+  if (loading || (user && adminLoading)) {
+    return <div className="min-h-screen flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-brand-purple" /></div>;
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-brand-surface" dir="rtl">

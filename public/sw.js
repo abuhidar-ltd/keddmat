@@ -1,10 +1,11 @@
-const CACHE_NAME = 'khadamat-v2';
+const CACHE_NAME = 'khadamat-v3';
 const STATIC_ASSETS = [
   '/',
   '/favicon.png',
   '/icon-192.png',
   '/icon-512.png',
-  '/manifest.json'
+  '/manifest.json',
+  '/logo-khadamat.png',
 ];
 
 // Install event - cache static assets

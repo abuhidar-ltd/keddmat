@@ -18,6 +18,7 @@
     <link rel="apple-touch-icon" href="/icon-192.png" />
 
     <!-- Primary Meta Tags -->
+    <link rel="canonical" href="__PUBLIC_SITE_URL__/" />
     <title>خدمات - ابنِ متجرك الإلكتروني</title>
     <meta name="title" content="خدمات - ابنِ متجرك الإلكتروني">
     <meta name="description" content="أنشئ متجرك الإلكتروني في ثوانٍ، أضف منتجاتك، شارك الرابط واستقبل الطلبات عبر واتساب مباشرة">
@@ -25,17 +26,45 @@
     <meta name="robots" content="index, follow">
     <meta name="language" content="Arabic">
 
-    <!-- Open Graph -->
+    <!-- Open Graph (absolute image URL required for WhatsApp / Facebook / LinkedIn previews) -->
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="__PUBLIC_SITE_URL__/" />
     <meta property="og:site_name" content="خدمات">
     <meta property="og:locale" content="ar_JO">
     <meta property="og:title" content="خدمات - ابنِ متجرك الإلكتروني">
     <meta property="og:description" content="أنشئ متجرك، أضف منتجاتك، شارك الرابط واستقبل الطلبات عبر واتساب مباشرة">
+    <meta property="og:image" content="__PUBLIC_SITE_URL__/logo-khadamat.png" />
+    <meta property="og:image:secure_url" content="__PUBLIC_SITE_URL__/logo-khadamat.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:alt" content="شعار خدمات - منصة متجرك الإلكتروني" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="خدمات - ابنِ متجرك الإلكتروني">
     <meta name="twitter:description" content="أنشئ متجرك، أضف منتجاتك، شارك الرابط واستقبل الطلبات عبر واتساب مباشرة">
+    <meta name="twitter:image" content="__PUBLIC_SITE_URL__/logo-khadamat.png" />
+    <meta name="twitter:image:alt" content="شعار خدمات" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "name": "خدمات",
+            "url": "__PUBLIC_SITE_URL__/",
+            "description": "أنشئ متجرك الإلكتروني في ثوانٍ، أضف منتجاتك، شارك الرابط واستقبل الطلبات عبر واتساب مباشرة",
+            "inLanguage": "ar"
+          },
+          {
+            "@type": "Organization",
+            "name": "خدمات",
+            "url": "__PUBLIC_SITE_URL__/",
+            "logo": "__PUBLIC_SITE_URL__/logo-khadamat.png"
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

@@ -1,18 +1,4 @@
-User-agent: Googlebot
-Allow: /
-Crawl-delay: 1
-
-User-agent: Bingbot
-Allow: /
-Crawl-delay: 2
-
-User-agent: Twitterbot
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
-
 User-agent: *
 Allow: /
 
-Sitemap: https://simple-begin-bot.lovable.app/sitemap.xml
+Sitemap: https://keddmat.com/sitemap.xml

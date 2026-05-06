@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Upload, Loader2, CheckCircle, XCircle, Clock, FileImage } from 'lucide-react';
 import type { PaymentReceipt } from '@/types/keddmat';
 import { SUBSCRIPTION_PERIOD_DAYS } from '@/lib/subscription';
+import { getCliqAlias } from '@/lib/cliq';
 
 interface Props {
   open: boolean;
@@ -95,7 +96,7 @@ const PaymentModal = ({ open, onOpenChange }: Props) => {
             <p className="font-bold text-brand-purple">تعليمات الدفع</p>
             <p className="text-sm text-gray-700">للنشر، يرجى الدفع عبر CliQ على الحساب:</p>
             <div className="bg-white border border-brand-purple/30 rounded-lg px-4 py-2 text-center">
-              <p className="text-lg font-extrabold bg-gradient-to-l from-brand-cyan to-brand-purple bg-clip-text text-transparent tracking-wide">keddmat</p>
+              <p className="text-lg font-extrabold bg-gradient-to-l from-brand-cyan to-brand-purple bg-clip-text text-transparent tracking-wide">{getCliqAlias()}</p>
             </div>
             <p className="text-xs text-gray-600">
               بعد موافقة الإدارة على الوصل، يُمدَّد اشتراكك <strong>{SUBSCRIPTION_PERIOD_DAYS} يوماً</strong> من تاريخ انتهاء الفترة الحالية (أو من اليوم إن كانت منتهية).

@@ -158,10 +158,10 @@ const StorePage = () => {
             <p>لا توجد منتجات حالياً</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 pb-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pb-12">
             {products.map(product => (
               <Card key={product.id} className="min-w-0 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border-0 bg-white">
-                <div className="aspect-video bg-gray-100 overflow-hidden">
+                <div className="aspect-[4/3] sm:aspect-video bg-gray-100 overflow-hidden">
                   {product.image_url
                     ? <img src={product.image_url} alt={product.title} className="w-full h-full object-cover" />
                     : <div className="w-full h-full flex items-center justify-center"><Package className="h-10 w-10 text-gray-300" /></div>}
