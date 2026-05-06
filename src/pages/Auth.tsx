@@ -15,15 +15,6 @@ import PhoneInput from '@/components/PhoneInput';
 import PasswordResetModal from '@/components/PasswordResetModal';
 import { z } from 'zod';
 
-const formatPhone = (phone: string): string => {
-  const p = phone.trim();
-  if (p.startsWith('+962')) return p;
-  if (p.startsWith('962')) return '+' + p;
-  if (p.startsWith('07')) return '+9627' + p.slice(2);
-  if (p.startsWith('7')) return '+962' + p;
-  return p;
-};
-
 const loginSchema = z.object({
   phone: z.string().min(8, 'رقم الهاتف غير صالح').max(20, 'رقم الهاتف طويل جداً'),
   password: z.string().min(6, 'كلمة المرور يجب أن تكون 6 أحرف على الأقل'),
@@ -70,7 +61,7 @@ const Auth = () => {
       return;
     }
     setIsSubmitting(true);
-    const { error } = await signIn(formatPhone(loginData.phone), loginData.password);
+    const { error } = await signIn(loginData.phone, loginData.password);
     setIsSubmitting(false);
     if (error) {
       toast({ title: 'خطأ في تسجيل الدخول', description: 'رقم الهاتف أو كلمة المرور غير صحيحة', variant: 'destructive' });
@@ -88,7 +79,7 @@ const Auth = () => {
       return;
     }
     setIsSubmitting(true);
-    const { error } = await signUp(formatPhone(regData.phone), regData.password, regData.storeName);
+    const { error } = await signUp(regData.phone, regData.password, regData.storeName);
     setIsSubmitting(false);
     if (error) {
       if (error.message.includes('already registered') || error.message.includes('already been registered')) {

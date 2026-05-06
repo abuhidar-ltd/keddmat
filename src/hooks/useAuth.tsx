@@ -4,6 +4,11 @@ import { supabase } from '@/integrations/supabase/client';
 import { generateSlug } from '@/lib/slug';
 import { isAdminPhoneDigits } from '@/lib/adminPhones';
 
+// IMPORTANT: In Supabase Dashboard → Authentication → Settings,
+// "Enable email confirmations" MUST be turned OFF.
+// We use fake emails (phone@keddmat.com) so confirmation emails are never received.
+const phoneToEmail = (phone: string) => phone.replace(/[\s\-+]/g, '') + '@keddmat.com';
+
 interface AuthContextType {
   user: User | null;
   session: Session | null;
@@ -35,21 +40,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const signUp = async (phone: string, password: string, storeName?: string) => {
-    const { data, error } = await supabase.auth.signUp({ phone, password });
+    const cleanPhone = phone.replace(/[\s\-+]/g, '');
+    const email = phoneToEmail(cleanPhone);
+    const { data, error } = await supabase.auth.signUp({ email, password });
     if (!error && data.user) {
       const base = generateSlug(storeName || '');
       const slug = base ? `${base}-${Date.now().toString(36)}` : `store-${Date.now().toString(36)}`;
       const { error: profileError } = await supabase.from('profiles').insert({
         user_id: data.user.id,
-        phone,
+        phone: cleanPhone,
         store_name: storeName || '',
         page_slug: slug,
-        whatsapp_number: phone,
+        whatsapp_number: cleanPhone,
         is_active: false,
       });
       if (profileError) return { error: new Error(profileError.message) };
 
-      const cleanPhone = phone.replace(/[^0-9]/g, '');
       if (isAdminPhoneDigits(cleanPhone)) {
         await supabase.from('user_roles').insert({ user_id: data.user.id, role: 'admin' });
       }
@@ -58,9 +64,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signIn = async (phone: string, password: string) => {
-    const { data, error } = await supabase.auth.signInWithPassword({ phone, password });
+    const cleanPhone = phone.replace(/[\s\-+]/g, '');
+    const email = phoneToEmail(cleanPhone);
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) return { error: new Error(error.message) };
-    const cleanPhone = phone.replace(/[^0-9]/g, '');
     if (data.user && isAdminPhoneDigits(cleanPhone)) {
       const { data: existing } = await supabase
         .from('user_roles')

@@ -1,25 +1,18 @@
-import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { useMemo } from 'react';
 import { useAuth } from './useAuth';
 
+const ADMIN_EMAILS = ['0795666185@keddmat.com'];
+const ADMIN_PHONES = ['0795666185', '962795666185', '+962795666185'];
+
 export const useAdmin = () => {
-  const { user, loading: authLoading } = useAuth();
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const { user, loading } = useAuth();
 
-  useEffect(() => {
-    const checkAdminRole = async () => {
-      if (authLoading) return;
-      if (!user) { setIsAdmin(false); setLoading(false); return; }
-      try {
-        const { data, error } = await supabase.from('user_roles').select('role').eq('user_id', user.id).eq('role', 'admin').maybeSingle();
-        if (error) { console.error('Error checking admin role:', error); setIsAdmin(false); }
-        else { setIsAdmin(!!data); }
-      } catch (err) { console.error('Error:', err); setIsAdmin(false); }
-      finally { setLoading(false); }
-    };
-    checkAdminRole();
-  }, [user, authLoading]);
+  const isAdmin = useMemo(() => {
+    if (!user) return false;
+    if (user.email && ADMIN_EMAILS.includes(user.email)) return true;
+    if (user.phone && ADMIN_PHONES.includes(user.phone)) return true;
+    return false;
+  }, [user]);
 
-  return { isAdmin, loading: loading || authLoading };
+  return { isAdmin, loading };
 };
