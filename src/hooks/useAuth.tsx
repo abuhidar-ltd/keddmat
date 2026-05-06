@@ -1,15 +1,15 @@
 import { useState, useEffect, createContext, useContext, type ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
-import { slugifyLatin } from '@/lib/slug';
-import { digitsFromMerchantEmail, isAdminPhoneDigits } from '@/lib/adminPhones';
+import { generateSlug } from '@/lib/slug';
+import { isAdminPhoneDigits } from '@/lib/adminPhones';
 
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
-  signUp: (email: string, password: string, phone: string, storeName?: string) => Promise<{ error: Error | null }>;
-  signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
+  signUp: (phone: string, password: string, storeName?: string) => Promise<{ error: Error | null }>;
+  signIn: (phone: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
 }
 
@@ -34,16 +34,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => subscription.unsubscribe();
   }, []);
 
-  const signUp = async (email: string, password: string, phone: string, storeName?: string) => {
-    const redirectUrl = `${window.location.origin}/`;
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: { emailRedirectTo: redirectUrl, data: { phone } },
-    });
+  const signUp = async (phone: string, password: string, storeName?: string) => {
+    const { data, error } = await supabase.auth.signUp({ phone, password });
     if (!error && data.user) {
-      const base = slugifyLatin(storeName || '');
-      const slug = base.length >= 3 ? `${base}-${Date.now().toString(36)}` : `store-${Date.now()}`;
+      const base = generateSlug(storeName || '');
+      const slug = base ? `${base}-${Date.now().toString(36)}` : `store-${Date.now().toString(36)}`;
       const { error: profileError } = await supabase.from('profiles').insert({
         user_id: data.user.id,
         phone,
@@ -62,11 +57,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return { error: error ? new Error(error.message) : null };
   };
 
-  const signIn = async (email: string, password: string) => {
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  const signIn = async (phone: string, password: string) => {
+    const { data, error } = await supabase.auth.signInWithPassword({ phone, password });
     if (error) return { error: new Error(error.message) };
-    const digits = digitsFromMerchantEmail(email);
-    if (data.user && digits && isAdminPhoneDigits(digits)) {
+    const cleanPhone = phone.replace(/[^0-9]/g, '');
+    if (data.user && isAdminPhoneDigits(cleanPhone)) {
       const { data: existing } = await supabase
         .from('user_roles')
         .select('role')

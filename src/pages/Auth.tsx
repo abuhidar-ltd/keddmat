@@ -15,9 +15,13 @@ import PhoneInput from '@/components/PhoneInput';
 import PasswordResetModal from '@/components/PasswordResetModal';
 import { z } from 'zod';
 
-const phoneToEmail = (phone: string) => {
-  const clean = phone.replace(/[^0-9]/g, '');
-  return `${clean}.merchant@phone.local`;
+const formatPhone = (phone: string): string => {
+  const p = phone.trim();
+  if (p.startsWith('+962')) return p;
+  if (p.startsWith('962')) return '+' + p;
+  if (p.startsWith('07')) return '+9627' + p.slice(2);
+  if (p.startsWith('7')) return '+962' + p;
+  return p;
 };
 
 const loginSchema = z.object({
@@ -66,7 +70,7 @@ const Auth = () => {
       return;
     }
     setIsSubmitting(true);
-    const { error } = await signIn(phoneToEmail(loginData.phone), loginData.password);
+    const { error } = await signIn(formatPhone(loginData.phone), loginData.password);
     setIsSubmitting(false);
     if (error) {
       toast({ title: 'خطأ في تسجيل الدخول', description: 'رقم الهاتف أو كلمة المرور غير صحيحة', variant: 'destructive' });
@@ -84,12 +88,11 @@ const Auth = () => {
       return;
     }
     setIsSubmitting(true);
-    const email = phoneToEmail(regData.phone);
-    const { error } = await signUp(email, regData.password, regData.phone, regData.storeName);
+    const { error } = await signUp(formatPhone(regData.phone), regData.password, regData.storeName);
     setIsSubmitting(false);
     if (error) {
-      if (error.message.includes('already registered')) {
-        toast({ title: 'الحساب موجود مسبقاً', description: 'هذا الرقم مسجل بالفعل', variant: 'destructive' });
+      if (error.message.includes('already registered') || error.message.includes('already been registered')) {
+        toast({ title: 'الحساب موجود مسبقاً', description: 'هذا الرقم مسجل بالفعل، يرجى تسجيل الدخول', variant: 'destructive' });
       } else {
         toast({ title: 'خطأ في التسجيل', description: error.message, variant: 'destructive' });
       }
