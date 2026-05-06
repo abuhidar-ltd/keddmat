@@ -1,18 +1,21 @@
-import { useMemo } from 'react';
-import { useAuth } from './useAuth';
+import { useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 
-const ADMIN_EMAILS = ['0795666185@keddmat.com'];
-const ADMIN_PHONES = ['0795666185', '962795666185', '+962795666185'];
+const ADMIN_EMAIL = '0795666185@keddmat.com';
 
 export const useAdmin = () => {
-  const { user, loading } = useAuth();
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const isAdmin = useMemo(() => {
-    if (!user) return false;
-    if (user.email && ADMIN_EMAILS.includes(user.email)) return true;
-    if (user.phone && ADMIN_PHONES.includes(user.phone)) return true;
-    return false;
-  }, [user]);
+  useEffect(() => {
+    const check = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      console.log('[useAdmin] user.email:', user?.email);
+      setIsAdmin(user?.email === ADMIN_EMAIL);
+      setLoading(false);
+    };
+    check();
+  }, []);
 
   return { isAdmin, loading };
 };
