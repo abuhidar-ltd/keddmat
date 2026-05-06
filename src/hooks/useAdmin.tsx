@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
-const ADMIN_EMAIL = '0795666185@keddmat.com';
+const ADMIN_EMAIL = '962795666185@keddmat.com';
 
 export const useAdmin = () => {
   const [isAdmin, setIsAdmin] = useState(false);
