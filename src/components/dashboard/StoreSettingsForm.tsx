@@ -107,8 +107,11 @@ const StoreSettingsForm = () => {
 
   const handleDeleteAccount = async () => {
     if (!user) return;
+    await supabase.from('store_analytics').delete().eq('user_id', user.id);
+    await supabase.from('payment_receipts').delete().eq('user_id', user.id);
+    await supabase.from('products').delete().eq('user_id', user.id);
     await supabase.from('profiles').delete().eq('user_id', user.id);
-    await supabase.auth.admin.deleteUser(user.id).catch(() => {});
+    await supabase.rpc('delete_user');
     await signOut();
     window.location.href = '/';
   };

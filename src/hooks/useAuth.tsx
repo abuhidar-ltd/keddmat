@@ -46,14 +46,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (!error && data.user) {
       const base = generateSlug(storeName || '');
       const slug = base ? `${base}-${Date.now().toString(36)}` : `store-${Date.now().toString(36)}`;
-      const { error: profileError } = await supabase.from('profiles').insert({
+      const { error: profileError } = await supabase.from('profiles').upsert({
         user_id: data.user.id,
         phone: cleanPhone,
         store_name: storeName || '',
         page_slug: slug,
         whatsapp_number: cleanPhone,
         is_active: false,
-      });
+      }, { onConflict: 'user_id' });
       if (profileError) return { error: new Error(profileError.message) };
 
       if (isAdminPhoneDigits(cleanPhone)) {
