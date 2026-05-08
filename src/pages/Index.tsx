@@ -25,64 +25,51 @@ const Index = () => {
       <LandingNavbar />
 
       {/* Hero */}
-      <section className="relative overflow-hidden px-4 pb-12 pt-2 md:px-6 md:pb-16 md:pt-4">
-        <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-4">
-          <div className="z-10 order-1 text-right lg:order-none">
-            <h1 className="mb-4 text-[1.65rem] font-extrabold leading-snug text-[#0d47a1] sm:text-4xl md:mb-5 md:text-[2.35rem] md:leading-tight lg:text-[2.5rem]">
+      <section className="relative overflow-hidden px-2 pb-12 pt-1 sm:px-4 md:px-6 md:pb-16 md:pt-4">
+        <div className="mx-auto grid max-w-6xl grid-cols-2 items-start gap-2 sm:gap-4 md:gap-8 lg:gap-x-12">
+          <div className="z-10 min-w-0 text-right">
+            <h1 className="mb-2 text-[0.95rem] font-extrabold leading-snug text-[#0d47a1] sm:mb-4 sm:text-3xl md:mb-5 md:text-[2.35rem] md:leading-tight lg:text-[2.5rem]">
               أنشئ متجرك وابدأ البيع خلال دقائق
             </h1>
-            <p className="mb-6 max-w-xl text-base leading-relaxed text-gray-600 md:mb-8 md:text-lg">
+            <p className="mb-3 max-w-xl text-[0.7rem] leading-relaxed text-gray-600 sm:mb-6 sm:text-base md:mb-8 md:text-lg">
               رابط واحد لمتجرك يطلب منه عملاؤك مباشرة عبر واتساب
             </p>
-            <div className="flex flex-col items-stretch gap-3 sm:items-end">
+            <div className="flex flex-col items-stretch gap-2 sm:items-end sm:gap-3">
               <Button
                 onClick={() => navigate('/auth')}
                 size="lg"
-                className="primary-gradient h-14 min-h-[3.5rem] w-full rounded-full border-0 px-10 text-base font-bold text-white shadow-[0_12px_30px_-8px_rgba(123,66,246,0.45)] transition-transform hover:scale-[1.02] sm:w-auto sm:text-lg"
+                className="primary-gradient h-10 min-h-10 w-full rounded-full border-0 px-3 text-[0.7rem] font-bold text-white shadow-[0_12px_30px_-8px_rgba(123,66,246,0.45)] transition-transform hover:scale-[1.02] sm:h-14 sm:min-h-[3.5rem] sm:px-10 sm:text-base md:text-lg"
               >
                 ابدأ متجرك الآن
               </Button>
-              <p className="flex items-center justify-end gap-2 text-sm text-gray-600">
-                <Shield className="h-4 w-4 shrink-0 text-[#7b42f6]" strokeWidth={2} />
+              <p className="flex items-center justify-end gap-1 text-[0.65rem] text-gray-600 sm:gap-2 sm:text-sm">
+                <Shield className="h-3 w-3 shrink-0 text-[#7b42f6] sm:h-4 sm:w-4" strokeWidth={2} />
                 5 دنانير شهرياً - بدون تعقيد
               </p>
             </div>
           </div>
 
-          <div className="order-2 flex justify-center lg:order-none">
+          <div className="flex min-w-0 justify-center md:justify-start md:pt-1">
             <LandingPhoneMockup />
           </div>
         </div>
       </section>
 
-      {/* Features — inset panel */}
-      <section className="px-4 pb-14 md:px-6 md:pb-[4.5rem]">
-        <div className="mx-auto max-w-5xl rounded-[1.35rem] bg-[#eceff1] p-4 md:rounded-[1.75rem] md:p-8">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-5">
+      {/* Why us */}
+      <section className="bg-[#f5f5f5] px-4 py-14 md:px-6 md:py-[4.5rem]">
+        <div className="mx-auto max-w-5xl">
+          <h2 className="mb-10 text-center text-2xl font-extrabold text-gray-900 md:mb-12 md:text-3xl">لماذا تختار خدمات؟</h2>
+          <div className="grid grid-cols-2 gap-6 md:grid-cols-4 md:gap-8">
             {[
-              {
-                icon: <ShoppingBag className="h-7 w-7" strokeWidth={1.75} />,
-                title: 'أضف منتجاتك بسهولة',
-                desc: 'أضف حتى 40 منتجًا مع الأسعار والصور',
-                circle: 'bg-sky-100 text-[#2196f3]',
-              },
-              {
-                icon: <MessageCircle className="h-7 w-7" strokeWidth={1.75} />,
-                title: 'استقبال الطلبات',
-                desc: 'تواصل مباشر مع عملائك عبر واتساب',
-                circle: 'bg-emerald-100 text-[#25D366]',
-              },
-              {
-                icon: <Link2 className="h-7 w-7" strokeWidth={1.75} />,
-                title: 'رابط خاص لمتجرك',
-                desc: 'رابط جميل وسهل لمتجرك الخاص',
-                circle: 'bg-violet-100 text-[#7b42f6]',
-              },
+              { icon: <X className="h-9 w-9" strokeWidth={1.5} />, title: 'إلغاء في أي وقت', desc: 'اشتراك مرن بدون التزام طويل.' },
+              { icon: <Headphones className="h-9 w-9" strokeWidth={1.5} />, title: 'دعم فني', desc: 'نساعدك عند الحاجة.' },
+              { icon: <Shield className="h-9 w-9" strokeWidth={1.5} />, title: 'آمن وموثوق', desc: 'بياناتك محمية.' },
+              { icon: <Zap className="h-9 w-9" strokeWidth={1.5} />, title: 'سهل وسريع', desc: 'متجرك جاهز خلال دقائق.' },
             ].map((f, i) => (
-              <div key={i} className="rounded-2xl bg-white p-6 text-right shadow-sm md:p-7">
-                <div className={`mb-4 flex h-14 w-14 items-center justify-center rounded-full ${f.circle}`}>{f.icon}</div>
-                <h3 className="mb-2 text-lg font-bold text-gray-900">{f.title}</h3>
-                <p className="text-sm leading-relaxed text-gray-600">{f.desc}</p>
+              <div key={i} className="flex flex-col items-center gap-2 px-2 text-center">
+                <div className="text-gray-500">{f.icon}</div>
+                <h4 className="text-sm font-bold text-gray-900 md:text-base">{f.title}</h4>
+                <p className="text-xs leading-relaxed text-gray-500 md:text-sm">{f.desc}</p>
               </div>
             ))}
           </div>
@@ -163,21 +150,34 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Why us */}
-      <section className="bg-[#f5f5f5] px-4 py-14 md:px-6 md:py-[4.5rem]">
-        <div className="mx-auto max-w-5xl">
-          <h2 className="mb-10 text-center text-2xl font-extrabold text-gray-900 md:mb-12 md:text-3xl">لماذا تختار خدمات؟</h2>
-          <div className="grid grid-cols-2 gap-6 md:grid-cols-4 md:gap-8">
+      {/* Features — inset panel */}
+      <section className="px-4 py-14 md:px-6 md:py-[4.5rem]">
+        <div className="mx-auto max-w-5xl rounded-[1.35rem] bg-[#eceff1] p-4 md:rounded-[1.75rem] md:p-8">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-5">
             {[
-              { icon: <X className="h-9 w-9" strokeWidth={1.5} />, title: 'إلغاء في أي وقت', desc: 'اشتراك مرن بدون التزام طويل.' },
-              { icon: <Headphones className="h-9 w-9" strokeWidth={1.5} />, title: 'دعم فني', desc: 'نساعدك عند الحاجة.' },
-              { icon: <Shield className="h-9 w-9" strokeWidth={1.5} />, title: 'آمن وموثوق', desc: 'بياناتك محمية.' },
-              { icon: <Zap className="h-9 w-9" strokeWidth={1.5} />, title: 'سهل وسريع', desc: 'متجرك جاهز خلال دقائق.' },
+              {
+                icon: <ShoppingBag className="h-7 w-7" strokeWidth={1.75} />,
+                title: 'أضف منتجاتك بسهولة',
+                desc: 'أضف حتى 40 منتجًا مع الأسعار والصور',
+                circle: 'bg-sky-100 text-[#2196f3]',
+              },
+              {
+                icon: <MessageCircle className="h-7 w-7" strokeWidth={1.75} />,
+                title: 'استقبال الطلبات',
+                desc: 'تواصل مباشر مع عملائك عبر واتساب',
+                circle: 'bg-emerald-100 text-[#25D366]',
+              },
+              {
+                icon: <Link2 className="h-7 w-7" strokeWidth={1.75} />,
+                title: 'رابط خاص لمتجرك',
+                desc: 'رابط جميل وسهل لمتجرك الخاص',
+                circle: 'bg-violet-100 text-[#7b42f6]',
+              },
             ].map((f, i) => (
-              <div key={i} className="flex flex-col items-center gap-2 px-2 text-center">
-                <div className="text-gray-500">{f.icon}</div>
-                <h4 className="text-sm font-bold text-gray-900 md:text-base">{f.title}</h4>
-                <p className="text-xs leading-relaxed text-gray-500 md:text-sm">{f.desc}</p>
+              <div key={i} className="rounded-2xl bg-white p-6 text-right shadow-sm md:p-7">
+                <div className={`mb-4 flex h-14 w-14 items-center justify-center rounded-full ${f.circle}`}>{f.icon}</div>
+                <h3 className="mb-2 text-lg font-bold text-gray-900">{f.title}</h3>
+                <p className="text-sm leading-relaxed text-gray-600">{f.desc}</p>
               </div>
             ))}
           </div>

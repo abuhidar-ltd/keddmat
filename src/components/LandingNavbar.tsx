@@ -20,14 +20,24 @@ const LandingNavbar = () => {
 
   return (
     <header className="sticky top-0 z-50 border-b border-gray-100/80 bg-white/90 backdrop-blur-md">
-      <div className="mx-auto flex h-[4.25rem] max-w-6xl items-center justify-between px-4 md:px-6">
-        <Link to="/" className="flex items-center py-1 transition-opacity hover:opacity-90" aria-label="Keddmat - الرئيسية">
-          <BrandLogo height={44} className="max-h-11" />
+      <div className="relative mx-auto flex min-h-[5.25rem] items-center justify-center px-4 py-3 sm:min-h-[5.75rem] sm:py-4 md:min-h-[6.5rem] md:px-6">
+        <Link
+          to="/"
+          className="flex items-center py-1 transition-opacity hover:opacity-90"
+          aria-label="Keddmat - الرئيسية"
+        >
+          <BrandLogo className="h-16 w-auto sm:h-20 md:h-24" />
         </Link>
 
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
-            <Button type="button" variant="ghost" size="icon" className="text-gray-800 hover:bg-gray-100" aria-label="القائمة">
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="absolute end-3 top-1/2 z-10 h-10 w-10 -translate-y-1/2 text-gray-800 hover:bg-gray-100 sm:end-4"
+              aria-label="القائمة"
+            >
               <Menu className="h-6 w-6" strokeWidth={2} />
             </Button>
           </SheetTrigger>
