@@ -72,7 +72,7 @@
 .btn-cta:hover { opacity: 0.92; transform: translateY(-1px); }
 
 .primary-gradient {
-  background: linear-gradient(135deg, #7C3AED, #4F46E5);
+  background: linear-gradient(to left, #7b42f6, #3da1ff);
 }
 
 @layer utilities {

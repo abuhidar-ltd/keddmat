@@ -1,4 +1,4 @@
-/** Logo gradient: cyan → purple (matches /public/logo-khadamat.png) */
+/** Logo gradient: cyan → purple (matches /public/logo-keddmat.png) */
 export const brand = {
   cyan: '#00AEEF',
   purple: '#7B2CBF',

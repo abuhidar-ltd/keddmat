@@ -59,7 +59,10 @@ serve(async (req) => {
         linkForm.append('link', link);
         linkForm.append('title', 'خدمات - منصة خدمات منزلية وصيانة عامة');
         linkForm.append('description', 'كهربائي، سباك، نجار، حداد، تنظيف، ديكور، نقل أثاث، ميكانيكي وأكثر | أطلب خدمة طارئة الآن!');
-        linkForm.append('image', 'https://simple-begin-bot.lovable.app/logo-khadamat.png');
+        linkForm.append(
+          'image',
+          Deno.env.get('SITE_LOGO_URL') ?? 'https://keddmat.com/logo-keddmat.png',
+        );
         linkForm.append('priority', '10');
 
         console.log('Sending link message to:', cleanPhone, 'link:', link);

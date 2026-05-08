@@ -9,8 +9,8 @@ type BrandLogoProps = {
 export function BrandLogo({ className, height = 44 }: BrandLogoProps) {
   return (
     <img
-      src="/logo-khadamat.jpg"
-      alt="خدمات"
+      src="/logo-keddmat.png"
+      alt="Keddmat"
       className={cn('object-contain select-none', className)}
       style={{ height, width: 'auto' }}
       draggable={false}
