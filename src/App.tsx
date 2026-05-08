@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import StorePage from "./pages/StorePage";
+import PreviewPage from "./pages/PreviewPage";
 import Terms from "./pages/Terms";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
@@ -31,6 +32,7 @@ const App = () => {
               <Route path="/auth" element={<Auth />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/store/:slug" element={<StorePage />} />
+              <Route path="/preview/:token" element={<PreviewPage />} />
               <Route path="/terms" element={<Terms />} />
               <Route path="/admin" element={<Admin />} />
               <Route path="*" element={<NotFound />} />
