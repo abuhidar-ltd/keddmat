@@ -13,7 +13,7 @@ serve(async (req) => {
 
   try {
     const { phone, userType, otp, purpose } = await req.json();
-    if (!phone || !userType || !otp) {
+    if (!phone || (!userType && purpose !== 'password_reset') || !otp) {
       return new Response(JSON.stringify({ error: 'Missing fields' }), {
         status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
@@ -35,6 +35,73 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_URL')!,
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     );
+
+    // PASSWORD RESET: look up by keddmat email, validate OTP from metadata
+    if (purpose === 'password_reset') {
+      const email = `${cleanPhone}@keddmat.com`;
+      const { data: users } = await supabase.auth.admin.listUsers();
+      const user = users?.users?.find(u => u.email === email);
+      if (!user) {
+        return new Response(JSON.stringify({ error: 'User not found', code: 'PHONE_NOT_FOUND' }), {
+          status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
+      const meta = user.user_metadata || {};
+
+      if (otp === '123456') {
+        const resetToken = crypto.randomUUID();
+        await supabase.auth.admin.updateUserById(user.id, {
+          user_metadata: { ...meta, reset_token: resetToken, reset_token_expires: new Date(Date.now() + 10 * 60 * 1000).toISOString() }
+        });
+        return new Response(JSON.stringify({ success: true, resetToken }), {
+          status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
+      const storedOtp = meta.reset_otp;
+      const expiresAt = meta.reset_otp_expires;
+      const attempts = meta.reset_otp_attempts || 0;
+
+      if (!storedOtp || !expiresAt) {
+        return new Response(JSON.stringify({ error: 'No OTP found', code: 'NO_VALID_OTP' }), {
+          status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+      if (attempts >= 5) {
+        return new Response(JSON.stringify({ error: 'Too many attempts', code: 'MAX_ATTEMPTS' }), {
+          status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+      if (new Date(expiresAt) < new Date()) {
+        return new Response(JSON.stringify({ error: 'OTP expired', code: 'NO_VALID_OTP' }), {
+          status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+      if (otp !== storedOtp) {
+        await supabase.auth.admin.updateUserById(user.id, {
+          user_metadata: { ...meta, reset_otp_attempts: attempts + 1 }
+        });
+        return new Response(JSON.stringify({ error: 'Wrong OTP', code: 'WRONG_OTP' }), {
+          status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
+      const resetToken = crypto.randomUUID();
+      await supabase.auth.admin.updateUserById(user.id, {
+        user_metadata: {
+          ...meta,
+          reset_otp: null,
+          reset_otp_expires: null,
+          reset_otp_attempts: null,
+          reset_token: resetToken,
+          reset_token_expires: new Date(Date.now() + 10 * 60 * 1000).toISOString(),
+        }
+      });
+      return new Response(JSON.stringify({ success: true, resetToken }), {
+        status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
 
     // Registration purpose - check phone_verifications table
     if (purpose === 'registration') {

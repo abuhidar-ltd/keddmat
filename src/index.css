@@ -14,13 +14,13 @@
     --card-foreground: 263 25% 14%;
     --popover: 0 0% 100%;
     --popover-foreground: 263 25% 14%;
-    --primary: 263 70% 48%;
+    --primary: 262 83% 58%;
     --primary-foreground: 0 0% 100%;
     --secondary: 250 40% 96%;
     --secondary-foreground: 263 45% 28%;
     --muted: 250 35% 96%;
     --muted-foreground: 220 14% 38%;
-    --accent: 195 100% 47%;
+    --accent: 244 73% 57%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
@@ -61,9 +61,9 @@
   }
 }
 
-/* CTA — brand gradient */
+/* CTA — Stitch primary gradient */
 .btn-cta {
-  background: linear-gradient(135deg, #00AEEF, #7B2CBF);
+  background: linear-gradient(135deg, #7C3AED, #4F46E5);
   color: #fff;
   font-weight: 700;
   border-radius: 9999px;
@@ -71,20 +71,24 @@
 }
 .btn-cta:hover { opacity: 0.92; transform: translateY(-1px); }
 
+.primary-gradient {
+  background: linear-gradient(135deg, #7C3AED, #4F46E5);
+}
+
 @layer utilities {
   .text-\[\#6B7280\] { color: #4B5563 !important; }
   .text-price { @apply text-accent font-bold; }
   .glass-effect { @apply bg-white/90 border border-white/60 shadow-xl; }
   .glass-card { @apply bg-white/95 border border-white/60 shadow-lg rounded-2xl; }
   .hover-lift { @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-xl; }
-  .gradient-text { @apply bg-clip-text text-transparent bg-gradient-to-l from-brand-cyan to-brand-purple; }
+  .gradient-text { @apply bg-clip-text text-transparent bg-gradient-to-l from-brand-purple to-brand-cyan; }
   .text-hero { @apply text-primary font-extrabold; }
   .glow-card { @apply shadow-[0_8px_30px_hsl(263_70%_48%_/_0.12)]; }
-  .section-alt { background-color: #f5f3ff; }
+  .section-alt { background-color: #fef7ff; }
   .footer-dark { background-color: #1e1b4b; }
 
   .bg-brand-gradient {
-    background: linear-gradient(135deg, #00AEEF 0%, #7B2CBF 100%);
+    background: linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%);
   }
 
   .bokeh-bg {

@@ -14,12 +14,10 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import PhoneInput from '@/components/PhoneInput';
-import PaymentModal from './PaymentModal';
 import { Copy, Check, Loader2, Camera, Image as ImageIcon, Trash2, ExternalLink } from 'lucide-react';
 import type { Profile } from '@/types/keddmat';
 import { getPublicSiteUrl } from '@/lib/siteUrl';
 import { slugifyLatin, generateSlug } from '@/lib/slug';
-import { daysUntilExpiry, isPublicStoreVisible, SUBSCRIPTION_PERIOD_DAYS } from '@/lib/subscription';
 
 const StoreSettingsForm = () => {
   const { user, signOut } = useAuth();
@@ -30,8 +28,9 @@ const StoreSettingsForm = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [showPayment, setShowPayment] = useState(false);
   const [charCount, setCharCount] = useState(0);
+  const [publishing, setPublishing] = useState(false);
+  const [managingSubscription, setManagingSubscription] = useState(false);
 
   useEffect(() => {
     if (user) fetchProfile();
@@ -109,67 +108,86 @@ const StoreSettingsForm = () => {
     if (!user) return;
     const { error } = await supabase.rpc('delete_user');
     if (error) {
-      toast({ title: 'فشل حذف الحساب', description: error.message, variant: 'destructive' });
+      toast({ title: 'حدث خطأ، يرجى المحاولة مرة أخرى', variant: 'destructive' });
       return;
     }
     await supabase.auth.signOut();
     window.location.href = '/';
   };
 
+  const handlePublish = async () => {
+    if (!user) return;
+    setPublishing(true);
+    const { data, error } = await supabase.functions.invoke('create-checkout-session', {
+      body: { userId: user.id, email: user.email },
+    });
+    setPublishing(false);
+    if (error || !data?.url) {
+      toast({ title: 'حدث خطأ في فتح صفحة الدفع', variant: 'destructive' });
+      return;
+    }
+    window.location.href = data.url;
+  };
+
+  const handleManageSubscription = async () => {
+    if (!user) return;
+    setManagingSubscription(true);
+    const { data, error } = await supabase.functions.invoke('manage-subscription', {
+      body: { userId: user.id },
+    });
+    setManagingSubscription(false);
+    if (error || !data?.url) {
+      toast({ title: 'حدث خطأ في فتح صفحة الاشتراك', variant: 'destructive' });
+      return;
+    }
+    window.location.href = data.url;
+  };
+
   if (loading) return <div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-brand-purple" /></div>;
 
   const storeLink = `${getPublicSiteUrl()}/store/${profile.page_slug || ''}`;
-  const publicVisible = isPublicStoreVisible({
-    is_active: !!profile.is_active,
-    subscription_expires_at: profile.subscription_expires_at,
-  });
-  const daysLeft = daysUntilExpiry(profile.subscription_expires_at);
-  const expiryLabel = profile.subscription_expires_at
-    ? new Date(profile.subscription_expires_at).toLocaleDateString('ar-EG', { dateStyle: 'medium' })
-    : null;
 
   return (
     <div className="space-y-6 p-1">
       {/* Store Status */}
       <div className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border">
-        <div>
-          <p className="font-semibold text-gray-800">حالة المتجر</p>
-          {publicVisible ? (
-            <>
-              <p className="text-sm text-gray-500">متجرك منشور ويظهر للزوار</p>
-              {expiryLabel && (
-                <p className="text-xs text-brand-purple font-medium mt-1">ينتهي الاشتراك: {expiryLabel}</p>
-              )}
-              {daysLeft !== null && daysLeft <= 7 && daysLeft > 0 && (
-                <p className="text-xs text-amber-700 mt-1">تبقّى {daysLeft} يوماً — جدّد مبكراً بعيد انقطاع الرابط العام.</p>
-              )}
-              <p className="text-xs text-gray-400 mt-1">الاشتراك شهري ({SUBSCRIPTION_PERIOD_DAYS} يوماً) بعد كل دفعة يوافق عليها فريقنا.</p>
-            </>
-          ) : (
-            <>
-              <p className="text-sm text-gray-500">
-                {profile.subscription_expires_at && new Date(profile.subscription_expires_at) <= new Date()
-                  ? 'انتهت صلاحية اشتراكك — المتجر غير ظاهر للزوار حالياً'
-                  : 'متجرك غير منشور للعامة بعد'}
-              </p>
-              <p className="text-xs text-gray-400 mt-1">
-                ادفع عبر CliQ، ارفع الوصل، وبعد الموافقة يُمدَّد اشتراكك {SUBSCRIPTION_PERIOD_DAYS} يوماً (أو يُفعَّل لأول مرة).
-              </p>
-            </>
-          )}
-        </div>
-        {publicVisible
-          ? <Badge className="bg-gradient-to-r from-brand-cyan to-brand-purple text-white text-sm px-3 py-1 border-0">متجرك نشط ✓</Badge>
-          : <Button onClick={() => setShowPayment(true)} className="font-bold text-white bg-gradient-to-br from-brand-cyan to-brand-purple hover:opacity-95">انشر متجرك / تجديد</Button>}
+        <p className="font-semibold text-gray-800">حالة المتجر</p>
+        {profile.is_active ? (
+          <div className="flex items-center gap-2">
+            <Badge className="bg-green-100 text-green-700 border-0 text-sm px-3 py-1">متجرك نشط ✓</Badge>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={handleManageSubscription}
+              disabled={managingSubscription}
+              className="rounded-xl text-xs border-brand-purple/30 text-brand-purple hover:bg-brand-purple/5 h-8"
+            >
+              {managingSubscription
+                ? <Loader2 className="h-3 w-3 animate-spin" />
+                : 'إدارة الاشتراك'}
+            </Button>
+          </div>
+        ) : (
+          <Button
+            size="sm"
+            onClick={handlePublish}
+            disabled={publishing}
+            className="rounded-xl font-bold text-white primary-gradient border-0 h-9 px-4"
+          >
+            {publishing
+              ? <><Loader2 className="h-3.5 w-3.5 animate-spin ml-1.5" />جاري التحويل...</>
+              : 'انشر متجرك ✦'}
+          </Button>
+        )}
       </div>
 
       {/* Cover upload */}
       <div className="space-y-2">
         <Label className="font-semibold">صورة الغلاف</Label>
-        <div className="relative h-32 rounded-2xl overflow-hidden border-2 border-dashed border-gray-200 group cursor-pointer bg-gray-50">
+        <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border-2 border-dashed border-gray-200 group cursor-pointer bg-gray-50">
           {profile.cover_url
             ? <img src={profile.cover_url} alt="Cover" className="w-full h-full object-cover" />
-            : <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-brand-cyan to-brand-purple"><ImageIcon className="h-10 w-10 text-white/50" /></div>}
+            : <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-brand-purple to-brand-cyan"><ImageIcon className="h-10 w-10 text-white/50" /></div>}
           <label className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
             <span className="text-white text-sm font-bold flex items-center gap-2"><Camera className="h-5 w-5" />تغيير الغلاف</span>
             <input type="file" accept="image/*" onChange={handleCoverUpload} className="hidden" />
@@ -242,11 +260,11 @@ const StoreSettingsForm = () => {
           className="h-11 rounded-xl"
           dir="ltr"
         />
-        <p className="text-xs text-gray-400">حروف لاتينية وأرقام وشرطات فقط. يُحدَّث الرابط في قاعدة البيانات عند الضغط على «حفظ التغييرات».</p>
+        <p className="text-xs text-gray-400">حروف لاتينية وأرقام وشرطات فقط. يُحدَّث الرابط في قاعدة البيانات عند الضغط على «حفظ التغييرات».</p>
       </div>
 
       {/* Shareable link */}
-      {profile.page_slug && publicVisible && (
+      {profile.page_slug && !!profile.is_active && (
         <Card className="border border-brand-purple/20 bg-brand-purple/5 rounded-2xl">
           <CardContent className="p-4">
             <p className="text-sm font-semibold text-brand-purple mb-2">رابط متجرك القابل للمشاركة</p>
@@ -268,7 +286,7 @@ const StoreSettingsForm = () => {
       <Button
         onClick={handleSave}
         disabled={saving || uploading}
-        className="w-full h-12 font-bold text-base rounded-xl text-white bg-gradient-to-br from-brand-cyan to-brand-purple hover:opacity-95"
+        className="w-full h-12 font-bold text-base rounded-xl text-white bg-gradient-to-br from-brand-purple to-brand-cyan hover:opacity-95"
       >
         {saving ? <><Loader2 className="h-5 w-5 animate-spin ml-2" />جاري الحفظ...</> : 'حفظ التغييرات'}
       </Button>
@@ -293,14 +311,6 @@ const StoreSettingsForm = () => {
           </AlertDialogContent>
         </AlertDialog>
       </div>
-
-      <PaymentModal
-        open={showPayment}
-        onOpenChange={(open) => {
-          setShowPayment(open);
-          if (!open && user) fetchProfile();
-        }}
-      />
     </div>
   );
 };

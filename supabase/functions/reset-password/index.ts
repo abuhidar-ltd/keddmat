@@ -12,17 +12,19 @@ serve(async (req) => {
   }
 
   try {
-    const { resetToken, tempPassword, newPassword, userType, phone } = await req.json();
+    const { resetToken, tempPassword, newPassword, userType, phone, purpose } = await req.json();
     const providedToken = resetToken ?? tempPassword;
 
-    if (!providedToken || !newPassword || !userType || !phone) {
+    if (!providedToken || !newPassword || (!userType && purpose !== 'password_reset') || !phone) {
       return new Response(JSON.stringify({ error: 'Missing fields' }), {
         status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
     const cleanPhone = phone.replace(/[^0-9]/g, '');
-    const email = `${cleanPhone}.${userType}@phone.local`;
+    const email = purpose === 'password_reset'
+      ? `${cleanPhone}@keddmat.com`
+      : `${cleanPhone}.${userType}@phone.local`;
 
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL')!,

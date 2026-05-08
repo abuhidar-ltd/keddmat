@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { LogOut, ExternalLink, Loader2 } from 'lucide-react';
 import { BrandLogo } from '@/components/BrandLogo';
+import { useToast } from '@/hooks/use-toast';
 import StoreSettingsForm from '@/components/dashboard/StoreSettingsForm';
 import ProductsManager from '@/components/dashboard/ProductsManager';
 import AnalyticsTab from '@/components/dashboard/AnalyticsTab';
@@ -13,11 +14,26 @@ import AnalyticsTab from '@/components/dashboard/AnalyticsTab';
 const Dashboard = () => {
   const { user, loading, signOut } = useAuth();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { toast } = useToast();
   const [slug, setSlug] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!loading && !user) navigate('/auth', { replace: true });
+    if (loading) return;
+    if (!user) navigate('/auth', { replace: true });
+    else if (user.email === 'loophereinit@protonmail.com') navigate('/admin', { replace: true });
   }, [user, loading]);
+
+  useEffect(() => {
+    const payment = searchParams.get('payment');
+    if (payment === 'success') {
+      toast({ title: 'تم الدفع بنجاح! متجرك قيد التفعيل ✓' });
+      setSearchParams({}, { replace: true });
+    } else if (payment === 'cancelled') {
+      toast({ title: 'تم إلغاء عملية الدفع', variant: 'destructive' });
+      setSearchParams({}, { replace: true });
+    }
+  }, []);
 
   useEffect(() => {
     if (user) {
@@ -31,7 +47,7 @@ const Dashboard = () => {
     navigate('/', { replace: true });
   };
 
-  if (loading || !user) {
+  if (loading || !user || user.email === 'loophereinit@protonmail.com') {
     return <div className="min-h-screen flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-brand-purple" /></div>;
   }
 

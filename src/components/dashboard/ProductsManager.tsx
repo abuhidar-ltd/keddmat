@@ -13,7 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
 } from '@/components/ui/dialog';
-import { Plus, Pencil, Trash2, Package, Loader2, Camera } from 'lucide-react';
+import { Plus, Pencil, Trash2, Package, Loader2, Camera, X } from 'lucide-react';
 import type { Product } from '@/types/keddmat';
 
 const emptyForm = { title: '', description: '', price: '', delivery_available: false, delivery_price: '', image_url: '' };
@@ -29,6 +29,7 @@ const ProductsManager = () => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
+  const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
 
   useEffect(() => {
     if (user) fetchProducts();
@@ -95,7 +96,7 @@ const ProductsManager = () => {
     <div className="space-y-4 p-1">
       <div className="flex items-center justify-between">
         <p className="text-sm text-gray-500">{products.length} منتج</p>
-        <Button onClick={openAdd} className="font-bold gap-2 rounded-xl text-white bg-gradient-to-br from-brand-cyan to-brand-purple hover:opacity-95">
+        <Button onClick={openAdd} className="font-bold gap-2 rounded-xl text-white bg-gradient-to-br from-brand-purple to-brand-cyan hover:opacity-95">
           <Plus className="h-4 w-4" />إضافة منتج +
         </Button>
       </div>
@@ -107,13 +108,18 @@ const ProductsManager = () => {
           <p className="text-sm mt-1">ابدأ بإضافة منتجاتك</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
           {products.map(p => (
             <Card key={p.id} className="rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border-0 bg-white">
-              <div className="aspect-video bg-gray-100 overflow-hidden">
+              <div className="w-full aspect-[3/4] max-h-44 md:max-h-none overflow-hidden flex items-center justify-center bg-gray-100">
                 {p.image_url
-                  ? <img src={p.image_url} alt={p.title} className="w-full h-full object-cover" />
-                  : <div className="w-full h-full flex items-center justify-center"><Package className="h-10 w-10 text-gray-300" /></div>}
+                  ? <img
+                      src={p.image_url}
+                      alt={p.title}
+                      className="w-full h-full object-cover object-center cursor-zoom-in"
+                      onClick={() => setLightboxUrl(p.image_url)}
+                    />
+                  : <Package className="h-10 w-10 text-gray-300" />}
               </div>
               <CardContent className="p-3 space-y-2">
                 <h3 className="font-bold text-gray-900 text-sm line-clamp-1">{p.title}</h3>
@@ -150,7 +156,7 @@ const ProductsManager = () => {
             {/* Image */}
             <div className="space-y-2">
               <Label className="font-semibold">صورة المنتج</Label>
-              <div className="relative h-36 bg-gray-100 rounded-xl overflow-hidden border-2 border-dashed border-gray-200 group cursor-pointer">
+              <div className="relative aspect-[3/4] bg-gray-100 rounded-xl overflow-hidden border-2 border-dashed border-gray-200 group cursor-pointer">
                 {form.image_url
                   ? <img src={form.image_url} alt="preview" className="w-full h-full object-cover" />
                   : <div className="w-full h-full flex flex-col items-center justify-center gap-2"><Camera className="h-8 w-8 text-gray-400" /><span className="text-xs text-gray-400">انقر لرفع صورة</span></div>}
@@ -195,12 +201,34 @@ const ProductsManager = () => {
 
           <DialogFooter className="flex gap-2 mt-2">
             <Button variant="outline" onClick={() => setDialogOpen(false)} className="flex-1 rounded-xl">إلغاء</Button>
-            <Button onClick={handleSave} disabled={saving || uploading} className="flex-1 font-bold rounded-xl text-white bg-gradient-to-br from-brand-cyan to-brand-purple hover:opacity-95">
+            <Button onClick={handleSave} disabled={saving || uploading} className="flex-1 font-bold rounded-xl text-white bg-gradient-to-br from-brand-purple to-brand-cyan hover:opacity-95">
               {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : 'حفظ'}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Lightbox */}
+      {lightboxUrl && (
+        <div
+          className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4"
+          onClick={() => setLightboxUrl(null)}
+        >
+          <button
+            className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors"
+            onClick={() => setLightboxUrl(null)}
+            aria-label="إغلاق"
+          >
+            <X className="h-5 w-5" />
+          </button>
+          <img
+            src={lightboxUrl}
+            alt="صورة المنتج"
+            className="max-h-[90vh] max-w-[90vw] object-contain rounded-xl shadow-2xl"
+            onClick={e => e.stopPropagation()}
+          />
+        </div>
+      )}
     </div>
   );
 };

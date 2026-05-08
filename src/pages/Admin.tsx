@@ -1,18 +1,19 @@
-import { useEffect, useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { useAdmin } from '@/hooks/useAdmin';
-import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
-import { LogOut, Store, CreditCard, CheckCircle, XCircle, Trash2, Users, MessageCircle, Link2, Loader2, ShieldCheck, ToggleLeft, ToggleRight } from 'lucide-react';
+import { LogOut, Store, Trash2, Users, MessageCircle, Link2, Loader2, ShieldCheck, ToggleLeft, ToggleRight } from 'lucide-react';
 import { brand } from '@/lib/brand';
 import { BrandLogo } from '@/components/BrandLogo';
-import { computeRenewedExpiry, isPublicStoreVisible, SUBSCRIPTION_PERIOD_DAYS } from '@/lib/subscription';
 import { toast } from 'sonner';
+
+const ADMIN_EMAIL = 'loophereinit@protonmail.com';
 
 interface StoreRow {
   user_id: string;
@@ -20,117 +21,84 @@ interface StoreRow {
   page_slug: string | null;
   whatsapp_number: string | null;
   is_active: boolean;
-  subscription_expires_at: string | null;
   created_at: string;
-}
-
-interface ReceiptRow {
-  id: string;
-  user_id: string;
-  receipt_image_url: string;
-  status: string;
-  created_at: string;
-  profiles: { store_name: string; whatsapp_number: string } | null;
 }
 
 const Admin = () => {
-  const navigate = useNavigate();
-  const { user, signOut } = useAuth();
-  const { isAdmin, loading: adminLoading } = useAdmin();
+  const [authed, setAuthed] = useState(false);
+
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
+  const [loginLoading, setLoginLoading] = useState(false);
 
   const [stores, setStores] = useState<StoreRow[]>([]);
-  const [receipts, setReceipts] = useState<ReceiptRow[]>([]);
   const [analytics, setAnalytics] = useState<{ event_type: string; created_at: string }[]>([]);
-  const [loadingData, setLoadingData] = useState(true);
+  const [loadingData, setLoadingData] = useState(false);
 
-  useEffect(() => {
-    if (!adminLoading && !isAdmin) {
-      toast.error('غير مصرح لك بالدخول');
-      navigate('/');
+  const handleAdminLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoginError('');
+    setLoginLoading(true);
+    const { data, error } = await supabase.auth.signInWithPassword({ email: loginEmail, password: loginPassword });
+    setLoginLoading(false);
+    if (error || !data.user) {
+      setLoginError('بيانات خاطئة');
+      return;
     }
-  }, [isAdmin, adminLoading]);
+    if (data.user.email !== ADMIN_EMAIL) {
+      await supabase.auth.signOut();
+      setLoginError('غير مصرح لك بالدخول');
+      return;
+    }
+    setAuthed(true);
+    fetchData(data.user.id);
+  };
 
-  useEffect(() => {
-    if (isAdmin) fetchData();
-  }, [isAdmin]);
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    setAuthed(false);
+    setStores([]);
+    setAnalytics([]);
+  };
 
-  const fetchData = async () => {
+  const fetchData = async (excludeUserId?: string) => {
     setLoadingData(true);
-    const [storesRes, receiptsRes, analyticsRes] = await Promise.all([
-      supabase.from('profiles').select('user_id, store_name, page_slug, whatsapp_number, is_active, subscription_expires_at, created_at').order('created_at', { ascending: false }),
-      supabase.from('payment_receipts').select('*, profiles(store_name, whatsapp_number)').order('created_at', { ascending: false }),
-      supabase.from('store_analytics').select('event_type, created_at').gte('created_at', new Date(Date.now() - 30 * 86400000).toISOString()),
+    const [storesRes, analyticsRes] = await Promise.all([
+      supabase.from('profiles')
+        .select('user_id, store_name, page_slug, whatsapp_number, is_active, created_at')
+        .order('created_at', { ascending: false }),
+      supabase.from('store_analytics')
+        .select('event_type, created_at')
+        .gte('created_at', new Date(Date.now() - 30 * 86400000).toISOString()),
     ]);
-
-    setStores((storesRes.data as StoreRow[]) || []);
-    setReceipts((receiptsRes.data as ReceiptRow[]) || []);
-
+    const allStores = (storesRes.data as StoreRow[]) || [];
+    setStores(excludeUserId ? allStores.filter(s => s.user_id !== excludeUserId) : allStores);
     setAnalytics(analyticsRes.data || []);
     setLoadingData(false);
   };
 
   const toggleActive = async (userId: string, current: boolean) => {
-    if (!current) {
-      const next = computeRenewedExpiry(null);
-      const { error } = await supabase
-        .from('profiles')
-        .update({ is_active: true, subscription_expires_at: next })
-        .eq('user_id', userId);
-      if (error) { toast.error('فشل التحديث'); return; }
-      toast.success(`تم تفعيل المتجر — اشتراك ${SUBSCRIPTION_PERIOD_DAYS} يوماً`);
-    } else {
-      const { error } = await supabase.from('profiles').update({ is_active: false }).eq('user_id', userId);
-      if (error) { toast.error('فشل التحديث'); return; }
-      toast.success('تم إيقاف المتجر');
-    }
+    const { error } = await supabase.from('profiles').update({ is_active: !current }).eq('user_id', userId);
+    if (error) { toast.error('فشل التحديث'); return; }
+    toast.success(current ? 'تم إيقاف المتجر' : 'تم تفعيل المتجر');
     fetchData();
   };
 
   const deleteStore = async (userId: string) => {
     if (!confirm('هل أنت متأكد من حذف هذا المتجر بجميع بياناته؟')) return;
+    await supabase.from('store_analytics').delete().eq('store_id', userId);
     await supabase.from('products').delete().eq('user_id', userId);
     await supabase.from('profiles').delete().eq('user_id', userId);
     toast.success('تم حذف المتجر');
     fetchData();
   };
 
-  const approveReceipt = async (receiptId: string, userId: string) => {
-    const { data: prof } = await supabase.from('profiles').select('subscription_expires_at').eq('user_id', userId).maybeSingle();
-    const nextExpiry = computeRenewedExpiry(prof?.subscription_expires_at ?? null);
-    await supabase.from('payment_receipts').update({ status: 'approved' }).eq('id', receiptId);
-    const { error } = await supabase
-      .from('profiles')
-      .update({ is_active: true, subscription_expires_at: nextExpiry })
-      .eq('user_id', userId);
-    if (error) {
-      toast.error('فشل تحديث الاشتراك');
-      return;
-    }
-    toast.success(`تم قبول الوصل — تمديد ${SUBSCRIPTION_PERIOD_DAYS} يوماً`);
-    fetchData();
-  };
-
-  const rejectReceipt = async (receiptId: string) => {
-    await supabase.from('payment_receipts').update({ status: 'rejected' }).eq('id', receiptId);
-    toast.success('تم رفض الوصل');
-    fetchData();
-  };
-
-  const handleSignOut = async () => {
-    await signOut();
-    navigate('/');
-  };
-
-  // KPIs
   const totalStores = stores.length;
-  const activeStores = stores.filter(s =>
-    isPublicStoreVisible({ is_active: s.is_active, subscription_expires_at: s.subscription_expires_at }),
-  ).length;
+  const activeStores = stores.filter(s => s.is_active).length;
   const totalWaClicks = analytics.filter(e => e.event_type === 'whatsapp_click').length;
   const totalLinkClicks = analytics.filter(e => e.event_type === 'link_click').length;
-  const pendingReceipts = receipts.filter(r => r.status === 'pending').length;
 
-  // Signups chart (last 30 days)
   const signupChart = (() => {
     const days: Record<string, number> = {};
     for (let i = 29; i >= 0; i--) {
@@ -145,13 +113,53 @@ const Admin = () => {
     return Object.entries(days).map(([date, count]) => ({ date: date.slice(5), تسجيل: count }));
   })();
 
-  if (adminLoading || !isAdmin) {
-    return <div className="min-h-screen flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-brand-purple" /></div>;
+  if (!authed) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4 bg-brand-surface" dir="rtl">
+        <Card className="w-full max-w-sm shadow-md rounded-2xl border-0">
+          <CardContent className="pt-8 pb-6 px-6 space-y-5">
+            <div className="text-center space-y-1">
+              <BrandLogo height={48} className="mx-auto mb-2" />
+              <p className="text-sm text-gray-500 font-medium">لوحة تحكم خدمات</p>
+            </div>
+            <form onSubmit={handleAdminLogin} className="space-y-4">
+              <div className="space-y-2">
+                <Label className="font-semibold">البريد الإلكتروني</Label>
+                <Input
+                  type="email"
+                  value={loginEmail}
+                  onChange={e => setLoginEmail(e.target.value)}
+                  className="h-12 text-base rounded-xl"
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="font-semibold">كلمة المرور</Label>
+                <Input
+                  type="password"
+                  value={loginPassword}
+                  onChange={e => setLoginPassword(e.target.value)}
+                  className="h-12 text-base rounded-xl"
+                  required
+                />
+              </div>
+              {loginError && <p className="text-sm text-red-500 text-center">{loginError}</p>}
+              <Button
+                type="submit"
+                disabled={loginLoading}
+                className="w-full h-12 font-bold text-base rounded-xl text-white bg-gradient-to-br from-brand-purple to-brand-cyan hover:opacity-95"
+              >
+                {loginLoading ? <><Loader2 className="h-4 w-4 animate-spin ml-2" />جاري الدخول...</> : 'تسجيل الدخول'}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    );
   }
 
   return (
     <div className="min-h-screen bg-brand-surface" dir="rtl">
-      {/* Header */}
       <header className="bg-white border-b border-brand-purple/10 shadow-sm sticky top-0 z-40">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -161,22 +169,20 @@ const Admin = () => {
           </div>
           <div className="flex items-center gap-2">
             <Link to="/"><Button variant="outline" size="sm" className="rounded-xl text-sm">الرئيسية</Button></Link>
-            <Button variant="ghost" size="sm" onClick={handleSignOut}><LogOut className="h-4 w-4" /></Button>
+            <Button variant="ghost" size="sm" onClick={handleSignOut}>
+              <LogOut className="h-4 w-4" />
+            </Button>
           </div>
         </div>
       </header>
 
       <main className="container mx-auto px-4 py-6 max-w-5xl">
         <Tabs defaultValue="overview">
-          <TabsList className="grid w-full grid-cols-3 rounded-2xl bg-white shadow-sm border border-brand-purple/10 p-1 mb-6 h-auto">
+          <TabsList className="grid w-full grid-cols-2 rounded-2xl bg-white shadow-sm border border-brand-purple/10 p-1 mb-6 h-auto">
             <TabsTrigger value="overview" className="rounded-xl py-2.5 font-semibold data-[state=active]:bg-brand-purple data-[state=active]:text-white">نظرة عامة</TabsTrigger>
             <TabsTrigger value="stores" className="rounded-xl py-2.5 font-semibold data-[state=active]:bg-brand-purple data-[state=active]:text-white">المتاجر</TabsTrigger>
-            <TabsTrigger value="payments" className="rounded-xl py-2.5 font-semibold data-[state=active]:bg-brand-purple data-[state=active]:text-white">
-              المدفوعات {pendingReceipts > 0 && <span className="bg-red-500 text-white rounded-full px-1.5 py-0.5 text-xs mr-1">{pendingReceipts}</span>}
-            </TabsTrigger>
           </TabsList>
 
-          {/* Overview Tab */}
           <TabsContent value="overview" className="space-y-6">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               {[
@@ -213,99 +219,74 @@ const Admin = () => {
             </Card>
           </TabsContent>
 
-          {/* Stores Tab */}
           <TabsContent value="stores">
-            {loadingData ? <div className="flex justify-center py-12"><Loader2 className="h-7 w-7 animate-spin text-brand-purple" /></div> : (
-              <div className="space-y-3">
-                {stores.length === 0 && <p className="text-center text-gray-400 py-10">لا توجد متاجر بعد</p>}
-                {stores.map(store => {
-                  const pub = isPublicStoreVisible({
-                    is_active: store.is_active,
-                    subscription_expires_at: store.subscription_expires_at,
-                  });
-                  const exp = store.subscription_expires_at
-                    ? new Date(store.subscription_expires_at).toLocaleDateString('ar-EG')
-                    : null;
-                  return (
-                  <Card key={store.user_id} className="border-0 shadow-sm rounded-2xl bg-white">
-                    <CardContent className="p-4 flex flex-col sm:flex-row sm:items-center gap-3">
-                      <div className="flex-1 min-w-0">
-                        <p className="font-bold text-gray-900 truncate">{store.store_name || 'بدون اسم'}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">{store.whatsapp_number} • {store.page_slug}</p>
-                        <p className="text-xs text-gray-400">{new Date(store.created_at).toLocaleDateString('ar-EG')}</p>
-                        {exp && (
-                          <p className="text-xs text-brand-purple mt-1">ينتهي الاشتراك: {exp}</p>
-                        )}
-                      </div>
-                      <div className="flex items-center gap-2 shrink-0 flex-wrap">
-                        {pub ? (
-                          <Badge className="bg-green-100 text-green-700 border-0">ظاهر للزوار</Badge>
-                        ) : store.is_active ? (
-                          <Badge className="bg-amber-100 text-amber-800 border-0">غير ظاهر (منتهي؟)</Badge>
-                        ) : (
-                          <Badge className="bg-gray-100 text-gray-500 border-0">غير نشط</Badge>
-                        )}
-                        {store.page_slug && pub && (
-                          <a href={`/store/${store.page_slug}`} target="_blank" rel="noopener noreferrer">
-                            <Button variant="outline" size="sm" className="rounded-xl h-8 text-xs">عرض</Button>
-                          </a>
-                        )}
-                        <Button
-                          variant="outline" size="sm"
-                          onClick={() => toggleActive(store.user_id, store.is_active)}
-                          className={`rounded-xl h-8 gap-1 text-xs ${store.is_active ? 'border-orange-200 text-orange-600 hover:bg-orange-50' : 'border-green-200 text-green-600 hover:bg-green-50'}`}
-                        >
-                          {store.is_active ? <ToggleRight className="h-3.5 w-3.5" /> : <ToggleLeft className="h-3.5 w-3.5" />}
-                          {store.is_active ? 'إيقاف' : 'تفعيل'}
-                        </Button>
-                        <Button variant="outline" size="sm" onClick={() => deleteStore(store.user_id)}
-                          className="rounded-xl h-8 gap-1 text-xs border-red-200 text-red-600 hover:bg-red-50">
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                );
-                })}
-              </div>
-            )}
-          </TabsContent>
-
-          {/* Payments Tab */}
-          <TabsContent value="payments">
-            {loadingData ? <div className="flex justify-center py-12"><Loader2 className="h-7 w-7 animate-spin text-brand-purple" /></div> : (
-              <div className="space-y-3">
-                {receipts.length === 0 && <p className="text-center text-gray-400 py-10">لا توجد وصولات بعد</p>}
-                {receipts.map(r => (
-                  <Card key={r.id} className="border-0 shadow-sm rounded-2xl bg-white">
-                    <CardContent className="p-4 flex flex-col sm:flex-row sm:items-center gap-3">
-                      <a href={r.receipt_image_url} target="_blank" rel="noopener noreferrer" className="shrink-0">
-                        <img src={r.receipt_image_url} alt="receipt" className="w-16 h-16 rounded-xl object-cover border hover:opacity-80 transition-opacity" />
-                      </a>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-bold text-gray-900">{r.profiles?.store_name ?? 'غير معروف'}</p>
-                        <p className="text-xs text-gray-500">{new Date(r.created_at).toLocaleDateString('ar-EG')}</p>
-                      </div>
-                      <div className="flex items-center gap-2 shrink-0">
-                        {r.status === 'pending' && (
-                          <>
-                            <Button size="sm" onClick={() => approveReceipt(r.id, r.user_id)}
-                              className="gap-1 rounded-xl h-8 text-xs bg-green-600 hover:bg-green-700 text-white">
-                              <CheckCircle className="h-3.5 w-3.5" />قبول
-                            </Button>
-                            <Button size="sm" variant="outline" onClick={() => rejectReceipt(r.id)}
-                              className="gap-1 rounded-xl h-8 text-xs border-red-200 text-red-600 hover:bg-red-50">
-                              <XCircle className="h-3.5 w-3.5" />رفض
-                            </Button>
-                          </>
-                        )}
-                        {r.status === 'approved' && <Badge className="bg-green-100 text-green-700 border-0">مقبول</Badge>}
-                        {r.status === 'rejected' && <Badge className="bg-red-100 text-red-700 border-0">مرفوض</Badge>}
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+            {loadingData ? (
+              <div className="flex justify-center py-12"><Loader2 className="h-7 w-7 animate-spin text-brand-purple" /></div>
+            ) : (
+              <Card className="border-0 shadow-md rounded-2xl overflow-hidden">
+                {stores.length === 0 ? (
+                  <CardContent className="p-8 text-center text-gray-400">لا توجد متاجر بعد</CardContent>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="bg-gray-50 border-b border-gray-100 text-gray-500 text-xs">
+                          <th className="text-right px-4 py-3 font-semibold">المتجر</th>
+                          <th className="text-right px-4 py-3 font-semibold hidden sm:table-cell">واتساب</th>
+                          <th className="text-right px-4 py-3 font-semibold">الحالة</th>
+                          <th className="text-right px-4 py-3 font-semibold hidden md:table-cell">تاريخ التسجيل</th>
+                          <th className="px-4 py-3" />
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-50">
+                        {stores.map(store => (
+                          <tr key={store.user_id} className="bg-white hover:bg-gray-50/50 transition-colors">
+                            <td className="px-4 py-3">
+                              <p className="font-semibold text-gray-900 truncate max-w-[140px]">{store.store_name || 'بدون اسم'}</p>
+                              {store.page_slug && (
+                                <p className="text-xs text-gray-400 truncate max-w-[140px]">{store.page_slug}</p>
+                              )}
+                            </td>
+                            <td className="px-4 py-3 text-gray-600 hidden sm:table-cell">{store.whatsapp_number || '—'}</td>
+                            <td className="px-4 py-3">
+                              {store.is_active
+                                ? <Badge className="bg-green-100 text-green-700 border-0 text-xs">نشط</Badge>
+                                : <Badge className="bg-gray-100 text-gray-500 border-0 text-xs">غير نشط</Badge>}
+                            </td>
+                            <td className="px-4 py-3 text-xs text-gray-400 hidden md:table-cell">
+                              {new Date(store.created_at).toLocaleDateString('ar-EG')}
+                            </td>
+                            <td className="px-4 py-3">
+                              <div className="flex items-center gap-1.5 justify-end">
+                                {store.page_slug && (
+                                  <a href={`/store/${store.page_slug}`} target="_blank" rel="noopener noreferrer">
+                                    <Button variant="outline" size="sm" className="rounded-lg h-7 text-xs px-2">عرض</Button>
+                                  </a>
+                                )}
+                                <Button
+                                  variant="outline" size="sm"
+                                  onClick={() => toggleActive(store.user_id, store.is_active)}
+                                  className={`rounded-lg h-7 gap-1 text-xs px-2 ${store.is_active ? 'border-orange-200 text-orange-600 hover:bg-orange-50' : 'border-green-200 text-green-600 hover:bg-green-50'}`}
+                                >
+                                  {store.is_active ? <ToggleRight className="h-3.5 w-3.5" /> : <ToggleLeft className="h-3.5 w-3.5" />}
+                                  {store.is_active ? 'إيقاف' : 'تفعيل'}
+                                </Button>
+                                <Button
+                                  variant="outline" size="sm"
+                                  onClick={() => deleteStore(store.user_id)}
+                                  className="rounded-lg h-7 text-xs px-2 border-red-200 text-red-600 hover:bg-red-50"
+                                >
+                                  <Trash2 className="h-3.5 w-3.5" />
+                                </Button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </Card>
             )}
           </TabsContent>
         </Tabs>

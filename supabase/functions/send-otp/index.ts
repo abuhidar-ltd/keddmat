@@ -15,7 +15,7 @@ serve(async (req) => {
     const { phone, userType, purpose } = await req.json();
     console.log('send-otp called with:', { phone, userType, purpose });
 
-    if (!phone || !userType) {
+    if (!phone || (!userType && purpose !== 'password_reset')) {
       return new Response(JSON.stringify({ error: 'Missing phone or userType' }), {
         status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
@@ -27,6 +27,36 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_URL')!,
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     );
+
+    // PASSWORD RESET: look up by keddmat email, store OTP in metadata, send via WhatsApp
+    if (purpose === 'password_reset') {
+      const email = `${cleanPhone}@keddmat.com`;
+      const { data: users } = await supabase.auth.admin.listUsers();
+      const existingUser = users?.users?.find(u => u.email === email);
+      if (!existingUser) {
+        return new Response(JSON.stringify({ error: 'PHONE_NOT_FOUND' }), {
+          status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
+      const otp = Math.floor(100000 + Math.random() * 900000).toString();
+      const expiresAt = new Date(Date.now() + 5 * 60 * 1000).toISOString();
+      await supabase.auth.admin.updateUserById(existingUser.id, {
+        user_metadata: {
+          ...existingUser.user_metadata,
+          reset_otp: otp,
+          reset_otp_expires: expiresAt,
+          reset_otp_attempts: 0,
+        }
+      });
+
+      const message = `🔐 رمز إعادة تعيين كلمة المرور في خدمات:\n\n*${otp}*\n\nصالح لمدة 5 دقائق. لا تشاركه مع أحد.`;
+      await sendWhatsApp(cleanPhone, message);
+
+      return new Response(JSON.stringify({ success: true }), {
+        status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
 
     // REGISTRATION: store OTP in phone_verifications table and send via WhatsApp
     if (purpose === 'registration') {

@@ -40,7 +40,7 @@ const Navbar = () => {
           ) : (
             <Button
               onClick={() => navigate('/auth')}
-              className="font-bold text-white bg-gradient-to-br from-brand-cyan to-brand-purple hover:opacity-95 shadow-md"
+              className="font-bold text-white bg-gradient-to-br from-brand-purple to-brand-cyan hover:opacity-95 shadow-md"
             >
               سجل الآن
             </Button>

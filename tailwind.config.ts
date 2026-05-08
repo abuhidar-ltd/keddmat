@@ -18,6 +18,7 @@ export default {
     extend: {
       fontFamily: {
         cairo: ['Cairo', 'sans-serif'],
+        tajawal: ['Tajawal', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -68,10 +69,10 @@ export default {
           foreground: "hsl(var(--success-foreground))",
         },
         brand: {
-          cyan: "#00AEEF",
-          purple: "#7B2CBF",
-          footer: "#1e1b4b",
-          surface: "#f5f3ff",
+          cyan: "#4b41e1",
+          purple: "#7c3aed",
+          footer: "#332f39",
+          surface: "#fef7ff",
         },
       },
       borderRadius: {

@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
-import { Eye, EyeOff, Loader2 } from 'lucide-react';
+import { Eye, EyeOff, Loader2, MessageCircle } from 'lucide-react';
 import { BrandLogo } from '@/components/BrandLogo';
 import PhoneInput from '@/components/PhoneInput';
 import PasswordResetModal from '@/components/PasswordResetModal';
@@ -24,14 +24,13 @@ const registerSchema = z.object({
   storeName: z.string().min(2, 'اسم المتجر مطلوب'),
   phone: z.string().min(8, 'رقم الهاتف غير صالح'),
   password: z.string().min(6, 'كلمة المرور يجب أن تكون 6 أحرف على الأقل'),
-  confirmPassword: z.string(),
   agreeToTerms: z.literal(true, { errorMap: () => ({ message: 'يجب الموافقة على الشروط والأحكام' }) }),
-}).refine(d => d.password === d.confirmPassword, { message: 'كلمات المرور غير متطابقة', path: ['confirmPassword'] });
+});
 
 const Auth = () => {
   const navigate = useNavigate();
   const { user, loading, signIn, signUp } = useAuth();
-  const { isAdmin, loading: adminLoading } = useAdmin();
+  const { isAdmin, adminLoading } = useAdmin();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPasswordReset, setShowPasswordReset] = useState(false);
@@ -41,9 +40,8 @@ const Auth = () => {
   const [loginData, setLoginData] = useState({ phone: '', password: '' });
   const [showLoginPwd, setShowLoginPwd] = useState(false);
 
-  const [regData, setRegData] = useState({ storeName: '', phone: '', password: '', confirmPassword: '', agreeToTerms: false });
+  const [regData, setRegData] = useState({ storeName: '', phone: '', password: '', agreeToTerms: false });
   const [showRegPwd, setShowRegPwd] = useState(false);
-  const [showConfirmPwd, setShowConfirmPwd] = useState(false);
 
   useEffect(() => {
     if (!user || loading || adminLoading) return;
@@ -98,13 +96,15 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-brand-surface" dir="rtl">
-      <Card className="w-full max-w-md shadow-2xl rounded-2xl border-0 ring-1 ring-brand-purple/10">
-        <CardHeader className="text-center pb-2">
-          <div className="mx-auto mb-2 flex justify-center">
-            <BrandLogo height={88} />
-          </div>
-          <CardTitle className="text-lg font-bold text-gray-600 sr-only">خدمات</CardTitle>
-          <p className="text-gray-500 text-sm">ابنِ متجرك الإلكتروني</p>
+      <div className="w-full max-w-md">
+        {/* Branding header */}
+        <div className="flex flex-col items-center mb-6">
+          <BrandLogo height={80} className="mb-2" />
+          <p className="text-gray-500 text-sm">انطلق بمتجرك الإلكتروني اليوم</p>
+        </div>
+      <Card className="w-full shadow-md rounded-2xl border-0">
+        <CardHeader className="sr-only">
+          <CardTitle>خدمات</CardTitle>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="register" className="w-full">
@@ -134,7 +134,7 @@ const Auth = () => {
                   </div>
                   {errors.password && <p className="text-sm text-red-500">{errors.password}</p>}
                 </div>
-                <Button type="submit" disabled={isSubmitting} className="w-full h-12 font-bold text-base rounded-xl text-white bg-gradient-to-br from-brand-cyan to-brand-purple hover:opacity-95">
+                <Button type="submit" disabled={isSubmitting} className="w-full h-12 font-bold text-base rounded-xl text-white bg-gradient-to-br from-brand-purple to-brand-cyan hover:opacity-95">
                   {isSubmitting ? <><Loader2 className="h-4 w-4 animate-spin ml-2" />جاري الدخول...</> : 'تسجيل الدخول'}
                 </Button>
                 <button type="button" onClick={() => setShowPasswordReset(true)}
@@ -171,20 +171,6 @@ const Auth = () => {
                   </div>
                   {errors.password && <p className="text-sm text-red-500">{errors.password}</p>}
                 </div>
-                <div className="space-y-2">
-                  <Label className="font-semibold">تأكيد كلمة المرور</Label>
-                  <div className="relative">
-                    <Input type={showConfirmPwd ? 'text' : 'password'} value={regData.confirmPassword}
-                      onChange={e => setRegData(p => ({ ...p, confirmPassword: e.target.value }))}
-                      className="h-12 text-base pe-12 rounded-xl" />
-                    <button type="button" onClick={() => setShowConfirmPwd(!showConfirmPwd)}
-                      className="absolute end-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700">
-                      {showConfirmPwd ? <Eye className="h-5 w-5" /> : <EyeOff className="h-5 w-5" />}
-                    </button>
-                  </div>
-                  {errors.confirmPassword && <p className="text-sm text-red-500">{errors.confirmPassword}</p>}
-                </div>
-
                 {/* Terms */}
                 <div className={`flex items-start gap-3 p-4 rounded-xl border transition-all ${regData.agreeToTerms ? 'bg-brand-purple/5 border-brand-purple/30' : 'bg-white border-gray-200'}`}>
                   <Checkbox id="agree-terms" checked={regData.agreeToTerms}
@@ -199,18 +185,35 @@ const Auth = () => {
                 </div>
                 {errors.agreeToTerms && <p className="text-sm text-red-500">{errors.agreeToTerms}</p>}
 
-                <Button type="submit" disabled={isSubmitting} className="w-full h-12 font-bold text-base rounded-xl text-white bg-gradient-to-br from-brand-cyan to-brand-purple hover:opacity-95">
+                <Button type="submit" disabled={isSubmitting} className="w-full h-12 font-bold text-base rounded-xl text-white bg-gradient-to-br from-brand-purple to-brand-cyan hover:opacity-95">
                   {isSubmitting ? <><Loader2 className="h-4 w-4 animate-spin ml-2" />جاري الإنشاء...</> : 'إنشاء الحساب'}
                 </Button>
               </form>
             </TabsContent>
           </Tabs>
 
-          <div className="text-center mt-4">
-            <Link to="/" className="text-sm text-gray-400 hover:text-brand-purple">← العودة للرئيسية</Link>
+          <div className="mt-4 space-y-3">
+            <div className="flex items-center gap-3">
+              <div className="flex-1 h-px bg-gray-200" />
+              <span className="text-xs text-gray-400">أو تواصل عبر</span>
+              <div className="flex-1 h-px bg-gray-200" />
+            </div>
+            <a
+              href="https://wa.me/962799126390"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 w-full h-12 bg-[#25D366] text-white font-bold rounded-xl hover:opacity-90 transition-opacity"
+            >
+              <MessageCircle className="h-5 w-5" />
+              تواصل عبر واتساب
+            </a>
+            <div className="text-center">
+              <Link to="/" className="text-sm text-gray-400 hover:text-brand-purple">← العودة للرئيسية</Link>
+            </div>
           </div>
         </CardContent>
       </Card>
+      </div>
 
       <PasswordResetModal open={showPasswordReset} onOpenChange={setShowPasswordReset} />
 
@@ -232,7 +235,7 @@ const Auth = () => {
             </div>
             <div className="p-4 border-t">
               <Button onClick={() => { setRegData(p => ({ ...p, agreeToTerms: true })); setShowTerms(false); }}
-                className="w-full font-bold h-11 rounded-xl text-white bg-gradient-to-br from-brand-cyan to-brand-purple hover:opacity-95">
+                className="w-full font-bold h-11 rounded-xl text-white bg-gradient-to-br from-brand-purple to-brand-cyan hover:opacity-95">
                 ✓ موافق على الشروط والأحكام
               </Button>
             </div>

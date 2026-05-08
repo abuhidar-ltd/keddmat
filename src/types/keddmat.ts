@@ -7,7 +7,6 @@ export interface Profile {
   page_slug: string | null;
   whatsapp_number: string | null;
   is_active: boolean;
-  subscription_expires_at: string | null;
 }
 
 export interface Product {
@@ -27,6 +26,15 @@ export interface StoreAnalyticsEvent {
   store_id: string;
   event_type: 'link_click' | 'whatsapp_click' | 'product_view';
   product_id: string | null;
+  created_at: string;
+}
+
+export interface Review {
+  id: string;
+  store_id: string;
+  reviewer_name: string;
+  rating: number;
+  comment: string | null;
   created_at: string;
 }
 

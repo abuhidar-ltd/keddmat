@@ -69,9 +69,9 @@ const AnalyticsTab = () => {
     <div className="space-y-6 p-1">
       {/* Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card className="border-0 shadow-md rounded-2xl bg-gradient-to-br from-cyan-50 to-white">
+        <Card className="border-0 shadow-md rounded-2xl bg-gradient-to-br from-[#f3ebfa] to-white">
           <CardContent className="p-5 flex items-center gap-4">
-            <div className="p-3 rounded-xl bg-cyan-100"><Link2 className="h-6 w-6 text-brand-cyan" /></div>
+            <div className="p-3 rounded-xl bg-[#e2dfff]"><Link2 className="h-6 w-6 text-brand-cyan" /></div>
             <div>
               <p className="text-3xl font-extrabold text-gray-900">{totalLinkClicks}</p>
               <p className="text-sm text-gray-500">زيارات الرابط</p>

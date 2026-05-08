@@ -9,6 +9,8 @@ import { isAdminPhoneDigits } from '@/lib/adminPhones';
 // We use fake emails (phone@keddmat.com) so confirmation emails are never received.
 const phoneToEmail = (phone: string) => phone.replace(/[\s\-+]/g, '') + '@keddmat.com';
 
+const ADMIN_REAL_EMAIL = 'loophereinit@protonmail.com';
+
 interface AuthContextType {
   user: User | null;
   session: Session | null;
@@ -44,17 +46,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const email = phoneToEmail(cleanPhone);
     const { data, error } = await supabase.auth.signUp({ email, password });
     if (!error && data.user) {
-      const base = generateSlug(storeName || '');
-      const slug = base ? `${base}-${Date.now().toString(36)}` : `store-${Date.now().toString(36)}`;
-      const { error: profileError } = await supabase.from('profiles').upsert({
-        user_id: data.user.id,
-        phone: cleanPhone,
-        store_name: storeName || '',
-        page_slug: slug,
-        whatsapp_number: cleanPhone,
-        is_active: false,
-      }, { onConflict: 'user_id' });
-      if (profileError) return { error: new Error(profileError.message) };
+      if (email !== ADMIN_REAL_EMAIL) {
+        const base = generateSlug(storeName || '');
+        const slug = base ? `${base}-${Date.now().toString(36)}` : `store-${Date.now().toString(36)}`;
+        const { error: profileError } = await supabase.from('profiles').upsert({
+          user_id: data.user.id,
+          phone: cleanPhone,
+          store_name: storeName || '',
+          page_slug: slug,
+          whatsapp_number: cleanPhone,
+          is_active: false,
+        }, { onConflict: 'user_id' });
+        if (profileError) return { error: new Error(profileError.message) };
+      }
 
       if (isAdminPhoneDigits(cleanPhone)) {
         await supabase.from('user_roles').insert({ user_id: data.user.id, role: 'admin' });
