@@ -8,13 +8,13 @@ const corsHeaders = {
 };
 
 serve(async (req) => {
-  // Handle CORS preflight — must return 200 not 204
   if (req.method === 'OPTIONS') {
     return new Response('ok', { status: 200, headers: corsHeaders });
   }
 
   try {
     const { phone } = await req.json();
+    const cleanPhone = phone.replace(/\D/g, '');
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
     const supabase = createClient(
@@ -23,13 +23,15 @@ serve(async (req) => {
     );
 
     await supabase.from('otp_codes').upsert({
-      phone,
+      phone: cleanPhone,
       code: otp,
       expires_at: new Date(Date.now() + 5 * 60 * 1000).toISOString()
     });
 
-    const instanceId = Deno.env.get('ULTRASMSG_INSTANCE_ID');
-    const token = Deno.env.get('ULTRASMSG_TOKEN');
+    console.log('Stored OTP for cleanPhone:', cleanPhone);
+
+    const instanceId = Deno.env.get('ULTRAMSG_INSTANCE_ID');
+    const token = Deno.env.get('ULTRAMSG_TOKEN');
 
     const formData = new URLSearchParams();
     formData.append('token', token!);
@@ -51,7 +53,7 @@ serve(async (req) => {
     });
 
   } catch (error) {
-    console.error('Error:', error);
+    console.error('send-otp error:', error);
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
