@@ -95,10 +95,14 @@ const ProductsManager = () => {
   return (
     <div className="space-y-4 p-1">
       <div className="flex items-center justify-between">
-        <p className="text-sm text-gray-500">{products.length} منتج</p>
-        <Button onClick={openAdd} className="font-bold gap-2 rounded-xl text-white bg-gradient-to-br from-brand-purple to-brand-cyan hover:opacity-95">
-          <Plus className="h-4 w-4" />إضافة منتج +
-        </Button>
+        <p className="text-sm text-gray-500">المنتجات: {products.length} / 40</p>
+        {products.length >= 40 ? (
+          <p className="text-sm text-red-500 font-semibold">لقد وصلت للحد الأقصى من المنتجات (40 منتج)</p>
+        ) : (
+          <Button onClick={openAdd} className="font-bold gap-2 rounded-xl text-white bg-gradient-to-br from-brand-purple to-brand-cyan hover:opacity-95">
+            <Plus className="h-4 w-4" />إضافة منتج +
+          </Button>
+        )}
       </div>
 
       {products.length === 0 ? (

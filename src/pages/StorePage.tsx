@@ -49,6 +49,15 @@ const StorePage = () => {
     if (slug) loadStore();
   }, [slug]);
 
+  useEffect(() => {
+    if (!profile) return;
+    const prevTitle = document.title;
+    document.title = `${profile.store_name} - متجر على خدمات`;
+    document.querySelector('meta[property="og:title"]')?.setAttribute('content', profile.store_name || '');
+    document.querySelector('meta[property="og:description"]')?.setAttribute('content', profile.store_description || '');
+    return () => { document.title = prevTitle; };
+  }, [profile]);
+
   const loadStore = async () => {
     const { data } = await supabase
       .from('public_profiles')
@@ -158,7 +167,7 @@ const StorePage = () => {
       {!isActive && (
         <div className="bg-amber-50 border-b-2 border-amber-300 px-4 py-3 text-center">
           <p className="text-amber-800 font-semibold text-sm">
-            ⚠️ هذا المتجر غير منشور بعد — لإظهار متجرك للعملاء يرجى إتمام عملية الدفع
+            هذا المتجر غير منشور بعد
           </p>
         </div>
       )}
@@ -170,7 +179,7 @@ const StorePage = () => {
 
         {/* Avatar */}
         <div className="absolute -bottom-12 left-1/2 z-20 -translate-x-1/2">
-          <div className="w-24 h-24 rounded-2xl overflow-hidden border-4 border-white shadow-xl ring-2 ring-brand-purple/70">
+          <div className="w-24 h-24 rounded-2xl overflow-hidden border-4 border-white shadow-xl">
             {profile?.avatar_url
               ? <img src={profile.avatar_url} alt={profile.store_name || ''} className="w-full h-full object-cover" />
               : <div className="w-full h-full bg-brand-purple flex items-center justify-center"><Store className="h-10 w-10 text-white" /></div>}

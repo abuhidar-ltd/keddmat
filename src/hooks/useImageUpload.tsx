@@ -7,7 +7,7 @@ const TARGET_MAX_KB = 500;
 const QUALITY_STEPS = [0.7, 0.5, 0.3];
 
 export const useImageUpload = (options: UseImageUploadOptions = {}) => {
-  const { maxSizeMB = 1, maxWidth = 800, maxHeight = 800, targetMaxKB = TARGET_MAX_KB } = options;
+  const { maxSizeMB = 10, maxWidth = 800, maxHeight = 800, targetMaxKB = TARGET_MAX_KB } = options;
   const [uploading, setUploading] = useState(false);
   const { toast } = useToast();
 

@@ -66,7 +66,7 @@ const Admin = () => {
     setLoadingData(true);
     const [storesRes, analyticsRes] = await Promise.all([
       supabase.from('profiles')
-        .select('user_id, store_name, page_slug, whatsapp_number, is_active, created_at')
+        .select('*')
         .order('created_at', { ascending: false }),
       supabase.from('store_analytics')
         .select('event_type, created_at')
