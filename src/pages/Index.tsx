@@ -1,4 +1,3 @@
-import { Fragment } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import LandingNavbar from '@/components/LandingNavbar';
 import { LandingPhoneMockup } from '@/components/LandingPhoneMockup';
@@ -8,12 +7,13 @@ import {
   Link2,
   ShoppingBag,
   Zap,
-  Lock,
-  Headphones,
   X,
   Shield,
   UserPlus,
-  ChevronLeft,
+  LayoutDashboard,
+  Star,
+  Store,
+  User,
 } from 'lucide-react';
 import { BrandLogo } from '@/components/BrandLogo';
 
@@ -25,14 +25,14 @@ const Index = () => {
       <LandingNavbar />
 
       {/* Hero */}
-      <section className="relative overflow-hidden px-2 pb-12 pt-1 sm:px-4 md:px-6 md:pb-16 md:pt-4">
+      <section className="relative overflow-hidden px-2 pb-6 pt-1 sm:px-4 md:px-6 md:pb-8 md:pt-4">
         <div className="mx-auto grid max-w-6xl grid-cols-2 items-start gap-2 sm:gap-4 md:gap-8 lg:gap-x-12">
           <div className="z-10 min-w-0 text-right">
-            <h1 className="mb-2 text-[0.95rem] font-extrabold leading-snug text-[#0d47a1] sm:mb-4 sm:text-3xl md:mb-5 md:text-[2.35rem] md:leading-tight lg:text-[2.5rem]">
-              أنشئ متجرك وابدأ البيع خلال دقائق
+            <h1 className="mb-2 text-[18px] font-extrabold leading-snug text-[#0d47a1] sm:mb-4 sm:text-3xl md:mb-5 md:text-[2.35rem] md:leading-tight lg:text-[2.5rem]">
+              أنشئ متجرك الإلكتروني خلال دقائق
             </h1>
-            <p className="mb-3 max-w-xl text-[0.7rem] leading-relaxed text-gray-600 sm:mb-6 sm:text-base md:mb-8 md:text-lg">
-              رابط واحد لمتجرك يطلب منه عملاؤك مباشرة عبر واتساب
+            <p className="mb-3 max-w-xl text-[0.7rem] leading-relaxed text-gray-700 sm:mb-6 sm:text-base md:mb-8 md:text-lg">
+              واحصل على رابط جاهز للنشر في كل مكان
             </p>
             <div className="flex flex-col items-stretch gap-2 sm:items-end sm:gap-3">
               <Button
@@ -40,11 +40,11 @@ const Index = () => {
                 size="lg"
                 className="primary-gradient h-10 min-h-10 w-full rounded-full border-0 px-3 text-[0.7rem] font-bold text-white shadow-[0_12px_30px_-8px_rgba(123,66,246,0.45)] transition-transform hover:scale-[1.02] sm:h-14 sm:min-h-[3.5rem] sm:px-10 sm:text-base md:text-lg"
               >
-                ابدأ متجرك الآن
+                أنشئ متجرك الآن
               </Button>
-              <p className="flex items-center justify-end gap-1 text-[0.65rem] text-gray-600 sm:gap-2 sm:text-sm">
+              <p className="flex items-center justify-end gap-1 text-[13px] text-gray-700 sm:gap-2 sm:text-sm">
                 <Shield className="h-3 w-3 shrink-0 text-[#7b42f6] sm:h-4 sm:w-4" strokeWidth={2} />
-                5 دنانير شهرياً - بدون تعقيد
+                5 دنانير شهرياً
               </p>
             </div>
           </div>
@@ -56,150 +56,84 @@ const Index = () => {
       </section>
 
       {/* Why us */}
-      <section className="bg-[#f5f5f5] px-4 py-14 md:px-6 md:py-[4.5rem]">
+      <section className="bg-[#f5f5f5] px-4 pb-10 pt-6 md:px-6 md:pb-12 md:pt-8">
         <div className="mx-auto max-w-5xl">
-          <h2 className="mb-10 text-center text-2xl font-extrabold text-gray-900 md:mb-12 md:text-3xl">لماذا تختار خدمات؟</h2>
-          <div className="grid grid-cols-2 gap-6 md:grid-cols-4 md:gap-8">
+          <h2 className="mb-5 text-center text-lg font-extrabold text-[#0D47A1] md:mb-7 md:text-3xl">لماذا تختار خدمات؟</h2>
+          <div className="grid grid-cols-2 gap-x-3 gap-y-4 md:grid-cols-4 md:gap-x-4 md:gap-y-5">
             {[
-              { icon: <X className="h-9 w-9" strokeWidth={1.5} />, title: 'إلغاء في أي وقت', desc: 'اشتراك مرن بدون التزام طويل.' },
-              { icon: <Headphones className="h-9 w-9" strokeWidth={1.5} />, title: 'دعم فني', desc: 'نساعدك عند الحاجة.' },
-              { icon: <Shield className="h-9 w-9" strokeWidth={1.5} />, title: 'آمن وموثوق', desc: 'بياناتك محمية.' },
-              { icon: <Zap className="h-9 w-9" strokeWidth={1.5} />, title: 'سهل وسريع', desc: 'متجرك جاهز خلال دقائق.' },
+              { icon: <Zap className="h-8 w-8" strokeWidth={1.5} />, title: 'سهل وسريع', desc: 'متجرك جاهز خلال دقائق.' },
+              { icon: <User className="h-8 w-8" strokeWidth={1.5} />, title: '300+ يثقون بنا', desc: 'من التجّار والعملاء على المنصة.' },
+              { icon: <Store className="h-8 w-8" strokeWidth={1.5} />, title: '300 متجر +', desc: 'متاجر نشطة على المنصة.' },
+              { icon: <X className="h-8 w-8" strokeWidth={1.5} />, title: 'إلغاء في أي وقت', desc: 'اشتراك مرن بدون التزام طويل.' },
             ].map((f, i) => (
-              <div key={i} className="flex flex-col items-center gap-2 px-2 text-center">
-                <div className="text-gray-500">{f.icon}</div>
+              <div key={f.title} className="flex flex-col items-center gap-1 px-1 text-center md:gap-1.5 md:px-1.5">
+                <div className="text-[#0D47A1]">{f.icon}</div>
                 <h4 className="text-sm font-bold text-gray-900 md:text-base">{f.title}</h4>
-                <p className="text-xs leading-relaxed text-gray-500 md:text-sm">{f.desc}</p>
+                <p className="text-xs leading-relaxed text-gray-600 md:text-sm">{f.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* How it works */}
-      <section className="bg-white px-4 py-14 md:px-6 md:py-[4.5rem]">
+      {/* Registration steps — same card grid as «لماذا تختار خدمات؟» */}
+      <section className="border-t border-gray-100/80 bg-white px-4 pb-14 pt-8 md:px-6 md:pb-16 md:pt-10">
         <div className="mx-auto max-w-5xl">
-          <h2 className="mb-12 text-center text-2xl font-extrabold text-[#0d47a1] md:mb-14 md:text-3xl">كيف يعمل؟</h2>
-          <div className="flex flex-col items-center gap-10 md:flex-row md:justify-center md:gap-2" dir="rtl">
+          <h2 className="mb-5 text-center text-lg font-extrabold text-[#0D47A1] md:mb-7 md:text-3xl">طريقه التسجيل</h2>
+          <div className="grid grid-cols-2 gap-x-3 gap-y-4 md:grid-cols-3 md:gap-x-4 md:gap-y-5 lg:grid-cols-6">
             {[
               {
-                num: 1,
                 title: 'سجل برقمك',
                 desc: 'أنشئ حسابك بخطوة واحدة برقم جوالك.',
-                icon: <UserPlus className="h-7 w-7" strokeWidth={1.75} />,
+                icon: <UserPlus className="h-8 w-8" strokeWidth={1.5} />,
               },
               {
-                num: 2,
                 title: 'أضف منتجاتك',
                 desc: 'ارفع الصور والأسعار واعرض منتجاتك فوراً.',
-                icon: <ShoppingBag className="h-7 w-7" strokeWidth={1.75} />,
+                icon: <ShoppingBag className="h-8 w-8" strokeWidth={1.5} />,
               },
               {
-                num: 3,
                 title: 'شارك الرابط',
                 desc: 'أرسل رابط متجرك للعملاء واستقبل الطلبات.',
-                icon: <Link2 className="h-7 w-7" strokeWidth={1.75} />,
-              },
-            ].map((step, idx) => (
-              <Fragment key={step.num}>
-                <div className="flex w-full max-w-[14.5rem] flex-col items-center gap-2 text-center">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gray-100 text-[#7b42f6]">{step.icon}</div>
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#7b42f6] text-sm font-bold text-white shadow-sm">
-                    {step.num}
-                  </div>
-                  <p className="mt-1 text-base font-bold text-gray-900">{step.title}</p>
-                  <p className="mx-auto max-w-[12.5rem] text-xs leading-relaxed text-gray-500 md:text-sm">{step.desc}</p>
-                </div>
-                {idx < 2 ? (
-                  <ChevronLeft className="hidden h-7 w-7 shrink-0 text-gray-300 md:block" strokeWidth={2} aria-hidden />
-                ) : null}
-              </Fragment>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing */}
-      <section className="px-4 pb-14 md:px-6 md:pb-[4.5rem]">
-        <div className="mx-auto max-w-5xl">
-          <div className="rounded-[1.35rem] primary-gradient px-6 py-8 shadow-xl md:rounded-[1.75rem] md:px-10 md:py-10">
-            <div dir="ltr" className="flex flex-col items-center gap-8 md:flex-row md:items-center md:justify-between md:gap-10">
-              <div dir="rtl" className="flex flex-1 flex-col items-center text-center md:items-start md:text-right">
-                <p className="text-sm text-white/90">كل هذا مقابل</p>
-                <div className="my-1 flex items-baseline gap-1.5 text-white">
-                  <span className="text-6xl font-bold leading-none md:text-7xl">5</span>
-                  <span className="text-2xl font-bold md:text-3xl">د.أ</span>
-                </div>
-                <p className="text-sm text-white/90">شهرياً فقط</p>
-              </div>
-              <div className="hidden h-[4.5rem] w-px shrink-0 bg-white/50 md:block" aria-hidden />
-              <div dir="rtl" className="flex flex-1 flex-col items-center text-center md:items-end md:text-right">
-                <Button
-                  onClick={() => navigate('/auth')}
-                  className="h-12 min-w-[11rem] rounded-full border-0 bg-white px-10 text-base font-bold text-[#7b42f6] shadow-lg hover:bg-gray-50 md:text-lg"
-                >
-                  ابدأ الآن
-                </Button>
-                <p className="mt-3 flex items-center justify-end gap-1.5 text-sm text-white/95">
-                  <Lock className="h-4 w-4 shrink-0" strokeWidth={2} />
-                  آمن وسهل الاستخدام
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features — inset panel */}
-      <section className="px-4 py-14 md:px-6 md:py-[4.5rem]">
-        <div className="mx-auto max-w-5xl rounded-[1.35rem] bg-[#eceff1] p-4 md:rounded-[1.75rem] md:p-8">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-5">
-            {[
-              {
-                icon: <ShoppingBag className="h-7 w-7" strokeWidth={1.75} />,
-                title: 'أضف منتجاتك بسهولة',
-                desc: 'أضف حتى 40 منتجًا مع الأسعار والصور',
-                circle: 'bg-sky-100 text-[#2196f3]',
+                icon: <Link2 className="h-8 w-8" strokeWidth={1.5} />,
               },
               {
-                icon: <MessageCircle className="h-7 w-7" strokeWidth={1.75} />,
-                title: 'استقبال الطلبات',
-                desc: 'تواصل مباشر مع عملائك عبر واتساب',
-                circle: 'bg-emerald-100 text-[#25D366]',
+                title: 'لوحه تحكم خاصه بك',
+                desc: 'حدّث منتجاتك وتابع طلباتك في أي وقت.',
+                icon: <LayoutDashboard className="h-8 w-8" strokeWidth={1.5} />,
               },
               {
-                icon: <Link2 className="h-7 w-7" strokeWidth={1.75} />,
-                title: 'رابط خاص لمتجرك',
-                desc: 'رابط جميل وسهل لمتجرك الخاص',
-                circle: 'bg-violet-100 text-[#7b42f6]',
+                title: 'طلبات عبر واتساب',
+                desc: 'يصلك طلب العميل مباشرة على رقم واتساب متجرك.',
+                icon: <MessageCircle className="h-8 w-8" strokeWidth={1.5} />,
               },
-            ].map((f, i) => (
-              <div key={i} className="rounded-2xl bg-white p-6 text-right shadow-sm md:p-7">
-                <div className={`mb-4 flex h-14 w-14 items-center justify-center rounded-full ${f.circle}`}>{f.icon}</div>
-                <h3 className="mb-2 text-lg font-bold text-gray-900">{f.title}</h3>
-                <p className="text-sm leading-relaxed text-gray-600">{f.desc}</p>
+              {
+                title: 'تقييمات العملاء',
+                desc: 'متجرك يدعم التقييمات لتعزيز ثقة الزبائن.',
+                icon: <Star className="h-8 w-8" strokeWidth={1.5} />,
+              },
+            ].map((step) => (
+              <div key={step.title} className="flex flex-col items-center gap-1 px-1 text-center md:gap-1.5 md:px-1.5">
+                <div className="text-[#0D47A1]">{step.icon}</div>
+                <h4 className="text-sm font-bold text-gray-900 md:text-base">{step.title}</h4>
+                <p className="text-xs leading-relaxed text-gray-600 md:text-sm">{step.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <footer className="bg-[#332f39] px-4 py-10 text-white md:px-6">
+      <footer className="bg-[#332f39] px-4 py-12 text-white md:px-6 md:py-14">
         <div className="mx-auto flex max-w-5xl flex-col items-center gap-6 text-center">
           <div className="rounded-xl bg-white/10 px-4 py-2">
             <BrandLogo height={36} />
           </div>
-          <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-400">
-            <Link to="/terms" className="transition-colors hover:text-white">
-              الشروط والأحكام
-            </Link>
-            <a href="#" className="transition-colors hover:text-white">
-              سياسة الخصوصية
-            </a>
-            <a href="#" className="transition-colors hover:text-white">
-              عن خدمات
-            </a>
-          </div>
+          <Link
+            to="/terms"
+            className="max-w-[min(100%,20rem)] text-center text-xs leading-snug text-gray-400 transition-colors hover:text-white sm:text-sm"
+          >
+            الشروط و الاحكام و سياسه الخصوصيه
+          </Link>
           <p className="text-xs text-gray-500">© 2026 خدمات — جميع الحقوق محفوظة</p>
         </div>
       </footer>
@@ -208,10 +142,10 @@ const Index = () => {
         href="https://wa.me/962799126390"
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-6 left-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition-transform hover:scale-110"
+        className="fixed bottom-5 left-5 z-40 flex h-11 w-11 items-center justify-center rounded-full bg-[#25D366] text-white shadow-md transition-transform hover:scale-105"
         aria-label="تواصل عبر واتساب"
       >
-        <MessageCircle className="h-7 w-7" />
+        <MessageCircle className="h-5 w-5" strokeWidth={2} />
       </a>
     </div>
   );

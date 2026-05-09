@@ -26,7 +26,7 @@ const LandingNavbar = () => {
           className="flex items-center py-1 transition-opacity hover:opacity-90"
           aria-label="Keddmat - الرئيسية"
         >
-          <BrandLogo className="h-16 w-auto sm:h-20 md:h-24" />
+          <BrandLogo className="h-20 w-auto sm:h-24 md:h-28" />
         </Link>
 
         <Sheet open={open} onOpenChange={setOpen}>
@@ -47,7 +47,7 @@ const LandingNavbar = () => {
             </SheetHeader>
             <nav className="mt-8 flex flex-col gap-1 text-right">
               <Button variant="ghost" className="justify-end text-base font-semibold" asChild onClick={close}>
-                <Link to="/auth">ابدأ متجرك الآن</Link>
+                <Link to="/auth">أنشئ متجرك الآن</Link>
               </Button>
               <Button variant="ghost" className="justify-end text-base" asChild onClick={close}>
                 <Link to="/terms">الشروط والأحكام</Link>

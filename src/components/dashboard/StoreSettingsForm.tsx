@@ -44,6 +44,28 @@ const StoreSettingsForm = () => {
     }
   }, [profile.store_name]);
 
+  // Poll is_active after returning from Stripe checkout until webhook fires
+  useEffect(() => {
+    if (!user) return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('payment') !== 'success') return;
+
+    const interval = setInterval(async () => {
+      const { data } = await supabase
+        .from('profiles')
+        .select('is_active')
+        .eq('user_id', user.id)
+        .maybeSingle();
+      if (data?.is_active) {
+        setProfile(prev => ({ ...prev, is_active: true }));
+        clearInterval(interval);
+      }
+    }, 3000);
+
+    const timeout = setTimeout(() => clearInterval(interval), 30000);
+    return () => { clearInterval(interval); clearTimeout(timeout); };
+  }, [user]);
+
   const fetchProfile = async () => {
     const { data } = await supabase.from('profiles').select('*').eq('user_id', user!.id).maybeSingle();
     if (data) {

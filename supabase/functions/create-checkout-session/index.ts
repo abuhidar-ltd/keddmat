@@ -30,8 +30,8 @@ serve(async (req) => {
       line_items: [{ price: Deno.env.get('STRIPE_PRICE_ID')!, quantity: 1 }],
       customer_email: email,
       metadata: { userId },
-      success_url: 'https://keddmat.com/dashboard?payment=success',
-      cancel_url: 'https://keddmat.com/dashboard?payment=cancelled',
+      success_url: `${Deno.env.get('SITE_URL') ?? 'https://keddmat.com'}/dashboard?payment=success`,
+      cancel_url: `${Deno.env.get('SITE_URL') ?? 'https://keddmat.com'}/dashboard?payment=cancelled`,
     });
 
     return new Response(JSON.stringify({ url: session.url }), {

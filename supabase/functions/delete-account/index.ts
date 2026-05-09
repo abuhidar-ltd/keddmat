@@ -131,7 +131,6 @@ serve(async (req) => {
     await adminClient.from('emergency_requests').delete().eq('customer_id', userId);
     await adminClient.from('ratings').delete().eq('merchant_id', userId);
     await adminClient.from('customer_profiles').delete().eq('user_id', userId);
-    await adminClient.from('user_roles').delete().eq('user_id', userId);
     await adminClient.from('whatsapp_clicks').delete().eq('merchant_id', userId);
     await adminClient.from('call_clicks').delete().eq('merchant_id', userId);
     await adminClient.from('emergency_clicks').delete().eq('merchant_id', userId);

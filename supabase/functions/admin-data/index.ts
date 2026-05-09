@@ -366,7 +366,6 @@ serve(async (req) => {
           await supabase.from('emergency_requests').delete().eq('customer_id', uid);
           await supabase.from('ratings').delete().eq('merchant_id', uid);
           await supabase.from('customer_profiles').delete().eq('user_id', uid);
-          await supabase.from('user_roles').delete().eq('user_id', uid);
           await supabase.from('whatsapp_clicks').delete().eq('merchant_id', uid);
           await supabase.from('call_clicks').delete().eq('merchant_id', uid);
           await supabase.from('emergency_clicks').delete().eq('merchant_id', uid);
@@ -453,7 +452,6 @@ serve(async (req) => {
         await supabase.from('emergency_requests').delete().neq('id', '00000000-0000-0000-0000-000000000000');
         await supabase.from('ratings').delete().neq('id', '00000000-0000-0000-0000-000000000000');
         await supabase.from('customer_profiles').delete().neq('id', '00000000-0000-0000-0000-000000000000');
-        await supabase.from('user_roles').delete().neq('id', '00000000-0000-0000-0000-000000000000');
         await supabase.from('whatsapp_clicks').delete().neq('id', '00000000-0000-0000-0000-000000000000');
         await supabase.from('call_clicks').delete().neq('id', '00000000-0000-0000-0000-000000000000');
         await supabase.from('emergency_clicks').delete().neq('id', '00000000-0000-0000-0000-000000000000');

@@ -116,29 +116,7 @@ CREATE POLICY "Anyone can read reviews"
   USING (true);
 
 -- ============================================================
--- 5. user_roles
--- ============================================================
-CREATE TABLE IF NOT EXISTS public.user_roles (
-  id         uuid        NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
-  user_id    uuid        NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  role       text        NOT NULL DEFAULT 'admin',
-  created_at timestamptz NOT NULL DEFAULT now(),
-  UNIQUE (user_id, role)
-);
-
-ALTER TABLE public.user_roles ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Service role full access on roles"
-  ON public.user_roles FOR ALL
-  TO service_role
-  USING (true);
-
-CREATE POLICY "Users read own roles"
-  ON public.user_roles FOR SELECT
-  USING (auth.uid() = user_id);
-
--- ============================================================
--- 6. public_profiles view
+-- 5. public_profiles view
 -- Exposed to anon so the public store page can read store data.
 -- ============================================================
 CREATE OR REPLACE VIEW public.public_profiles AS

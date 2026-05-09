@@ -2,7 +2,6 @@ import { useState, useEffect, createContext, useContext, type ReactNode } from '
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { generateSlug } from '@/lib/slug';
-import { isAdminPhoneDigits } from '@/lib/adminPhones';
 
 // IMPORTANT: In Supabase Dashboard → Authentication → Settings,
 // "Enable email confirmations" MUST be turned OFF.
@@ -59,10 +58,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }, { onConflict: 'user_id' });
         if (profileError) return { error: new Error(profileError.message) };
       }
-
-      if (isAdminPhoneDigits(cleanPhone)) {
-        await supabase.from('user_roles').insert({ user_id: data.user.id, role: 'admin' });
-      }
     }
     return { error: error ? new Error(error.message) : null };
   };
@@ -72,17 +67,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const email = phoneToEmail(cleanPhone);
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) return { error: new Error(error.message) };
-    if (data.user && isAdminPhoneDigits(cleanPhone)) {
-      const { data: existing } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', data.user.id)
-        .eq('role', 'admin')
-        .maybeSingle();
-      if (!existing) {
-        await supabase.from('user_roles').insert({ user_id: data.user.id, role: 'admin' });
-      }
-    }
     return { error: null };
   };
 

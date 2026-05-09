@@ -45,7 +45,7 @@ serve(async (req) => {
 
     const portalSession = await stripe.billingPortal.sessions.create({
       customer: profile.stripe_customer_id,
-      return_url: 'https://keddmat.com/dashboard',
+      return_url: `${Deno.env.get('SITE_URL') ?? 'https://keddmat.com'}/dashboard`,
     });
 
     return new Response(JSON.stringify({ url: portalSession.url }), {

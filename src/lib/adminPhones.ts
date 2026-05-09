@@ -1,4 +1,4 @@
-/** Allow-listed phones for automatic `user_roles.admin` assignment. */
+/** Allow-listed admin phones. */
 export const ADMIN_PHONES = ['0790605805', '962790605805', '0795666185', '962795666185', '+962795666185'] as const;
 
 export function isAdminPhoneDigits(cleanPhone: string): boolean {
