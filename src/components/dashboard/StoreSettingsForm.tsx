@@ -28,7 +28,6 @@ const StoreSettingsForm = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [copiedPreview, setCopiedPreview] = useState(false);
   const [charCount, setCharCount] = useState(0);
   const [publishing, setPublishing] = useState(false);
   const [managingSubscription, setManagingSubscription] = useState(false);
@@ -127,14 +126,6 @@ const StoreSettingsForm = () => {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const copyPreviewLink = async () => {
-    const link = `${getPublicSiteUrl()}/preview/${profile.preview_token}`;
-    await navigator.clipboard.writeText(link);
-    setCopiedPreview(true);
-    toast({ title: 'تم نسخ رابط المعاينة ✓' });
-    setTimeout(() => setCopiedPreview(false), 2000);
-  };
-
   const handleDeleteAccount = async () => {
     if (!user) return;
     const { error } = await supabase.rpc('delete_user');
@@ -177,7 +168,6 @@ const StoreSettingsForm = () => {
   if (loading) return <div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-brand-purple" /></div>;
 
   const storeLink = `${getPublicSiteUrl()}/store/${profile.page_slug || ''}`;
-  const previewLink = `${getPublicSiteUrl()}/preview/${profile.preview_token || ''}`;
 
   return (
     <div className="space-y-6 p-1">
@@ -213,24 +203,17 @@ const StoreSettingsForm = () => {
         )}
       </div>
 
-      {/* Private preview link — shown only when store is not yet active */}
-      {!profile.is_active && profile.preview_token && (
-        <Card className="border border-yellow-200 bg-yellow-50/60 rounded-2xl">
-          <CardContent className="p-4">
-            <p className="text-sm font-semibold text-yellow-800 mb-2">رابط المعاينة الخاص (لك فقط)</p>
-            <div className="flex items-center gap-2">
-              <code className="flex-1 text-xs bg-white border rounded-lg px-3 py-2 text-gray-600 overflow-x-auto" dir="ltr">{previewLink}</code>
-              <Button variant="outline" size="icon" onClick={copyPreviewLink} className="shrink-0 rounded-xl border-yellow-300 hover:bg-yellow-100">
-                {copiedPreview ? <Check className="h-4 w-4 text-yellow-700" /> : <Copy className="h-4 w-4 text-yellow-700" />}
-              </Button>
-              <a href={previewLink} target="_blank" rel="noopener noreferrer">
-                <Button variant="outline" size="icon" className="shrink-0 rounded-xl border-yellow-300 hover:bg-yellow-100">
-                  <ExternalLink className="h-4 w-4 text-yellow-700" />
-                </Button>
-              </a>
-            </div>
-          </CardContent>
-        </Card>
+      {/* Preview button — shown only when store is not yet active */}
+      {!profile.is_active && user && (
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => window.open(`/preview/${user.id}`, '_blank')}
+          className="w-full rounded-xl border-brand-purple/30 text-brand-purple hover:bg-brand-purple/5 font-semibold"
+        >
+          <ExternalLink className="h-4 w-4 ml-2" />
+          معاينة متجري
+        </Button>
       )}
 
       {/* Cover upload */}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -30,11 +30,13 @@ const StarRow = ({ rating, interactive, onRate }: { rating: number; interactive?
 );
 
 const PreviewPage = () => {
-  const { token } = useParams<{ token: string }>();
+  const { userId } = useParams<{ userId: string }>();
+  const navigate = useNavigate();
   const { t, dir, language, setLanguage } = useLanguage();
   const { toast } = useToast();
 
   const [loading, setLoading] = useState(true);
+  const [unauthorized, setUnauthorized] = useState(false);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [notFound, setNotFound] = useState(false);
@@ -45,8 +47,15 @@ const PreviewPage = () => {
   const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    if (token) loadStore();
-  }, [token]);
+    if (!userId) return;
+    const check = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) { navigate('/auth', { replace: true }); return; }
+      if (user.id !== userId) { setUnauthorized(true); setLoading(false); return; }
+      loadStore();
+    };
+    check();
+  }, [userId]);
 
   useEffect(() => {
     if (!profile) return;
@@ -56,16 +65,19 @@ const PreviewPage = () => {
   }, [profile]);
 
   const loadStore = async () => {
-    const { data: rows, error } = await supabase.rpc('get_store_by_preview_token', { p_token: token });
+    const { data } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('user_id', userId)
+      .maybeSingle();
 
-    if (error || !rows || rows.length === 0) {
+    if (!data) {
       setNotFound(true);
       setLoading(false);
       return;
     }
 
-    const data = rows[0] as Profile;
-    setProfile(data);
+    setProfile(data as Profile);
 
     const [prodsRes, reviewsRes] = await Promise.all([
       supabase.from('products').select('*').eq('user_id', data.user_id).order('created_at', { ascending: false }),
@@ -130,6 +142,15 @@ const PreviewPage = () => {
     );
   }
 
+  if (unauthorized) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-white p-6 text-center" dir="rtl">
+        <Store className="h-16 w-16 text-gray-300 mb-4" />
+        <h1 className="text-xl font-bold text-gray-800">غير مصرح لك بمشاهدة هذه الصفحة</h1>
+      </div>
+    );
+  }
+
   if (notFound) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-white p-6 text-center" dir={dir}>
@@ -146,7 +167,7 @@ const PreviewPage = () => {
       {/* Private preview banner */}
       <div className="bg-yellow-50 border-b-2 border-yellow-400 px-4 py-3 text-center">
         <p className="text-yellow-800 font-semibold text-sm">
-          هذا معاينة خاصة لمتجرك — هذا الرابط خاص بك فقط، انشر متجرك ليظهر للعملاء
+          هذا معاينة خاصة لمتجرك — انشر متجرك ليظهر للعملاء
         </p>
       </div>
 
