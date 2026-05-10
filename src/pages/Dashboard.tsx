@@ -14,7 +14,7 @@ import AnalyticsTab from '@/components/dashboard/AnalyticsTab';
 
 const Dashboard = () => {
   const { user, loading, signOut } = useAuth();
-  const { language, setLanguage } = useLanguage();
+  const { language, setLanguage, dir } = useLanguage();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { toast } = useToast();
@@ -54,7 +54,7 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-brand-surface" dir="rtl">
+    <div className="min-h-screen bg-brand-surface" dir={dir}>
       <header className="bg-white border-b border-brand-purple/10 sticky top-0 z-40 shadow-sm">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2 py-1">

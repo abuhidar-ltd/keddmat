@@ -1,4 +1,4 @@
-import { useState, createContext, useContext, type ReactNode } from 'react';
+import { useState, useEffect, createContext, useContext, type ReactNode } from 'react';
 
 type Language = 'ar' | 'en';
 
@@ -99,6 +99,9 @@ interface LanguageContextType {
   t: (key: string) => string;
   dir: 'rtl' | 'ltr';
   isRTL: boolean;
+  lang: Language;
+  toggleLang: () => void;
+  isArabic: boolean;
 }
 
 const LanguageContext = createContext<LanguageContextType>({
@@ -107,6 +110,9 @@ const LanguageContext = createContext<LanguageContextType>({
   t: (key) => translations[key]?.ar ?? key,
   dir: 'rtl',
   isRTL: true,
+  lang: 'ar',
+  toggleLang: () => {},
+  isArabic: true,
 });
 
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
@@ -120,12 +126,18 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem('keddmat_lang', lang);
   };
 
+  useEffect(() => {
+    document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.lang = language;
+  }, [language]);
+
   const t = (key: string): string => translations[key]?.[language] ?? key;
   const dir: 'rtl' | 'ltr' = language === 'ar' ? 'rtl' : 'ltr';
   const isRTL = language === 'ar';
+  const toggleLang = () => setLanguage(language === 'ar' ? 'en' : 'ar');
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t, dir, isRTL }}>
+    <LanguageContext.Provider value={{ language, setLanguage, t, dir, isRTL, lang: language, toggleLang, isArabic: isRTL }}>
       {children}
     </LanguageContext.Provider>
   );

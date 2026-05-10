@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import { useLanguage } from '@/hooks/useLanguage';
 import { useAdmin } from '@/hooks/useAdmin';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -31,6 +32,7 @@ const Auth = () => {
   const navigate = useNavigate();
   const { user, loading, signIn, signUp } = useAuth();
   const { isAdmin, adminLoading } = useAdmin();
+  const { dir } = useLanguage();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPasswordReset, setShowPasswordReset] = useState(false);
@@ -95,7 +97,7 @@ const Auth = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-brand-surface" dir="rtl">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-brand-surface" dir={dir}>
       <div className="w-full max-w-md">
         {/* Branding header */}
         <div className="flex flex-col items-center mb-6">
@@ -220,7 +222,7 @@ const Auth = () => {
       {/* Terms Dialog */}
       {showTerms && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[85vh] flex flex-col overflow-hidden" dir="rtl">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[85vh] flex flex-col overflow-hidden" dir={dir}>
             <div className="p-4 border-b flex items-center justify-between">
               <h3 className="font-bold text-lg">الشروط والأحكام</h3>
               <button onClick={() => setShowTerms(false)} className="text-gray-400 hover:text-gray-700 text-xl">✕</button>

@@ -207,7 +207,7 @@ const StoreSettingsForm = () => {
             disabled={publishing}
             className="rounded-xl font-bold text-white primary-gradient border-0 h-9 px-4"
           >
-            انشر متجرك ✦
+            فعّل متجرك
           </Button>
         )}
       </div>

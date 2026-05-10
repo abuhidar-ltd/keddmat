@@ -1,11 +1,15 @@
+import { cn } from '@/lib/utils';
+
 const STORE_PREVIEW_SRC = '/landing-phone-store-preview.png';
 
 /** iPhone-style device framing a real store screenshot inside the display. */
-export function LandingPhoneMockup() {
+export function LandingPhoneMockup({ className }: { className?: string }) {
   return (
-    <div className="flex w-full min-w-0 flex-col items-center">
+    <div
+      className={cn('flex w-max max-w-full min-w-0 shrink-0 flex-col items-center sm:pt-1', className)}
+    >
       <div
-        className="relative flex w-full min-w-0 justify-center px-0 py-1 sm:px-2 sm:py-3 md:justify-start md:py-0 md:ps-2"
+        className="relative flex w-max max-w-full min-w-0 justify-center px-0 py-1 sm:px-2 sm:py-3 md:justify-start md:py-0 md:pe-2"
         style={{ perspective: '1200px' }}
       >
         <div

@@ -26,7 +26,7 @@ interface StoreRow {
 }
 
 const Admin = () => {
-  const { language, setLanguage } = useLanguage();
+  const { language, setLanguage, dir } = useLanguage();
   const [authed, setAuthed] = useState(false);
 
   const [loginEmail, setLoginEmail] = useState('');
@@ -138,7 +138,7 @@ const Admin = () => {
 
   if (!authed) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4 bg-brand-surface" dir="rtl">
+      <div className="min-h-screen flex items-center justify-center p-4 bg-brand-surface" dir={dir}>
         <Card className="w-full max-w-sm shadow-md rounded-2xl border-0">
           <CardContent className="pt-8 pb-6 px-6 space-y-5">
             <div className="text-center space-y-1">
@@ -182,7 +182,7 @@ const Admin = () => {
   }
 
   return (
-    <div className="min-h-screen bg-brand-surface" dir="rtl">
+    <div className="min-h-screen bg-brand-surface" dir={dir}>
       <header className="bg-white border-b border-brand-purple/10 shadow-sm sticky top-0 z-40">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
