@@ -64,19 +64,28 @@ const Admin = () => {
     setAnalytics([]);
   };
 
+  const [fetchError, setFetchError] = useState<string | null>(null);
+
   const fetchData = async (excludeUserId?: string) => {
     setLoadingData(true);
+    setFetchError(null);
+    const currentUser = (await supabase.auth.getUser()).data.user;
+    console.log('Current user:', currentUser?.email);
     const [storesRes, analyticsRes] = await Promise.all([
       supabase.from('profiles')
         .select('*')
+        .limit(100)
         .order('created_at', { ascending: false }),
       supabase.from('store_analytics')
         .select('event_type, created_at')
         .gte('created_at', new Date(Date.now() - 30 * 86400000).toISOString()),
     ]);
+    console.log('Stores query result:', storesRes.data);
+    console.log('Stores error:', storesRes.error);
+    if (storesRes.error) setFetchError(storesRes.error.message);
+    else if (!storesRes.data?.length) setFetchError('No stores found (empty array) — RLS may be blocking.');
     const allStores = (storesRes.data as StoreRow[]) || [];
     setStores(excludeUserId ? allStores.filter(s => s.user_id !== excludeUserId) : allStores);
-    console.log('Stores fetched:', allStores.length, 'Error:', storesRes.error);
     setAnalytics(analyticsRes.data || []);
     setLoadingData(false);
   };
@@ -233,8 +242,11 @@ const Admin = () => {
               <div className="flex justify-center py-12"><Loader2 className="h-7 w-7 animate-spin text-brand-purple" /></div>
             ) : (
               <Card className="border-0 shadow-md rounded-2xl overflow-hidden">
+                {fetchError && (
+                  <CardContent className="p-4 bg-red-50 text-red-700 text-sm font-mono break-all">{fetchError}</CardContent>
+                )}
                 {stores.length === 0 ? (
-                  <CardContent className="p-8 text-center text-gray-400">لا توجد متاجر بعد</CardContent>
+                  <CardContent className="p-8 text-center text-gray-400">لا توجد متاجر — تحقق من الكونسول</CardContent>
                 ) : (
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm">
