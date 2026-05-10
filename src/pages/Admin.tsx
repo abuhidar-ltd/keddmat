@@ -100,17 +100,14 @@ const Admin = () => {
   };
 
   const deleteStore = async (store: StoreRow) => {
-    if (!confirm('هل أنت متأكد من حذف هذا المتجر بجميع بياناته؟')) return;
-    console.log('Deleting store:', store.user_id);
-    const { error: analyticsError } = await supabase.from('store_analytics').delete().eq('store_id', store.user_id);
-    console.log('Analytics delete error:', analyticsError);
-    const { error: productsError } = await supabase.from('products').delete().eq('user_id', store.user_id);
-    console.log('Products delete error:', productsError);
-    const { error: profileError } = await supabase.from('profiles').delete().eq('user_id', store.user_id);
-    console.log('Profile delete error:', profileError);
-    if (profileError) { toast.error('فشل الحذف'); return; }
-    toast.success('تم حذف المتجر');
-    setStores(prev => prev.filter(s => s.user_id !== store.user_id));
+    if (!confirm('هل أنت متأكد أنك تريد حذف هذا المتجر؟')) return;
+    const { error } = await supabase.rpc('admin_delete_user', { target_user_id: store.user_id });
+    console.log('Delete error:', error);
+    if (!error) {
+      setStores(prev => prev.filter(s => s.user_id !== store.user_id));
+    } else {
+      alert('حدث خطأ أثناء الحذف: ' + error.message);
+    }
   };
 
   const totalStores = stores.length;
