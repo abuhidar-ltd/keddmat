@@ -361,6 +361,9 @@ const StoreSettingsForm = () => {
           dir="ltr"
         />
         <p className="text-xs text-gray-400">حروف لاتينية وأرقام وشرطات فقط. يُحدَّث الرابط في قاعدة البيانات عند الضغط على «حفظ التغييرات».</p>
+        {!profile.is_active && (
+          <p className="text-xs text-amber-600 font-medium">تغيير الرابط لن ينشر متجرك — يجب إتمام الدفع أولاً</p>
+        )}
       </div>
 
       {/* Shareable link */}

@@ -97,7 +97,7 @@ const StorePage = () => {
 
   const loadStore = async () => {
     const { data } = await supabase
-      .from('public_profiles')
+      .from('profiles')
       .select('user_id, store_name, store_description, avatar_url, cover_url, page_slug, whatsapp_number, is_active')
       .eq('page_slug', slug)
       .maybeSingle();
@@ -110,9 +110,13 @@ const StorePage = () => {
 
     setIsActive(!!data.is_active);
     setProfile(data as Profile);
-    if (data.is_active) {
-      supabase.from('store_analytics').insert({ store_id: data.user_id, event_type: 'link_click' }).then(() => {});
+
+    if (!data.is_active) {
+      setLoading(false);
+      return;
     }
+
+    supabase.from('store_analytics').insert({ store_id: data.user_id, event_type: 'link_click' }).then(() => {});
 
     const [prodsRes, reviewsRes] = await Promise.all([
       supabase.from('products').select('*').eq('user_id', data.user_id).order('created_at', { ascending: false }),
@@ -192,22 +196,28 @@ const StorePage = () => {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-white p-6 text-center" dir={dir}>
         <Store className="h-16 w-16 text-gray-300 mb-4" />
-        <h1 className="text-2xl font-bold text-gray-800 mb-2">{t('store.storeUnavailable')}</h1>
+        <h1 className="text-2xl font-bold text-gray-800 mb-2">هذا المتجر غير موجود</h1>
         <p className="text-gray-500 mb-6">{t('store.storeUnavailableDesc')}</p>
         <Link to="/"><Button variant="outline" className="rounded-xl">{t('store.backHome')}</Button></Link>
       </div>
     );
   }
 
+  if (!isActive) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-white p-6 text-center" dir={dir}>
+        <div className="w-full max-w-sm">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">{profile?.store_name || 'متجر'}</h1>
+          <div className="bg-amber-50 border-2 border-amber-300 rounded-2xl px-6 py-5">
+            <p className="text-amber-800 font-semibold text-base">هذا المتجر غير منشور بعد</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-brand-surface" dir={dir}>
-      {!isActive && (
-        <div className="bg-amber-50 border-b-2 border-amber-300 px-4 py-3 text-center">
-          <p className="text-amber-800 font-semibold text-sm">
-            هذا المتجر غير منشور بعد
-          </p>
-        </div>
-      )}
       {/* Cover */}
       <div className="relative aspect-[4/3] w-full">
         {profile?.cover_url
