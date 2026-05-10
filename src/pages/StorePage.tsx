@@ -6,7 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { MessageCircle, Package, Loader2, Store, Truck, Phone, Star, X } from 'lucide-react';
+import { MessageCircle, Package, Loader2, Store, Truck, Phone, Star, X, ShoppingCart, Plus, Minus, Trash2 } from 'lucide-react';
 import { BrandLogo } from '@/components/BrandLogo';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useToast } from '@/hooks/use-toast';
@@ -44,6 +44,43 @@ const StorePage = () => {
   const [reviewForm, setReviewForm] = useState({ name: '', rating: 5, comment: '' });
   const [submittingReview, setSubmittingReview] = useState(false);
   const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
+
+  const [cart, setCart] = useState<{ product: Product; quantity: number }[]>([]);
+  const [cartOpen, setCartOpen] = useState(false);
+
+  const addToCart = (product: Product) => {
+    setCart(prev => {
+      const existing = prev.find(i => i.product.id === product.id);
+      if (existing) return prev.map(i => i.product.id === product.id ? { ...i, quantity: i.quantity + 1 } : i);
+      return [...prev, { product, quantity: 1 }];
+    });
+  };
+
+  const removeFromCart = (productId: string) => {
+    setCart(prev => prev.filter(i => i.product.id !== productId));
+  };
+
+  const updateQty = (productId: string, delta: number) => {
+    setCart(prev =>
+      prev.map(i => i.product.id === productId ? { ...i, quantity: i.quantity + delta } : i)
+          .filter(i => i.quantity > 0)
+    );
+  };
+
+  const cartTotal = cart.reduce((sum, { product, quantity }) => sum + product.price * quantity, 0);
+  const cartCount = cart.reduce((sum, { quantity }) => sum + quantity, 0);
+  const hasDelivery = cart.some(({ product }) => product.delivery_available);
+
+  const buildWhatsAppMessage = () => {
+    if (!profile?.whatsapp_number) return;
+    let message = 'مرحباً، أريد طلب المنتجات التالية:\n\n';
+    cart.forEach(({ product, quantity }) => {
+      message += `• ${product.title} × ${quantity} = ${(product.price * quantity).toFixed(3)} د.أ\n`;
+    });
+    message += `\nالمجموع: ${cartTotal.toFixed(3)} د.أ`;
+    trackWaClick();
+    window.open(`https://wa.me/${normalizePhone(profile.whatsapp_number)}?text=${encodeURIComponent(message)}`, '_blank');
+  };
 
   useEffect(() => {
     if (slug) loadStore();
@@ -264,13 +301,25 @@ const StorePage = () => {
                       </Badge>
                     )}
                   </div>
-                  <Button
-                    onClick={() => handleProductWa(product)}
-                    className="w-full gap-1 md:gap-2 font-bold rounded-xl bg-[#25D366] hover:bg-[#20BD5A] text-white text-xs md:text-sm py-1 md:py-2 h-auto"
-                  >
-                    <MessageCircle className="h-3 w-3 md:h-4 md:w-4" />
-                    {t('store.orderWhatsapp')}
-                  </Button>
+                  <div className="space-y-1.5">
+                    <Button
+                      onClick={() => addToCart(product)}
+                      className="w-full gap-1 md:gap-2 font-bold rounded-xl text-white text-xs md:text-sm py-1 md:py-2 h-auto primary-gradient"
+                    >
+                      <ShoppingCart className="h-3 w-3 md:h-4 md:w-4" />
+                      {cart.find(i => i.product.id === product.id)
+                        ? `في السلة (${cart.find(i => i.product.id === product.id)?.quantity})`
+                        : 'أضف للسلة'}
+                    </Button>
+                    <Button
+                      onClick={() => handleProductWa(product)}
+                      variant="outline"
+                      className="w-full gap-1 md:gap-2 font-bold rounded-xl text-xs md:text-sm py-1 md:py-2 h-auto border-[#25D366] text-[#25D366] hover:bg-[#25D366]/10"
+                    >
+                      <MessageCircle className="h-3 w-3 md:h-4 md:w-4" />
+                      واتساب
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             ))}
@@ -350,6 +399,95 @@ const StorePage = () => {
           </button>
         </div>
       </footer>
+
+      {/* Floating cart button */}
+      {cartCount > 0 && (
+        <button
+          onClick={() => setCartOpen(true)}
+          className="fixed bottom-6 left-6 z-40 flex items-center gap-2 primary-gradient text-white rounded-full px-4 py-3 shadow-xl hover:scale-105 transition-transform"
+        >
+          <ShoppingCart className="h-5 w-5" />
+          <span className="font-bold text-sm">{cartCount}</span>
+        </button>
+      )}
+
+      {/* Cart drawer */}
+      {cartOpen && (
+        <div className="fixed inset-0 z-50 flex flex-col justify-end" dir="rtl">
+          <div className="absolute inset-0 bg-black/50" onClick={() => setCartOpen(false)} />
+          <div className="relative bg-white rounded-t-3xl shadow-2xl max-h-[85vh] flex flex-col">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+              <h2 className="text-lg font-bold text-gray-900">السلة ({cartCount})</h2>
+              <button
+                onClick={() => setCartOpen(false)}
+                className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-gray-200"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="overflow-y-auto flex-1 p-4 space-y-3">
+              {cart.map(({ product, quantity }) => (
+                <div key={product.id} className="flex gap-3 bg-gray-50 rounded-2xl p-3">
+                  <div className="w-16 h-16 rounded-xl overflow-hidden bg-gray-200 shrink-0 flex items-center justify-center">
+                    {product.image_url
+                      ? <img src={product.image_url} alt={product.title} className="w-full h-full object-cover" />
+                      : <Package className="h-6 w-6 text-gray-300" />}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-gray-900 text-sm truncate">{product.title}</p>
+                    <p className="text-brand-purple font-bold text-sm">{(product.price * quantity).toFixed(3)} JOD</p>
+                    <div className="flex items-center gap-2 mt-1.5">
+                      <button
+                        onClick={() => updateQty(product.id, -1)}
+                        className="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center text-gray-700 hover:bg-gray-300 transition-colors"
+                      >
+                        <Minus className="h-3 w-3" />
+                      </button>
+                      <span className="text-sm font-bold w-5 text-center">{quantity}</span>
+                      <button
+                        onClick={() => updateQty(product.id, 1)}
+                        className="w-6 h-6 rounded-full bg-brand-purple/10 flex items-center justify-center text-brand-purple hover:bg-brand-purple/20 transition-colors"
+                      >
+                        <Plus className="h-3 w-3" />
+                      </button>
+                      <button
+                        onClick={() => removeFromCart(product.id)}
+                        className="mr-auto text-red-400 hover:text-red-600 transition-colors"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+
+              {hasDelivery && (
+                <div className="bg-violet-50 rounded-xl p-3 flex gap-2 items-start">
+                  <Truck className="h-4 w-4 text-brand-purple mt-0.5 shrink-0" />
+                  <p className="text-xs text-brand-purple leading-relaxed">
+                    التوصيل متاح لبعض المنتجات — سيتم تأكيد التفاصيل مع البائع
+                  </p>
+                </div>
+              )}
+            </div>
+
+            <div className="p-4 border-t border-gray-100 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-gray-900">المجموع</span>
+                <span className="text-xl font-extrabold text-brand-purple">{cartTotal.toFixed(3)} JOD</span>
+              </div>
+              <Button
+                onClick={buildWhatsAppMessage}
+                className="w-full gap-2 font-bold rounded-xl bg-[#25D366] hover:bg-[#20BD5A] text-white text-base py-3 h-auto"
+              >
+                <MessageCircle className="h-5 w-5" />
+                إتمام الطلب عبر واتساب
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Lightbox */}
       {lightboxUrl && (
