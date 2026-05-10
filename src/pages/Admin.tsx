@@ -90,20 +90,27 @@ const Admin = () => {
     setLoadingData(false);
   };
 
-  const toggleActive = async (userId: string, current: boolean) => {
-    const { error } = await supabase.from('profiles').update({ is_active: !current }).eq('user_id', userId);
+  const toggleActive = async (store: StoreRow) => {
+    console.log('Toggling store:', store.user_id, 'current is_active:', store.is_active);
+    const { error } = await supabase.from('profiles').update({ is_active: !store.is_active }).eq('user_id', store.user_id);
+    console.log('Toggle error:', error);
     if (error) { toast.error('فشل التحديث'); return; }
-    toast.success(current ? 'تم إيقاف المتجر' : 'تم تفعيل المتجر');
-    fetchData();
+    toast.success(store.is_active ? 'تم إيقاف المتجر' : 'تم تفعيل المتجر');
+    setStores(prev => prev.map(s => s.user_id === store.user_id ? { ...s, is_active: !s.is_active } : s));
   };
 
-  const deleteStore = async (userId: string) => {
+  const deleteStore = async (store: StoreRow) => {
     if (!confirm('هل أنت متأكد من حذف هذا المتجر بجميع بياناته؟')) return;
-    await supabase.from('store_analytics').delete().eq('store_id', userId);
-    await supabase.from('products').delete().eq('user_id', userId);
-    await supabase.from('profiles').delete().eq('user_id', userId);
+    console.log('Deleting store:', store.user_id);
+    const { error: analyticsError } = await supabase.from('store_analytics').delete().eq('store_id', store.user_id);
+    console.log('Analytics delete error:', analyticsError);
+    const { error: productsError } = await supabase.from('products').delete().eq('user_id', store.user_id);
+    console.log('Products delete error:', productsError);
+    const { error: profileError } = await supabase.from('profiles').delete().eq('user_id', store.user_id);
+    console.log('Profile delete error:', profileError);
+    if (profileError) { toast.error('فشل الحذف'); return; }
     toast.success('تم حذف المتجر');
-    fetchData();
+    setStores(prev => prev.filter(s => s.user_id !== store.user_id));
   };
 
   const totalStores = stores.length;
@@ -286,7 +293,7 @@ const Admin = () => {
                                 )}
                                 <Button
                                   variant="outline" size="sm"
-                                  onClick={() => toggleActive(store.user_id, store.is_active)}
+                                  onClick={() => toggleActive(store)}
                                   className={`rounded-lg h-7 gap-1 text-xs px-2 ${store.is_active ? 'border-orange-200 text-orange-600 hover:bg-orange-50' : 'border-green-200 text-green-600 hover:bg-green-50'}`}
                                 >
                                   {store.is_active ? <ToggleRight className="h-3.5 w-3.5" /> : <ToggleLeft className="h-3.5 w-3.5" />}
@@ -294,7 +301,7 @@ const Admin = () => {
                                 </Button>
                                 <Button
                                   variant="outline" size="sm"
-                                  onClick={() => deleteStore(store.user_id)}
+                                  onClick={() => deleteStore(store)}
                                   className="rounded-lg h-7 text-xs px-2 border-red-200 text-red-600 hover:bg-red-50"
                                 >
                                   <Trash2 className="h-3.5 w-3.5" />
