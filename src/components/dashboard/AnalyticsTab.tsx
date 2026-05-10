@@ -4,10 +4,10 @@ import { useAuth } from '@/hooks/useAuth';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import { brand } from '@/lib/brand';
-import { Link2, MessageCircle, Eye, Loader2 } from 'lucide-react';
+import { Link2, MessageCircle, Loader2 } from 'lucide-react';
 import type { StoreAnalyticsEvent, Product } from '@/types/keddmat';
 
-interface DayData { date: string; رابط: number; واتساب: number; مشاهدة: number; }
+interface DayData { date: string; رابط: number; واتساب: number; }
 
 const AnalyticsTab = () => {
   const { user } = useAuth();
@@ -37,7 +37,6 @@ const AnalyticsTab = () => {
 
   const totalLinkClicks = events.filter(e => e.event_type === 'link_click').length;
   const totalWaClicks = events.filter(e => e.event_type === 'whatsapp_click').length;
-  const totalViews = events.filter(e => e.event_type === 'product_view').length;
 
   const chartData: DayData[] = (() => {
     const days: Record<string, DayData> = {};
@@ -45,14 +44,13 @@ const AnalyticsTab = () => {
       const d = new Date();
       d.setDate(d.getDate() - i);
       const key = d.toISOString().slice(0, 10);
-      days[key] = { date: key.slice(5), رابط: 0, واتساب: 0, مشاهدة: 0 };
+      days[key] = { date: key.slice(5), رابط: 0, واتساب: 0 };
     }
     events.forEach(e => {
       const key = e.created_at.slice(0, 10);
       if (days[key]) {
         if (e.event_type === 'link_click') days[key].رابط++;
         else if (e.event_type === 'whatsapp_click') days[key].واتساب++;
-        else if (e.event_type === 'product_view') days[key].مشاهدة++;
       }
     });
     return Object.values(days);
@@ -68,7 +66,7 @@ const AnalyticsTab = () => {
   return (
     <div className="space-y-6 p-1">
       {/* Stat Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Card className="border-0 shadow-md rounded-2xl bg-gradient-to-br from-[#f3ebfa] to-white">
           <CardContent className="p-5 flex items-center gap-4">
             <div className="p-3 rounded-xl bg-[#e2dfff]"><Link2 className="h-6 w-6 text-brand-cyan" /></div>
@@ -87,15 +85,6 @@ const AnalyticsTab = () => {
             </div>
           </CardContent>
         </Card>
-        <Card className="border-0 shadow-md rounded-2xl bg-gradient-to-br from-purple-50 to-white">
-          <CardContent className="p-5 flex items-center gap-4">
-            <div className="p-3 rounded-xl bg-purple-100"><Eye className="h-6 w-6 text-brand-purple" /></div>
-            <div>
-              <p className="text-3xl font-extrabold text-gray-900">{totalViews}</p>
-              <p className="text-sm text-gray-500">مشاهدات المنتجات</p>
-            </div>
-          </CardContent>
-        </Card>
       </div>
 
       {/* Activity Chart */}
@@ -110,7 +99,6 @@ const AnalyticsTab = () => {
               <Tooltip />
               <Bar dataKey="رابط" fill={brand.cyan} radius={[3, 3, 0, 0]} />
               <Bar dataKey="واتساب" fill={brand.purple} radius={[3, 3, 0, 0]} />
-              <Bar dataKey="مشاهدة" fill="#a855f7" radius={[3, 3, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </CardContent>
