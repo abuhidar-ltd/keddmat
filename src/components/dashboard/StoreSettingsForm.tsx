@@ -137,7 +137,9 @@ const StoreSettingsForm = () => {
 
   const handleDeleteAccount = async () => {
     if (!user) return;
-    const { error } = await supabase.rpc('delete_user');
+    const { error } = await supabase.functions.invoke('cancel-and-delete', {
+      body: { targetUserId: user.id }
+    });
     if (error) {
       toast({ title: 'حدث خطأ، يرجى المحاولة مرة أخرى', variant: 'destructive' });
       return;
