@@ -99,14 +99,21 @@ const Admin = () => {
     setStores(prev => prev.map(s => s.user_id === store.user_id ? { ...s, is_active: !s.is_active } : s));
   };
 
-  const deleteStore = async (store: StoreRow) => {
-    if (!confirm('هل أنت متأكد أنك تريد حذف هذا المتجر؟')) return;
-    const { error } = await supabase.rpc('admin_delete_user', { target_user_id: store.user_id });
-    console.log('Delete error:', error);
+  const deleteStore = async (store: any) => {
+    if (!confirm('هل أنت متأكد أنك تريد حذف هذا المتجر نهائياً؟')) return;
+
+    console.log('Calling admin_delete_user with:', store.user_id);
+
+    const { data, error } = await supabase.rpc('admin_delete_user', {
+      target_user_id: store.user_id
+    });
+
+    console.log('RPC result:', data, 'Error:', error);
+
     if (!error) {
-      setStores(prev => prev.filter(s => s.user_id !== store.user_id));
+      setStores((prev: any[]) => prev.filter((s: any) => s.user_id !== store.user_id));
     } else {
-      alert('حدث خطأ أثناء الحذف: ' + error.message);
+      alert('حدث خطأ: ' + error.message);
     }
   };
 
