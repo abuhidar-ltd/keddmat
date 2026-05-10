@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import { useLanguage } from '@/hooks/useLanguage';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -13,6 +14,7 @@ import AnalyticsTab from '@/components/dashboard/AnalyticsTab';
 
 const Dashboard = () => {
   const { user, loading, signOut } = useAuth();
+  const { language, setLanguage } = useLanguage();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { toast } = useToast();
@@ -68,6 +70,12 @@ const Dashboard = () => {
                 </Button>
               </a>
             )}
+            <button
+              onClick={() => setLanguage(language === 'ar' ? 'en' : 'ar')}
+              className="text-xs font-semibold px-2.5 py-1 rounded-lg border border-gray-200 text-gray-500 hover:border-brand-purple/40 hover:text-brand-purple transition-colors"
+            >
+              {language === 'ar' ? 'EN' : 'ع'}
+            </button>
             <Button variant="ghost" size="sm" onClick={handleSignOut} className="gap-2 text-gray-500 hover:text-red-600 rounded-xl">
               <LogOut className="h-4 w-4" />
             </Button>

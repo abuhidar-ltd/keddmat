@@ -13,8 +13,11 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle,
+} from '@/components/ui/dialog';
 import PhoneInput from '@/components/PhoneInput';
-import { Copy, Check, Loader2, Camera, Image as ImageIcon, Trash2, ExternalLink } from 'lucide-react';
+import { Copy, Check, Loader2, Camera, Image as ImageIcon, Trash2, ExternalLink, CreditCard, MessageCircle } from 'lucide-react';
 import type { Profile } from '@/types/keddmat';
 import { getPublicSiteUrl } from '@/lib/siteUrl';
 import { slugifyLatin, generateSlug } from '@/lib/slug';
@@ -31,6 +34,8 @@ const StoreSettingsForm = () => {
   const [charCount, setCharCount] = useState(0);
   const [publishing, setPublishing] = useState(false);
   const [managingSubscription, setManagingSubscription] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [cliqUsername, setCliqUsername] = useState<string | null>(null);
 
   useEffect(() => {
     if (user) fetchProfile();
@@ -66,11 +71,15 @@ const StoreSettingsForm = () => {
   }, [user]);
 
   const fetchProfile = async () => {
-    const { data } = await supabase.from('profiles').select('*').eq('user_id', user!.id).maybeSingle();
-    if (data) {
-      setProfile(data as Profile);
-      setCharCount((data as Profile).store_description?.length || 0);
+    const [profileRes, settingsRes] = await Promise.all([
+      supabase.from('profiles').select('*').eq('user_id', user!.id).maybeSingle(),
+      supabase.from('app_settings').select('value').eq('key', 'cliq_username').maybeSingle(),
+    ]);
+    if (profileRes.data) {
+      setProfile(profileRes.data as Profile);
+      setCharCount((profileRes.data as Profile).store_description?.length || 0);
     }
+    if (settingsRes.data?.value) setCliqUsername(settingsRes.data.value);
     setLoading(false);
   };
 
@@ -192,16 +201,70 @@ const StoreSettingsForm = () => {
         ) : (
           <Button
             size="sm"
-            onClick={handlePublish}
+            onClick={() => setShowPaymentModal(true)}
             disabled={publishing}
             className="rounded-xl font-bold text-white primary-gradient border-0 h-9 px-4"
           >
-            {publishing
-              ? <><Loader2 className="h-3.5 w-3.5 animate-spin ml-1.5" />جاري التحويل...</>
-              : 'انشر متجرك ✦'}
+            انشر متجرك ✦
           </Button>
         )}
       </div>
+
+      {/* Payment method modal */}
+      <Dialog open={showPaymentModal} onOpenChange={setShowPaymentModal}>
+        <DialogContent dir="rtl" className="max-w-md rounded-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-right text-lg font-bold">اختر طريقة الدفع</DialogTitle>
+          </DialogHeader>
+          <div className="flex flex-col sm:flex-row gap-4 pt-2">
+            {/* Stripe option */}
+            <Card className="flex-1 border border-brand-purple/20 rounded-2xl cursor-pointer hover:border-brand-purple/60 hover:shadow-md transition-all">
+              <CardContent className="p-5 flex flex-col items-center text-center gap-3">
+                <div className="p-3 rounded-xl bg-brand-purple/10">
+                  <CreditCard className="h-7 w-7 text-brand-purple" />
+                </div>
+                <p className="font-bold text-gray-900">ادفع ببطاقة الائتمان</p>
+                <Button
+                  onClick={() => { setShowPaymentModal(false); handlePublish(); }}
+                  disabled={publishing}
+                  className="w-full rounded-xl font-bold text-white primary-gradient border-0"
+                >
+                  {publishing ? <Loader2 className="h-4 w-4 animate-spin" /> : 'دفع بالبطاقة'}
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* CliQ option */}
+            <Card className="flex-1 border border-green-200 rounded-2xl">
+              <CardContent className="p-5 flex flex-col items-center text-center gap-3">
+                <div className="p-3 rounded-xl bg-green-50">
+                  <MessageCircle className="h-7 w-7 text-green-600" />
+                </div>
+                <p className="font-bold text-gray-900">ادفع عبر CliQ</p>
+                <div className="w-full bg-gray-50 rounded-xl px-3 py-2 text-sm text-right space-y-1">
+                  <p className="text-gray-500 text-xs">اسم المستخدم</p>
+                  <p className="font-bold text-gray-900 text-base">{cliqUsername ?? '...'}</p>
+                </div>
+                <p className="text-xs text-gray-600 leading-relaxed">
+                  قم بتحويل 5 دنانير أردنية إلى الحساب أعلاه ثم أرسل لنا صورة الإيصال عبر واتساب
+                </p>
+                <a
+                  href="https://wa.me/962799126390?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D8%8C%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%AA%D9%81%D8%B9%D9%8A%D9%84%20%D9%85%D8%AA%D8%AC%D8%B1%D9%8A%20%D9%88%D9%82%D8%AF%20%D8%AF%D9%81%D8%B9%D8%AA%20%D8%B9%D8%A8%D8%B1%20CliQ"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full"
+                >
+                  <Button className="w-full rounded-xl font-bold bg-[#25D366] hover:bg-[#20BD5A] text-white border-0 gap-2">
+                    <MessageCircle className="h-4 w-4" />
+                    أرسل الإيصال عبر واتساب
+                  </Button>
+                </a>
+                <p className="text-xs text-gray-400">سيتم تفعيل متجرك خلال 24 ساعة بعد التحقق من الدفع</p>
+              </CardContent>
+            </Card>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Preview button — shown only when store is not yet active */}
       {!profile.is_active && user && (

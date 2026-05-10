@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
+import { useLanguage } from '@/hooks/useLanguage';
 import { Button } from '@/components/ui/button';
 import { Menu, LogOut, LayoutDashboard } from 'lucide-react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
@@ -8,6 +9,7 @@ import { BrandLogo } from '@/components/BrandLogo';
 
 const LandingNavbar = () => {
   const { user, signOut } = useAuth();
+  const { language, setLanguage } = useLanguage();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const close = () => setOpen(false);
@@ -28,6 +30,13 @@ const LandingNavbar = () => {
         >
           <BrandLogo className="h-20 w-auto sm:h-24 md:h-28" />
         </Link>
+
+        <button
+          onClick={() => setLanguage(language === 'ar' ? 'en' : 'ar')}
+          className="absolute start-3 top-1/2 -translate-y-1/2 text-xs font-semibold px-2.5 py-1 rounded-lg border border-gray-200 text-gray-500 hover:border-brand-purple/40 hover:text-brand-purple transition-colors sm:start-4"
+        >
+          {language === 'ar' ? 'EN' : 'ع'}
+        </button>
 
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>

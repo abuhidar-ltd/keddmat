@@ -12,6 +12,7 @@ import { LogOut, Store, Trash2, Users, MessageCircle, Link2, Loader2, ShieldChec
 import { brand } from '@/lib/brand';
 import { BrandLogo } from '@/components/BrandLogo';
 import { toast } from 'sonner';
+import { useLanguage } from '@/hooks/useLanguage';
 
 const ADMIN_EMAIL = 'loophereinit@protonmail.com';
 
@@ -25,6 +26,7 @@ interface StoreRow {
 }
 
 const Admin = () => {
+  const { language, setLanguage } = useLanguage();
   const [authed, setAuthed] = useState(false);
 
   const [loginEmail, setLoginEmail] = useState('');
@@ -74,6 +76,7 @@ const Admin = () => {
     ]);
     const allStores = (storesRes.data as StoreRow[]) || [];
     setStores(excludeUserId ? allStores.filter(s => s.user_id !== excludeUserId) : allStores);
+    console.log('Stores fetched:', allStores.length, 'Error:', storesRes.error);
     setAnalytics(analyticsRes.data || []);
     setLoadingData(false);
   };
@@ -168,6 +171,12 @@ const Admin = () => {
             <span className="font-extrabold text-gray-900 hidden sm:inline">لوحة الأدمن</span>
           </div>
           <div className="flex items-center gap-2">
+            <button
+              onClick={() => setLanguage(language === 'ar' ? 'en' : 'ar')}
+              className="text-xs font-semibold px-2.5 py-1 rounded-lg border border-gray-200 text-gray-500 hover:border-brand-purple/40 hover:text-brand-purple transition-colors"
+            >
+              {language === 'ar' ? 'EN' : 'ع'}
+            </button>
             <Link to="/"><Button variant="outline" size="sm" className="rounded-xl text-sm">الرئيسية</Button></Link>
             <Button variant="ghost" size="sm" onClick={handleSignOut}>
               <LogOut className="h-4 w-4" />

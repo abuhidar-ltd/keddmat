@@ -26,7 +26,7 @@ const Index = () => {
 
       {/* Hero */}
       <section className="relative overflow-hidden px-2 pb-6 pt-1 sm:px-4 md:px-6 md:pb-8 md:pt-4">
-        <div className="mx-auto grid max-w-6xl grid-cols-2 items-start gap-2 sm:gap-4 md:gap-8 lg:gap-x-12">
+        <div className="mx-auto grid max-w-6xl grid-cols-1 items-start gap-2 sm:grid-cols-2 sm:gap-4 md:gap-8 lg:gap-x-12">
           <div className="z-10 min-w-0 text-right">
             <h1 className="mb-2 text-[18px] font-extrabold leading-snug text-[#0d47a1] sm:mb-4 sm:text-3xl md:mb-5 md:text-[2.35rem] md:leading-tight lg:text-[2.5rem]">
               أنشئ متجرك الإلكتروني خلال دقائق

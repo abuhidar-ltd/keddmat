@@ -208,7 +208,7 @@ const StorePage = () => {
           <div className="flex flex-wrap items-center justify-center gap-3 mb-6">
             <Button
               onClick={handleGeneralWa}
-              className="gap-2 font-bold rounded-xl bg-[#25D366] hover:bg-[#20BD5A] text-white shadow-md"
+              className="w-full sm:w-auto gap-2 font-bold rounded-xl bg-[#25D366] hover:bg-[#20BD5A] text-white shadow-md"
             >
               <MessageCircle className="h-5 w-5" />
               {t('store.contactWhatsapp')}
@@ -216,7 +216,7 @@ const StorePage = () => {
             <Button
               asChild
               variant="outline"
-              className="gap-2 font-bold rounded-xl border-brand-purple text-brand-purple hover:bg-brand-purple/5 shadow-md"
+              className="w-full sm:w-auto gap-2 font-bold rounded-xl border-brand-purple text-brand-purple hover:bg-brand-purple/5 shadow-md"
             >
               <a href={`tel:+${normalizePhone(profile.whatsapp_number)}`}>
                 <Phone className="h-5 w-5" />
