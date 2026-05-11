@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/dialog';
 import { Plus, Pencil, Trash2, Package, Loader2, Camera, X } from 'lucide-react';
 import type { Product } from '@/types/keddmat';
+import { phoneToCurrency, formatPrice } from '@/lib/currency';
 
 const emptyForm = { title: '', description: '', price: '', delivery_available: false, delivery_price: '', image_url: '' };
 
@@ -25,6 +26,7 @@ const ProductsManager = () => {
 
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [whatsappNumber, setWhatsappNumber] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState(emptyForm);
@@ -36,10 +38,16 @@ const ProductsManager = () => {
   }, [user]);
 
   const fetchProducts = async () => {
-    const { data } = await supabase.from('products').select('*').eq('user_id', user!.id).order('created_at', { ascending: false });
-    setProducts((data as Product[]) || []);
+    const [prodsRes, profileRes] = await Promise.all([
+      supabase.from('products').select('*').eq('user_id', user!.id).order('created_at', { ascending: false }),
+      supabase.from('profiles').select('whatsapp_number').eq('user_id', user!.id).maybeSingle(),
+    ]);
+    setProducts((prodsRes.data as Product[]) || []);
+    if (profileRes.data?.whatsapp_number) setWhatsappNumber(profileRes.data.whatsapp_number);
     setLoading(false);
   };
+
+  const currency = phoneToCurrency(whatsappNumber);
 
   const openAdd = () => { setForm(emptyForm); setEditingId(null); setDialogOpen(true); };
   const openEdit = (p: Product) => {
@@ -129,10 +137,10 @@ const ProductsManager = () => {
                 <h3 className="font-bold text-gray-900 text-sm line-clamp-1">{p.title}</h3>
                 {p.description && <p className="text-xs text-gray-500 line-clamp-2">{p.description}</p>}
                 <div className="flex items-center justify-between">
-                  <span className="font-extrabold text-brand-purple text-sm">{p.price} JOD</span>
+                  <span className="font-extrabold text-brand-purple text-sm">{formatPrice(p.price, currency)}</span>
                   {p.delivery_available && (
                     <Badge variant="secondary" className="text-xs bg-blue-50 text-blue-700 border-0">
-                      توصيل {p.delivery_price ? `${p.delivery_price} JOD` : ''}
+                      توصيل {p.delivery_price ? formatPrice(p.delivery_price, currency) : ''}
                     </Badge>
                   )}
                 </div>
@@ -185,7 +193,7 @@ const ProductsManager = () => {
 
             {/* Price */}
             <div className="space-y-2">
-              <Label className="font-semibold">السعر (JOD)</Label>
+              <Label className="font-semibold">السعر ({currency.code})</Label>
               <Input type="number" min="0" step="0.001" value={form.price} onChange={e => setForm(prev => ({ ...prev, price: e.target.value }))} placeholder="0.000" className="h-11 rounded-xl" dir="ltr" />
             </div>
 
@@ -197,7 +205,7 @@ const ProductsManager = () => {
 
             {form.delivery_available && (
               <div className="space-y-2">
-                <Label className="font-semibold">سعر التوصيل (JOD)</Label>
+                <Label className="font-semibold">سعر التوصيل ({currency.code})</Label>
                 <Input type="number" min="0" step="0.001" value={form.delivery_price} onChange={e => setForm(prev => ({ ...prev, delivery_price: e.target.value }))} placeholder="0.000" className="h-11 rounded-xl" dir="ltr" />
               </div>
             )}

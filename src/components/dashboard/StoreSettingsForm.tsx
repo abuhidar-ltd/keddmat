@@ -16,7 +16,7 @@ import {
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
 } from '@/components/ui/dialog';
-import PhoneInput from '@/components/PhoneInput';
+
 import { Copy, Check, Loader2, Camera, Image as ImageIcon, Trash2, ExternalLink, CreditCard, MessageCircle } from 'lucide-react';
 import type { Profile } from '@/types/keddmat';
 import { getPublicSiteUrl } from '@/lib/siteUrl';
@@ -76,8 +76,14 @@ const StoreSettingsForm = () => {
       supabase.from('app_settings').select('value').eq('key', 'cliq_username').maybeSingle(),
     ]);
     if (profileRes.data) {
-      setProfile(profileRes.data as Profile);
-      setCharCount((profileRes.data as Profile).store_description?.length || 0);
+      const p = profileRes.data as Profile;
+      setProfile(p);
+      setCharCount(p.store_description?.length || 0);
+      if (!p.whatsapp_number && user?.email?.endsWith('@keddmat.com')) {
+        const phone = user.email.replace('@keddmat.com', '');
+        setProfile(prev => ({ ...prev, whatsapp_number: phone }));
+        await supabase.from('profiles').update({ whatsapp_number: phone }).eq('user_id', user!.id);
+      }
     }
     if (settingsRes.data?.value) setCliqUsername(settingsRes.data.value);
     setLoading(false);
@@ -342,12 +348,15 @@ const StoreSettingsForm = () => {
       {/* WhatsApp */}
       <div className="space-y-2">
         <Label className="font-semibold">رقم واتساب للطلبات</Label>
-        <PhoneInput
+        <Input
           value={profile.whatsapp_number || ''}
-          onChange={val => setProfile(prev => ({ ...prev, whatsapp_number: val }))}
-          placeholder="7XX XXX XXX"
+          onChange={e => setProfile(prev => ({ ...prev, whatsapp_number: e.target.value.replace(/\D/g, '') }))}
+          placeholder="مثال: 966XXXXXXXXX أو 962XXXXXXXXX"
+          className="h-11 rounded-xl"
+          dir="ltr"
+          inputMode="numeric"
         />
-        <p className="text-xs text-gray-400">هذا الرقم يستخدمه الزوار لإرسال الطلبات عبر واتساب</p>
+        <p className="text-xs text-gray-400">أدخل رقمك الكامل مع رمز الدولة بدون + (مثال: 966501234567)</p>
       </div>
 
       {/* Slug */}

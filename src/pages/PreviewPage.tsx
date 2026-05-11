@@ -11,11 +11,7 @@ import { BrandLogo } from '@/components/BrandLogo';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useToast } from '@/hooks/use-toast';
 import type { Profile, Product, Review } from '@/types/keddmat';
-
-const normalizePhone = (phone: string) => {
-  const n = phone.replace(/[^0-9]/g, '');
-  return n.startsWith('962') ? n : `962${n.replace(/^0/, '')}`;
-};
+import { phoneToCurrency, formatPrice, cleanWhatsAppNumber } from '@/lib/currency';
 
 const StarRow = ({ rating, interactive, onRate }: { rating: number; interactive?: boolean; onRate?: (r: number) => void }) => (
   <div className="flex gap-0.5">
@@ -117,22 +113,24 @@ const PreviewPage = () => {
 
   const handleGeneralWa = () => {
     if (!profile?.whatsapp_number) return;
-    const phone = normalizePhone(profile.whatsapp_number);
+    const phone = cleanWhatsAppNumber(profile.whatsapp_number);
     window.open(`https://wa.me/${phone}`, '_blank', 'noopener,noreferrer');
   };
 
   const handleProductWa = (product: Product) => {
     if (!profile?.whatsapp_number) return;
-    const phone = normalizePhone(profile.whatsapp_number);
+    const phone = cleanWhatsAppNumber(profile.whatsapp_number);
     const msg = encodeURIComponent(language === 'ar'
-      ? `مرحباً، أنا مهتم بـ ${product.title} بسعر ${product.price} JOD`
-      : `Hello, I'm interested in ${product.title} priced at ${product.price} JOD`);
+      ? `مرحباً، أنا مهتم بـ ${product.title} بسعر ${formatPrice(product.price, currency)}`
+      : `Hello, I'm interested in ${product.title} priced at ${formatPrice(product.price, currency)}`);
     window.open(`https://wa.me/${phone}?text=${msg}`, '_blank', 'noopener,noreferrer');
   };
 
   const avgRating = reviews.length
     ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length)
     : null;
+
+  const currency = phoneToCurrency(profile?.whatsapp_number);
 
   if (loading) {
     return (
@@ -218,7 +216,7 @@ const PreviewPage = () => {
               variant="outline"
               className="gap-2 font-bold rounded-xl border-brand-purple text-brand-purple hover:bg-brand-purple/5 shadow-md"
             >
-              <a href={`tel:+${normalizePhone(profile.whatsapp_number)}`}>
+              <a href={`tel:+${cleanWhatsAppNumber(profile.whatsapp_number)}`}>
                 <Phone className="h-5 w-5" />
                 {t('store.call')}
               </a>
@@ -256,11 +254,11 @@ const PreviewPage = () => {
                     <p className="text-xs md:text-sm text-gray-700 line-clamp-2 leading-relaxed">{product.description}</p>
                   )}
                   <div className="flex items-center justify-between gap-1">
-                    <span className="text-sm md:text-lg font-extrabold text-brand-purple">{product.price} JOD</span>
+                    <span className="text-sm md:text-lg font-extrabold text-brand-purple">{formatPrice(product.price, currency)}</span>
                     {product.delivery_available && (
                       <Badge className="bg-violet-50 text-brand-purple border-0 gap-1 text-xs hidden sm:flex">
                         <Truck className="h-3 w-3" />
-                        {t('store.deliveryAvailable')} {product.delivery_price ? `${product.delivery_price} JOD` : ''}
+                        {t('store.deliveryAvailable')} {product.delivery_price ? formatPrice(product.delivery_price, currency) : ''}
                       </Badge>
                     )}
                   </div>

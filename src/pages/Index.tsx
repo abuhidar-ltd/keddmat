@@ -8,7 +8,6 @@ import {
   ShoppingBag,
   Zap,
   X,
-  Shield,
   UserPlus,
   LayoutDashboard,
   Star,
@@ -48,10 +47,6 @@ const Index = () => {
               >
                 أنشئ متجرك الآن
               </Button>
-              <p className="flex items-center justify-end gap-1 text-[13px] text-gray-700 sm:gap-2 sm:text-sm">
-                <Shield className="h-3 w-3 shrink-0 text-[#7b42f6] sm:h-4 sm:w-4" strokeWidth={2} />
-                5 دنانير شهرياً
-              </p>
             </div>
           </div>
         </div>
