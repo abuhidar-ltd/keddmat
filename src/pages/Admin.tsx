@@ -21,7 +21,7 @@ interface StoreRow {
   store_name: string | null;
   page_slug: string | null;
   whatsapp_number: string | null;
-  is_active: boolean;
+  is_pro: boolean;
   created_at: string;
 }
 
@@ -90,13 +90,11 @@ const Admin = () => {
     setLoadingData(false);
   };
 
-  const toggleActive = async (store: StoreRow) => {
-    console.log('Toggling store:', store.user_id, 'current is_active:', store.is_active);
-    const { error } = await supabase.from('profiles').update({ is_active: !store.is_active }).eq('user_id', store.user_id);
-    console.log('Toggle error:', error);
+  const togglePro = async (store: StoreRow) => {
+    const { error } = await supabase.from('profiles').update({ is_pro: !store.is_pro }).eq('user_id', store.user_id);
     if (error) { toast.error('فشل التحديث'); return; }
-    toast.success(store.is_active ? 'تم إيقاف المتجر' : 'تم تفعيل المتجر');
-    setStores(prev => prev.map(s => s.user_id === store.user_id ? { ...s, is_active: !s.is_active } : s));
+    toast.success(store.is_pro ? 'تم إلغاء البرو' : 'تم تفعيل البرو');
+    setStores(prev => prev.map(s => s.user_id === store.user_id ? { ...s, is_pro: !s.is_pro } : s));
   };
 
   const deleteStore = async (store: any) => {
@@ -118,7 +116,7 @@ const Admin = () => {
   };
 
   const totalStores = stores.length;
-  const activeStores = stores.filter(s => s.is_active).length;
+  const proStores = stores.filter(s => s.is_pro).length;
   const totalWaClicks = analytics.filter(e => e.event_type === 'whatsapp_click').length;
   const totalLinkClicks = analytics.filter(e => e.event_type === 'link_click').length;
 
@@ -216,7 +214,7 @@ const Admin = () => {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               {[
                 { label: 'إجمالي المتاجر', value: totalStores, icon: <Store className="h-5 w-5 text-brand-purple" />, bg: 'from-violet-50' },
-                { label: 'متاجر نشطة', value: activeStores, icon: <Users className="h-5 w-5 text-blue-600" />, bg: 'from-blue-50' },
+                { label: 'متاجر برو', value: proStores, icon: <Users className="h-5 w-5 text-blue-600" />, bg: 'from-blue-50' },
                 { label: 'نقرات واتساب', value: totalWaClicks, icon: <MessageCircle className="h-5 w-5 text-brand-cyan" />, bg: 'from-cyan-50' },
                 { label: 'زيارات الرابط', value: totalLinkClicks, icon: <Link2 className="h-5 w-5 text-brand-purple" />, bg: 'from-violet-50' },
               ].map((stat, i) => (
@@ -281,9 +279,9 @@ const Admin = () => {
                             </td>
                             <td className="px-4 py-3 text-gray-600 hidden sm:table-cell">{store.whatsapp_number || '—'}</td>
                             <td className="px-4 py-3">
-                              {store.is_active
-                                ? <Badge className="bg-green-100 text-green-700 border-0 text-xs">نشط</Badge>
-                                : <Badge className="bg-gray-100 text-gray-500 border-0 text-xs">غير نشط</Badge>}
+                              {store.is_pro
+                                ? <Badge className="bg-brand-purple/10 text-brand-purple border-0 text-xs">برو</Badge>
+                                : <Badge className="bg-gray-100 text-gray-500 border-0 text-xs">مجاني</Badge>}
                             </td>
                             <td className="px-4 py-3 text-xs text-gray-400 hidden md:table-cell">
                               {new Date(store.created_at).toLocaleDateString('ar-EG')}
@@ -297,11 +295,11 @@ const Admin = () => {
                                 )}
                                 <Button
                                   variant="outline" size="sm"
-                                  onClick={() => toggleActive(store)}
-                                  className={`rounded-lg h-7 gap-1 text-xs px-2 ${store.is_active ? 'border-orange-200 text-orange-600 hover:bg-orange-50' : 'border-green-200 text-green-600 hover:bg-green-50'}`}
+                                  onClick={() => togglePro(store)}
+                                  className={`rounded-lg h-7 gap-1 text-xs px-2 ${store.is_pro ? 'border-orange-200 text-orange-600 hover:bg-orange-50' : 'border-green-200 text-green-600 hover:bg-green-50'}`}
                                 >
-                                  {store.is_active ? <ToggleRight className="h-3.5 w-3.5" /> : <ToggleLeft className="h-3.5 w-3.5" />}
-                                  {store.is_active ? 'إيقاف' : 'تفعيل'}
+                                  {store.is_pro ? <ToggleRight className="h-3.5 w-3.5" /> : <ToggleLeft className="h-3.5 w-3.5" />}
+                                  {store.is_pro ? 'إلغاء برو' : 'تفعيل برو'}
                                 </Button>
                                 <Button
                                   variant="outline" size="sm"

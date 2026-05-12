@@ -45,8 +45,27 @@ const Index = () => {
                 size="lg"
                 className="primary-gradient h-10 min-h-10 w-full rounded-full border-0 px-3 text-[0.7rem] font-bold text-white shadow-[0_12px_30px_-8px_rgba(123,66,246,0.45)] transition-transform hover:scale-[1.02] sm:h-14 sm:min-h-[3.5rem] sm:px-10 sm:text-base md:text-lg"
               >
-                أنشئ متجرك الآن
+                انشى متجرك الان مجانا
               </Button>
+              <ul className="mt-2 flex w-full max-w-xl flex-col gap-1.5 text-right sm:mt-3 sm:self-end sm:gap-2">
+                {[
+                  'بدون خبرة',
+                  'خلال دقايق',
+                  'متجر مربوط مباشرة بالواتساب',
+                  'سلة مشتريات لكل متجر',
+                ].map((line) => (
+                  <li
+                    key={line}
+                    className="flex items-baseline justify-start gap-2 text-xs font-medium leading-snug text-gray-700 sm:text-sm"
+                  >
+                    <span
+                      className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#0d47a1] sm:h-2 sm:w-2"
+                      aria-hidden
+                    />
+                    <span className="min-w-0">{line}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>
@@ -116,6 +135,47 @@ const Index = () => {
                 <p className="text-xs leading-relaxed text-gray-600 md:text-sm">{step.desc}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing */}
+      <section className="bg-white px-4 pb-12 pt-8 md:px-6 md:pb-16 md:pt-10">
+        <div className="mx-auto max-w-3xl">
+          <h2 className="mb-6 text-center text-lg font-extrabold text-[#0D47A1] md:text-3xl">الأسعار</h2>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {/* Free tier */}
+            <div className="rounded-2xl border border-gray-200 bg-[#f5f5f5] p-6">
+              <p className="mb-1 text-sm font-semibold text-gray-500">مجاني</p>
+              <p className="mb-5 text-3xl font-extrabold text-gray-900">مجاني للأبد</p>
+              <ul className="mb-6 space-y-2 text-sm text-gray-700">
+                {['متجر نشط ومرئي للعملاء', '2 منتجات', 'طلبات عبر واتساب', 'سلة مشتريات'].map(f => (
+                  <li key={f} className="flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-gray-400" />{f}
+                  </li>
+                ))}
+              </ul>
+              <Button onClick={() => navigate('/auth')} variant="outline" className="w-full rounded-full font-bold">
+                ابدأ مجاناً
+              </Button>
+            </div>
+            {/* Pro tier */}
+            <div className="rounded-2xl border-2 border-[#7B2CBF] bg-white p-6 shadow-lg">
+              <p className="mb-1 text-sm font-semibold text-[#7B2CBF]">الأكثر شيوعاً</p>
+              <p className="mb-5 text-3xl font-extrabold text-gray-900">
+                5 د.أ <span className="text-base font-normal text-gray-500">/ شهر</span>
+              </p>
+              <ul className="mb-6 space-y-2 text-sm text-gray-700">
+                {['100 منتج', 'إحصائيات كاملة', 'شارة التحقق ✓', 'طلبات عبر واتساب', 'سلة مشتريات'].map(f => (
+                  <li key={f} className="flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#7B2CBF]" />{f}
+                  </li>
+                ))}
+              </ul>
+              <Button onClick={() => navigate('/auth')} className="w-full rounded-full font-bold text-white primary-gradient border-0">
+                ابدأ الآن
+              </Button>
+            </div>
           </div>
         </div>
       </section>

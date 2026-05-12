@@ -34,7 +34,6 @@ const StorePage = () => {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [notFound, setNotFound] = useState(false);
-  const [isActive, setIsActive] = useState(true);
 
   const [reviews, setReviews] = useState<Review[]>([]);
   const [reviewForm, setReviewForm] = useState({ name: '', rating: 5, comment: '' });
@@ -94,7 +93,7 @@ const StorePage = () => {
   const loadStore = async () => {
     const { data } = await supabase
       .from('profiles')
-      .select('user_id, store_name, store_description, avatar_url, cover_url, page_slug, whatsapp_number, is_active')
+      .select('user_id, store_name, store_description, avatar_url, cover_url, page_slug, whatsapp_number, is_active, is_pro')
       .eq('page_slug', slug)
       .maybeSingle();
 
@@ -104,13 +103,7 @@ const StorePage = () => {
       return;
     }
 
-    setIsActive(!!data.is_active);
     setProfile(data as Profile);
-
-    if (!data.is_active) {
-      setLoading(false);
-      return;
-    }
 
     supabase.from('store_analytics').insert({ store_id: data.user_id, event_type: 'link_click' }).then(() => {});
 
@@ -201,19 +194,6 @@ const StorePage = () => {
     );
   }
 
-  if (!isActive) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-white p-6 text-center" dir={dir}>
-        <div className="w-full max-w-sm">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">{profile?.store_name || 'متجر'}</h1>
-          <div className="bg-amber-50 border-2 border-amber-300 rounded-2xl px-6 py-5">
-            <p className="text-amber-800 font-semibold text-base">هذا المتجر غير منشور بعد</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-brand-surface" dir={dir}>
       {/* Cover */}
@@ -235,7 +215,16 @@ const StorePage = () => {
       {/* Store info */}
       <div className="container mx-auto px-4 pt-16 pb-4">
         <div className="mb-4 text-center">
-          <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900">{profile?.store_name || 'متجر'}</h1>
+          <div className="flex items-center justify-center gap-2">
+            <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900">{profile?.store_name || 'متجر'}</h1>
+            {profile?.is_pro && (
+              <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-brand-purple shadow-sm flex-shrink-0" title="متجر موثق">
+                <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              </span>
+            )}
+          </div>
           {profile?.store_description && (
             <p className="text-gray-600 mt-1 leading-relaxed">{profile.store_description}</p>
           )}

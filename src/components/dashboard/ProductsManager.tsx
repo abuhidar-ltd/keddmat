@@ -19,7 +19,11 @@ import { phoneToCurrency, formatPrice } from '@/lib/currency';
 
 const emptyForm = { title: '', description: '', price: '', delivery_available: false, delivery_price: '', image_url: '' };
 
-const ProductsManager = () => {
+interface ProductsManagerProps {
+  onUpgradeClick?: () => void;
+}
+
+const ProductsManager = ({ onUpgradeClick }: ProductsManagerProps) => {
   const { user } = useAuth();
   const { uploadImage, uploading } = useImageUpload();
   const { toast } = useToast();
@@ -27,6 +31,7 @@ const ProductsManager = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [whatsappNumber, setWhatsappNumber] = useState<string | null>(null);
+  const [isPro, setIsPro] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState(emptyForm);
@@ -40,10 +45,11 @@ const ProductsManager = () => {
   const fetchProducts = async () => {
     const [prodsRes, profileRes] = await Promise.all([
       supabase.from('products').select('*').eq('user_id', user!.id).order('created_at', { ascending: false }),
-      supabase.from('profiles').select('whatsapp_number').eq('user_id', user!.id).maybeSingle(),
+      supabase.from('profiles').select('whatsapp_number, is_pro').eq('user_id', user!.id).maybeSingle(),
     ]);
     setProducts((prodsRes.data as Product[]) || []);
     if (profileRes.data?.whatsapp_number) setWhatsappNumber(profileRes.data.whatsapp_number);
+    setIsPro(!!profileRes.data?.is_pro);
     setLoading(false);
   };
 
@@ -102,16 +108,34 @@ const ProductsManager = () => {
 
   return (
     <div className="space-y-4 p-1">
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-gray-500">المنتجات: {products.length} / 40</p>
-        {products.length >= 40 ? (
-          <p className="text-sm text-red-500 font-semibold">لقد وصلت للحد الأقصى من المنتجات (40 منتج)</p>
-        ) : (
-          <Button onClick={openAdd} className="font-bold gap-2 rounded-xl text-white bg-gradient-to-br from-brand-purple to-brand-cyan hover:opacity-95">
-            <Plus className="h-4 w-4" />إضافة منتج +
-          </Button>
-        )}
-      </div>
+      {(() => {
+        const limit = isPro ? 100 : 2;
+        return (
+          <div className="flex items-center justify-between">
+            <p className="text-sm text-gray-500">المنتجات: {products.length} / {limit}</p>
+            {products.length >= limit ? (
+              isPro ? (
+                <p className="text-sm text-red-500 font-semibold">وصلت للحد الأقصى (100 منتج)</p>
+              ) : (
+                <div className="flex flex-col items-end gap-1">
+                  <p className="text-sm text-amber-600 font-semibold">الخطة المجانية تتيح 2 منتجات فقط</p>
+                  <Button
+                    size="sm"
+                    onClick={onUpgradeClick}
+                    className="rounded-xl font-bold text-white primary-gradient border-0 text-xs h-8 px-3"
+                  >
+                    ترقية للبرو 🚀
+                  </Button>
+                </div>
+              )
+            ) : (
+              <Button onClick={openAdd} className="font-bold gap-2 rounded-xl text-white bg-gradient-to-br from-brand-purple to-brand-cyan hover:opacity-95">
+                <Plus className="h-4 w-4" />إضافة منتج +
+              </Button>
+            )}
+          </div>
+        );
+      })()}
 
       {products.length === 0 ? (
         <div className="text-center py-16 text-gray-500">

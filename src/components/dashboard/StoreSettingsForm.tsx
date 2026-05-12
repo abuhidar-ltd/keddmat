@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useImageUpload } from '@/hooks/useImageUpload';
@@ -26,6 +27,7 @@ const StoreSettingsForm = () => {
   const { user, signOut } = useAuth();
   const { uploadImage, uploading } = useImageUpload();
   const { toast } = useToast();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [profile, setProfile] = useState<Partial<Profile>>({});
   const [loading, setLoading] = useState(true);
@@ -48,7 +50,7 @@ const StoreSettingsForm = () => {
     }
   }, [profile.store_name]);
 
-  // Poll is_active after returning from Stripe checkout until webhook fires
+  // Poll is_pro after returning from Stripe checkout until webhook fires
   useEffect(() => {
     if (!user) return;
     const params = new URLSearchParams(window.location.search);
@@ -57,11 +59,11 @@ const StoreSettingsForm = () => {
     const interval = setInterval(async () => {
       const { data } = await supabase
         .from('profiles')
-        .select('is_active')
+        .select('is_pro')
         .eq('user_id', user.id)
         .maybeSingle();
-      if (data?.is_active) {
-        setProfile(prev => ({ ...prev, is_active: true }));
+      if (data?.is_pro) {
+        setProfile(prev => ({ ...prev, is_pro: true }));
         clearInterval(interval);
       }
     }, 3000);
@@ -69,6 +71,14 @@ const StoreSettingsForm = () => {
     const timeout = setTimeout(() => clearInterval(interval), 30000);
     return () => { clearInterval(interval); clearTimeout(timeout); };
   }, [user]);
+
+  // Auto-open payment modal when navigated here with ?upgrade=1
+  useEffect(() => {
+    if (searchParams.get('upgrade') === '1') {
+      setShowPaymentModal(true);
+      setSearchParams({}, { replace: true });
+    }
+  }, [searchParams]);
 
   const fetchProfile = async () => {
     const [profileRes, settingsRes] = await Promise.all([
@@ -191,9 +201,9 @@ const StoreSettingsForm = () => {
       {/* Store Status */}
       <div className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border">
         <p className="font-semibold text-gray-800">حالة المتجر</p>
-        {profile.is_active ? (
+        {profile.is_pro ? (
           <div className="flex items-center gap-2">
-            <Badge className="bg-green-100 text-green-700 border-0 text-sm px-3 py-1">متجرك نشط ✓</Badge>
+            <Badge className="bg-green-100 text-green-700 border-0 text-sm px-3 py-1">برو نشط ✓</Badge>
             <Button
               size="sm"
               variant="outline"
@@ -207,14 +217,17 @@ const StoreSettingsForm = () => {
             </Button>
           </div>
         ) : (
-          <Button
-            size="sm"
-            onClick={() => setShowPaymentModal(true)}
-            disabled={publishing}
-            className="rounded-xl font-bold text-white primary-gradient border-0 h-9 px-4"
-          >
-            فعّل متجرك
-          </Button>
+          <div className="flex items-center gap-2">
+            <Badge className="bg-gray-100 text-gray-600 border-0 text-sm px-3 py-1">الخطة المجانية</Badge>
+            <Button
+              size="sm"
+              onClick={() => setShowPaymentModal(true)}
+              disabled={publishing}
+              className="rounded-xl font-bold text-white primary-gradient border-0 h-9 px-4"
+            >
+              ترقية للبرو 🚀
+            </Button>
+          </div>
         )}
       </div>
 
@@ -273,19 +286,6 @@ const StoreSettingsForm = () => {
           </div>
         </DialogContent>
       </Dialog>
-
-      {/* Preview button — shown only when store is not yet active */}
-      {!profile.is_active && user && (
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => window.open(`/preview/${user.id}`, '_blank')}
-          className="w-full rounded-xl border-brand-purple/30 text-brand-purple hover:bg-brand-purple/5 font-semibold"
-        >
-          <ExternalLink className="h-4 w-4 ml-2" />
-          معاينة متجري
-        </Button>
-      )}
 
       {/* Cover upload */}
       <div className="space-y-2">
@@ -370,13 +370,10 @@ const StoreSettingsForm = () => {
           dir="ltr"
         />
         <p className="text-xs text-gray-400">حروف لاتينية وأرقام وشرطات فقط. يُحدَّث الرابط في قاعدة البيانات عند الضغط على «حفظ التغييرات».</p>
-        {!profile.is_active && (
-          <p className="text-xs text-amber-600 font-medium">تغيير الرابط لن ينشر متجرك — يجب إتمام الدفع أولاً</p>
-        )}
       </div>
 
       {/* Shareable link */}
-      {profile.page_slug && !!profile.is_active && (
+      {profile.page_slug && (
         <Card className="border border-brand-purple/20 bg-brand-purple/5 rounded-2xl">
           <CardContent className="p-4">
             <p className="text-sm font-semibold text-brand-purple mb-2">رابط متجرك القابل للمشاركة</p>

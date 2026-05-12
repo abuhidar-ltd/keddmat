@@ -54,7 +54,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           store_name: storeName || '',
           page_slug: slug,
           whatsapp_number: cleanPhone,
-          is_active: false,
+          is_active: true,
         }, { onConflict: 'user_id' });
         if (profileError) return { error: new Error(profileError.message) };
       }

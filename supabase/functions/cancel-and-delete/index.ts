@@ -36,6 +36,9 @@ serve(async (req) => {
       }
     }
 
+    // Clear pro status before deletion to avoid webhook race condition
+    await supabase.from('profiles').update({ is_pro: false }).eq('user_id', targetUserId);
+
     // Delete from database using admin_delete_user function
     await supabase.rpc('admin_delete_user', { target_user_id: targetUserId });
 

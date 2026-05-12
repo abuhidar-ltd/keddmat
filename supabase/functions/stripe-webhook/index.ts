@@ -46,7 +46,7 @@ serve(async (req) => {
         });
       }
       await supabase.from('profiles').update({
-        is_active: true,
+        is_pro: true,
         stripe_customer_id: session.customer as string,
       }).eq('user_id', userId);
       console.log(`Activated store for user ${userId}`);
@@ -55,9 +55,9 @@ serve(async (req) => {
     if (event.type === 'customer.subscription.deleted') {
       const subscription = event.data.object as Stripe.Subscription;
       const customerId = subscription.customer as string;
-      await supabase.from('profiles').update({ is_active: false })
+      await supabase.from('profiles').update({ is_pro: false })
         .eq('stripe_customer_id', customerId);
-      console.log(`Deactivated store for Stripe customer ${customerId}`);
+      console.log(`Removed pro for Stripe customer ${customerId}`);
     }
 
     if (event.type === 'invoice.payment_failed') {
@@ -65,9 +65,9 @@ serve(async (req) => {
       const customerId = invoice.customer as string;
       // Only deactivate after final attempt (attempt_count >= 4 by default)
       if (invoice.attempt_count && invoice.attempt_count >= 4) {
-        await supabase.from('profiles').update({ is_active: false })
+        await supabase.from('profiles').update({ is_pro: false })
           .eq('stripe_customer_id', customerId);
-        console.log(`Deactivated store after payment failure for customer ${customerId}`);
+        console.log(`Removed pro after payment failure for customer ${customerId}`);
       }
     }
   } catch (err) {

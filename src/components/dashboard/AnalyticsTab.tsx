@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import { brand } from '@/lib/brand';
 import { Link2, MessageCircle, Loader2 } from 'lucide-react';
@@ -9,11 +10,16 @@ import type { StoreAnalyticsEvent, Product } from '@/types/keddmat';
 
 interface DayData { date: string; رابط: number; واتساب: number; }
 
-const AnalyticsTab = () => {
+interface AnalyticsTabProps {
+  onUpgradeClick?: () => void;
+}
+
+const AnalyticsTab = ({ onUpgradeClick }: AnalyticsTabProps) => {
   const { user } = useAuth();
   const [events, setEvents] = useState<StoreAnalyticsEvent[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isPro, setIsPro] = useState(false);
 
   useEffect(() => {
     if (user) fetchData();
@@ -23,15 +29,17 @@ const AnalyticsTab = () => {
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-    const [eventsRes, productsRes] = await Promise.all([
+    const [eventsRes, productsRes, profileRes] = await Promise.all([
       supabase.from('store_analytics').select('*')
         .eq('store_id', user!.id)
         .gte('created_at', thirtyDaysAgo.toISOString()),
       supabase.from('products').select('id, title').eq('user_id', user!.id),
+      supabase.from('profiles').select('is_pro').eq('user_id', user!.id).maybeSingle(),
     ]);
 
     setEvents((eventsRes.data as StoreAnalyticsEvent[]) || []);
     setProducts((productsRes.data as Product[]) || []);
+    setIsPro(!!profileRes.data?.is_pro);
     setLoading(false);
   };
 
@@ -64,7 +72,8 @@ const AnalyticsTab = () => {
   if (loading) return <div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-brand-purple" /></div>;
 
   return (
-    <div className="space-y-6 p-1">
+    <div className="relative">
+      <div className={isPro ? 'space-y-6 p-1' : 'space-y-6 p-1 pointer-events-none select-none'} style={isPro ? {} : { filter: 'blur(4px)' }}>
       {/* Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Card className="border-0 shadow-md rounded-2xl bg-gradient-to-br from-[#f3ebfa] to-white">
@@ -122,6 +131,18 @@ const AnalyticsTab = () => {
             </div>
           </CardContent>
         </Card>
+      )}
+      </div>
+      {!isPro && (
+        <div className="absolute inset-0 flex items-center justify-center z-10">
+          <div className="bg-white rounded-2xl shadow-xl border border-brand-purple/20 p-6 text-center max-w-xs">
+            <p className="text-2xl mb-2">📊</p>
+            <p className="font-bold text-gray-900 mb-1">الإحصائيات متاحة في خطة البرو</p>
+            <Button onClick={onUpgradeClick} className="mt-3 w-full rounded-xl font-bold text-white primary-gradient border-0">
+              ترقية للبرو
+            </Button>
+          </div>
+        </div>
       )}
     </div>
   );

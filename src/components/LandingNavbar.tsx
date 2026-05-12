@@ -56,7 +56,7 @@ const LandingNavbar = () => {
             </SheetHeader>
             <nav className="mt-8 flex flex-col gap-1 text-right">
               <Button variant="ghost" className="justify-end text-base font-semibold" asChild onClick={close}>
-                <Link to="/auth">أنشئ متجرك الآن</Link>
+                <Link to="/auth">انشى متجرك الان مجانا</Link>
               </Button>
               <Button variant="ghost" className="justify-end text-base" asChild onClick={close}>
                 <Link to="/terms">الشروط والأحكام</Link>

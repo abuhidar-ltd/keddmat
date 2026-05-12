@@ -19,6 +19,7 @@ const Dashboard = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { toast } = useToast();
   const [slug, setSlug] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'store');
 
   useEffect(() => {
     if (loading) return;
@@ -29,13 +30,18 @@ const Dashboard = () => {
   useEffect(() => {
     const payment = searchParams.get('payment');
     if (payment === 'success') {
-      toast({ title: 'تم الدفع بنجاح! متجرك قيد التفعيل ✓' });
+      toast({ title: 'تم الدفع بنجاح! اشتراكك قيد التفعيل ✓' });
       setSearchParams({}, { replace: true });
     } else if (payment === 'cancelled') {
       toast({ title: 'تم إلغاء عملية الدفع', variant: 'destructive' });
       setSearchParams({}, { replace: true });
     }
   }, []);
+
+  const handleUpgradeClick = () => {
+    setActiveTab('store');
+    setSearchParams({ upgrade: '1' }, { replace: true });
+  };
 
   useEffect(() => {
     if (user) {
@@ -84,7 +90,7 @@ const Dashboard = () => {
       </header>
 
       <main className="container mx-auto px-4 py-6 max-w-3xl">
-        <Tabs defaultValue="store" className="w-full">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-3 rounded-2xl bg-white shadow-sm border border-brand-purple/10 p-1 mb-6 h-auto">
             <TabsTrigger value="store" className="rounded-xl py-2.5 font-semibold data-[state=active]:bg-brand-purple data-[state=active]:text-white transition-all">المتجر</TabsTrigger>
             <TabsTrigger value="products" className="rounded-xl py-2.5 font-semibold data-[state=active]:bg-brand-purple data-[state=active]:text-white transition-all">المنتجات</TabsTrigger>
@@ -95,10 +101,10 @@ const Dashboard = () => {
             <StoreSettingsForm />
           </TabsContent>
           <TabsContent value="products">
-            <ProductsManager />
+            <ProductsManager onUpgradeClick={handleUpgradeClick} />
           </TabsContent>
           <TabsContent value="analytics">
-            <AnalyticsTab />
+            <AnalyticsTab onUpgradeClick={handleUpgradeClick} />
           </TabsContent>
         </Tabs>
       </main>

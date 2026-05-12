@@ -7,6 +7,7 @@ export interface Profile {
   page_slug: string | null;
   whatsapp_number: string | null;
   is_active: boolean;
+  is_pro: boolean;
   preview_token?: string | null;
   stripe_customer_id?: string | null;
 }
