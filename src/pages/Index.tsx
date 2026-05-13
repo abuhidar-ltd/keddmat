@@ -147,7 +147,7 @@ const Index = () => {
             {/* Free tier */}
             <div className="rounded-2xl border border-gray-200 bg-[#f5f5f5] p-6">
               <p className="mb-1 text-sm font-semibold text-gray-500">مجاني</p>
-              <p className="mb-5 text-3xl font-extrabold text-gray-900">مجاني للأبد</p>
+              <p className="mb-5 text-3xl font-extrabold text-gray-900">مجاني</p>
               <ul className="mb-6 space-y-2 text-sm text-gray-700">
                 {['متجر نشط ومرئي للعملاء', '2 منتجات', 'طلبات عبر واتساب', 'سلة مشتريات'].map(f => (
                   <li key={f} className="flex items-center gap-2">
@@ -163,7 +163,7 @@ const Index = () => {
             <div className="rounded-2xl border-2 border-[#7B2CBF] bg-white p-6 shadow-lg">
               <p className="mb-1 text-sm font-semibold text-[#7B2CBF]">الأكثر شيوعاً</p>
               <p className="mb-5 text-3xl font-extrabold text-gray-900">
-                5 د.أ <span className="text-base font-normal text-gray-500">/ شهر</span>
+                3 د.أ <span className="text-base font-normal text-gray-500">/ شهر</span>
               </p>
               <ul className="mb-6 space-y-2 text-sm text-gray-700">
                 {['100 منتج', 'إحصائيات كاملة', 'شارة التحقق ✓', 'طلبات عبر واتساب', 'سلة مشتريات'].map(f => (
