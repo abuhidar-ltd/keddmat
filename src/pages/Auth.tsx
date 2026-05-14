@@ -6,7 +6,7 @@ import { useAdmin } from '@/hooks/useAdmin';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
@@ -98,22 +98,25 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-brand-surface" dir={dir}>
-      <div className="w-full max-w-md">
+      <div className="w-full max-w-md min-w-0">
         {/* Branding header */}
         <div className="flex flex-col items-center mb-6">
           <BrandLogo height={150} width={150} className="mb-2" />
           <p className="text-base font-semibold text-[#221B2D]">انطلق بمتجرك الإلكتروني اليوم</p>
         </div>
-      <Card className="w-full shadow-md rounded-2xl border-0">
-        <CardHeader className="sr-only">
-          <CardTitle>خدمات</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Tabs defaultValue="register" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-6 rounded-xl">
-              <TabsTrigger value="login" className="rounded-xl font-semibold">تسجيل الدخول</TabsTrigger>
-              <TabsTrigger value="register" className="rounded-xl font-semibold">حساب جديد</TabsTrigger>
-            </TabsList>
+        <Card className="w-full min-w-0 shadow-md rounded-2xl border-0">
+          <CardContent className="p-6 min-w-0">
+            <h2 className="sr-only">خدمات</h2>
+            <Tabs defaultValue="register" className="flex w-full min-w-0 flex-col gap-0">
+              {/* Register first: in RTL the default tab aligns to the reading-start edge (right). */}
+              <TabsList className="mb-6 grid h-12 w-full min-w-0 grid-cols-2 gap-1 rounded-xl border border-[rgba(93,62,229,1)] p-1">
+                <TabsTrigger value="register" className="rounded-lg font-semibold">
+                  حساب جديد
+                </TabsTrigger>
+                <TabsTrigger value="login" className="rounded-lg font-semibold">
+                  تسجيل الدخول
+                </TabsTrigger>
+              </TabsList>
 
             {/* Login Tab */}
             <TabsContent value="login">
@@ -152,7 +155,7 @@ const Auth = () => {
                 <div className="space-y-2">
                   <Label className="font-semibold">اسم المتجر <span className="text-red-500">*</span></Label>
                   <Input value={regData.storeName} onChange={e => setRegData(p => ({ ...p, storeName: e.target.value }))}
-                    placeholder="مثال: رنا ستورز" className="h-12 text-base rounded-xl" />
+                    placeholder="مثال: رنا ستورز" className="h-12 text-base rounded-xl border-[rgba(91,62,229,1)]" />
                   {errors.storeName && <p className="text-sm text-red-500">{errors.storeName}</p>}
                 </div>
                 <div className="space-y-2">
@@ -165,7 +168,7 @@ const Auth = () => {
                   <div className="relative">
                     <Input type={showRegPwd ? 'text' : 'password'} value={regData.password}
                       onChange={e => setRegData(p => ({ ...p, password: e.target.value }))}
-                      className="h-12 text-base pe-12 rounded-xl" />
+                      className="h-12 text-base pe-12 rounded-xl border-[rgba(81,65,227,1)]" />
                     <button type="button" onClick={() => setShowRegPwd(!showRegPwd)}
                       className="absolute end-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700">
                       {showRegPwd ? <Eye className="h-5 w-5" /> : <EyeOff className="h-5 w-5" />}
