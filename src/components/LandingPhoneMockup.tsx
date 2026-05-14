@@ -1,8 +1,8 @@
 import { cn } from '@/lib/utils';
 
-const STORE_PREVIEW_SRC = '/landing-phone-store-preview.png';
+const STORE_PREVIEW_SRC = '/landing-phone-store-preview.jpg';
 
-/** iPhone-style device framing a real store screenshot inside the display. */
+/** Phone-style device framing a real store screenshot inside the display. */
 export function LandingPhoneMockup({ className }: { className?: string }) {
   return (
     <div
@@ -22,13 +22,11 @@ export function LandingPhoneMockup({ className }: { className?: string }) {
         >
           <div className="rounded-[1.35rem] bg-gradient-to-b from-[#2d2d2f] via-[#1a1a1c] to-[#0e0e0f] p-[4px] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.45),0_0_0_1px_rgba(255,255,255,0.06)_inset] sm:rounded-[2.1rem] sm:p-[7px] md:rounded-[2.2rem] md:p-[8px]">
             <div className="relative overflow-hidden rounded-[1.1rem] bg-[#f5f0e8] shadow-inner sm:rounded-[1.75rem] md:rounded-[1.85rem]">
-              <div className="absolute left-1/2 top-1.5 z-20 h-3 w-10 -translate-x-1/2 rounded-full bg-black sm:top-2 sm:h-4 sm:w-12 md:top-2.5 md:h-[1.125rem] md:w-[4rem]" />
-
               <img
                 src={STORE_PREVIEW_SRC}
                 alt="معاينة واجهة متجر على الجوال"
-                width={390}
-                height={844}
+                width={602}
+                height={1024}
                 className="block h-[14.5rem] w-full object-cover object-top sm:h-[24rem] md:h-[26.5rem]"
                 loading="lazy"
                 decoding="async"

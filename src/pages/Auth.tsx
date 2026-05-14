@@ -109,7 +109,7 @@ const Auth = () => {
             <h2 className="sr-only">خدمات</h2>
             <Tabs defaultValue="register" className="flex w-full min-w-0 flex-col gap-0">
               {/* Register first: in RTL the default tab aligns to the reading-start edge (right). */}
-              <TabsList className="mb-6 grid h-12 w-full min-w-0 grid-cols-2 gap-1 rounded-xl border border-[rgba(93,62,229,1)] p-1">
+              <TabsList className="mb-6 grid h-12 w-full min-w-0 grid-cols-2 gap-1 rounded-xl p-1">
                 <TabsTrigger value="register" className="rounded-lg font-semibold">
                   حساب جديد
                 </TabsTrigger>
