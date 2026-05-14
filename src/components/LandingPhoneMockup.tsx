@@ -37,7 +37,7 @@ export function LandingPhoneMockup({ className }: { className?: string }) {
           </div>
         </div>
       </div>
-      <p className="mt-1.5 text-center text-[0.65rem] font-semibold text-gray-700 sm:mt-2 sm:text-sm md:text-base">
+      <p className="mt-1.5 pt-[10px] text-center text-[13px] font-extrabold text-gray-700 sm:mt-2 sm:text-sm md:text-base">
         شكل المتجر
       </p>
     </div>

@@ -22,13 +22,13 @@ const LandingNavbar = () => {
 
   return (
     <header className="sticky top-0 z-50 border-b border-gray-100/80 bg-white/90 backdrop-blur-md">
-      <div className="relative mx-auto flex min-h-[5.25rem] items-center justify-center px-4 py-3 sm:min-h-[5.75rem] sm:py-4 md:min-h-[6.5rem] md:px-6">
+      <div className="relative mx-auto flex min-h-[6.25rem] items-center justify-center px-4 py-3 sm:min-h-[7rem] sm:py-4 md:min-h-[8rem] md:px-6">
         <Link
           to="/"
           className="flex items-center py-1 transition-opacity hover:opacity-90"
           aria-label="Keddmat - الرئيسية"
         >
-          <BrandLogo className="h-20 w-auto sm:h-24 md:h-28" />
+          <BrandLogo className="h-28 w-auto sm:h-32 md:h-36" />
         </Link>
 
         <button
@@ -56,7 +56,7 @@ const LandingNavbar = () => {
             </SheetHeader>
             <nav className="mt-8 flex flex-col gap-1 text-right">
               <Button variant="ghost" className="justify-end text-base font-semibold" asChild onClick={close}>
-                <Link to="/auth">انشى متجرك الان مجانا</Link>
+                <Link to="/auth">ابدأ الآن مجاناً</Link>
               </Button>
               <Button variant="ghost" className="justify-end text-base" asChild onClick={close}>
                 <Link to="/terms">الشروط والأحكام</Link>
