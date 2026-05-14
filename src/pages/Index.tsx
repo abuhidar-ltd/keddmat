@@ -43,7 +43,7 @@ const Index = () => {
               <Button
                 onClick={() => navigate('/auth')}
                 size="lg"
-                className="primary-gradient h-10 min-h-10 w-full rounded-full border-0 px-3 text-[0.7rem] font-bold text-white shadow-[0_12px_30px_-8px_rgba(123,66,246,0.45)] transition-transform hover:scale-[1.02] sm:h-14 sm:min-h-[3.5rem] sm:px-10 sm:text-base md:text-lg"
+                className="primary-gradient h-11 min-h-11 w-full rounded-full border-0 px-4 text-sm font-bold text-white shadow-[0_12px_30px_-8px_rgba(123,66,246,0.45)] transition-transform hover:scale-[1.02] sm:h-14 sm:min-h-[3.5rem] sm:px-10 sm:text-lg md:text-xl"
               >
                 انشى متجرك الان مجانا
               </Button>
@@ -56,10 +56,10 @@ const Index = () => {
                 ].map((line) => (
                   <li
                     key={line}
-                    className="flex items-baseline justify-start gap-2 text-xs font-medium leading-snug text-gray-700 sm:text-sm"
+                    className="flex items-baseline justify-start gap-2 text-sm font-medium leading-snug text-gray-700 sm:text-base md:text-lg"
                   >
                     <span
-                      className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#0d47a1] sm:h-2 sm:w-2"
+                      className="mt-0.5 h-2 w-2 shrink-0 rounded-full bg-[#0d47a1] sm:mt-1 sm:h-2.5 sm:w-2.5"
                       aria-hidden
                     />
                     <span className="min-w-0">{line}</span>
