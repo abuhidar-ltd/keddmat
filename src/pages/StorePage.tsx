@@ -226,35 +226,42 @@ const StorePage = () => {
             )}
           </div>
           {profile?.store_description && (
-            <p className="text-gray-600 mt-1 leading-relaxed">{profile.store_description}</p>
+            <p className="text-gray-600 mt-1 leading-relaxed font-medium">{profile.store_description}</p>
           )}
           {avgRating !== null && (
             <div className="flex items-center justify-center gap-1.5 mt-2">
               <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
               <span className="font-semibold text-gray-700">{avgRating.toFixed(1)}</span>
-              <span className="text-xs text-gray-400">({reviews.length} {t('reviews.reviewCount')})</span>
+              <span className="text-xs font-semibold text-black">({reviews.length} {t('reviews.reviewCount')})</span>
             </div>
           )}
         </div>
 
         {/* Contact buttons */}
         {profile?.whatsapp_number && (
-          <div className="flex flex-wrap items-center justify-center gap-3 mb-6">
+          <div className="flex flex-wrap items-center justify-center gap-2 mb-[5px]">
             <Button
+              type="button"
+              size="icon"
               onClick={handleGeneralWa}
-              className="w-full sm:w-auto gap-2 font-bold rounded-xl bg-[#25D366] hover:bg-[#20BD5A] text-white shadow-md"
+              className="shrink-0 rounded-xl bg-[#25D366] hover:bg-[#20BD5A] text-white shadow-md [&_svg]:h-5 [&_svg]:w-5"
+              aria-label={t('store.contactWhatsapp')}
+              title={t('store.contactWhatsapp')}
             >
               <MessageCircle className="h-5 w-5" />
-              {t('store.contactWhatsapp')}
             </Button>
             <Button
               asChild
+              size="icon"
               variant="outline"
-              className="w-full sm:w-auto gap-2 font-bold rounded-xl border-brand-purple text-brand-purple hover:bg-brand-purple/5 shadow-md"
+              className="shrink-0 rounded-xl border-brand-purple text-brand-purple hover:bg-brand-purple/5 shadow-md [&_svg]:h-5 [&_svg]:w-5"
             >
-              <a href={`tel:+${cleanWhatsAppNumber(profile.whatsapp_number)}`}>
+              <a
+                href={`tel:+${cleanWhatsAppNumber(profile.whatsapp_number)}`}
+                aria-label={t('store.call')}
+                title={t('store.call')}
+              >
                 <Phone className="h-5 w-5" />
-                {t('store.call')}
               </a>
             </Button>
           </div>

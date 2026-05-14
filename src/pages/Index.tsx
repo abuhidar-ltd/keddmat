@@ -81,18 +81,12 @@ const Index = () => {
               { icon: <Zap className="h-8 w-8" strokeWidth={1.5} />, title: 'سهل وسريع', desc: 'متجرك جاهز خلال دقائق.' },
               { icon: <User className="h-8 w-8" strokeWidth={1.5} />, title: '300+ يثقون بنا', desc: 'من التجّار والعملاء على المنصة.' },
               { icon: <Store className="h-8 w-8" strokeWidth={1.5} />, title: '300 متجر +', desc: 'متاجر نشطة على المنصة.' },
-              { icon: <X className="h-8 w-8" strokeWidth={1.5} />, title: 'إلغاء في أي وقت', desc: 'اشتراك مرن بدون التزام طويل.' },
+              { icon: <X className="h-8 w-8" strokeWidth={1.5} />, title: 'إلغاء في أي وقت', desc: 'اشتراك مرن بدون التزام' },
             ].map((f) => (
               <div key={f.title} className="flex flex-col items-center gap-1 px-1 text-center md:gap-1.5 md:px-1.5">
                 <div className="text-[#0D47A1]">{f.icon}</div>
                 <h4 className="text-sm font-bold text-gray-900 md:text-base">{f.title}</h4>
-                <p
-                  className={
-                    f.desc === 'متاجر نشطة على المنصة.'
-                      ? 'text-xs font-semibold leading-relaxed text-gray-600 md:text-sm'
-                      : 'text-xs leading-relaxed text-gray-600 md:text-sm'
-                  }
-                >
+                <p className="text-xs font-semibold leading-relaxed text-gray-600 md:text-sm">
                   {f.desc}
                 </p>
               </div>

@@ -101,8 +101,8 @@ const Auth = () => {
       <div className="w-full max-w-md">
         {/* Branding header */}
         <div className="flex flex-col items-center mb-6">
-          <BrandLogo height={80} className="mb-2" />
-          <p className="text-gray-500 text-sm">انطلق بمتجرك الإلكتروني اليوم</p>
+          <BrandLogo height={150} width={150} className="mb-2" />
+          <p className="text-base font-semibold text-[#221B2D]">انطلق بمتجرك الإلكتروني اليوم</p>
         </div>
       <Card className="w-full shadow-md rounded-2xl border-0">
         <CardHeader className="sr-only">
@@ -128,7 +128,7 @@ const Auth = () => {
                   <div className="relative">
                     <Input type={showLoginPwd ? 'text' : 'password'} value={loginData.password}
                       onChange={e => setLoginData(p => ({ ...p, password: e.target.value }))}
-                      className="h-12 text-base pe-12 rounded-xl" />
+                      className="h-12 text-base pe-12 rounded-xl border-[rgba(105,61,232,1)]" />
                     <button type="button" onClick={() => setShowLoginPwd(!showLoginPwd)}
                       className="absolute end-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700">
                       {showLoginPwd ? <Eye className="h-5 w-5" /> : <EyeOff className="h-5 w-5" />}
@@ -174,7 +174,7 @@ const Auth = () => {
                   {errors.password && <p className="text-sm text-red-500">{errors.password}</p>}
                 </div>
                 {/* Terms */}
-                <div className={`flex items-start gap-3 p-4 rounded-xl border transition-all ${regData.agreeToTerms ? 'bg-brand-purple/5 border-brand-purple/30' : 'bg-white border-gray-200'}`}>
+                <div className={`flex items-start gap-3 p-4 rounded-xl border transition-all ${regData.agreeToTerms ? 'bg-brand-purple/5 border-brand-purple/30' : 'bg-white border-[rgba(81,64,227,1)]'}`}>
                   <Checkbox id="agree-terms" checked={regData.agreeToTerms}
                     onCheckedChange={v => setRegData(p => ({ ...p, agreeToTerms: v === true }))}
                     className="mt-0.5 h-5 w-5 cursor-pointer" />
@@ -195,9 +195,9 @@ const Auth = () => {
           </Tabs>
 
           <div className="mt-4 space-y-3">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 font-extrabold">
               <div className="flex-1 h-px bg-gray-200" />
-              <span className="text-xs text-gray-400">أو تواصل عبر</span>
+              <span className="text-xs font-black text-[#221B2D]">أو تواصل عبر</span>
               <div className="flex-1 h-px bg-gray-200" />
             </div>
             <a
@@ -209,8 +209,8 @@ const Auth = () => {
               <MessageCircle className="h-5 w-5" />
               تواصل عبر واتساب
             </a>
-            <div className="text-center">
-              <Link to="/" className="text-sm text-gray-400 hover:text-brand-purple">← العودة للرئيسية</Link>
+            <div className="text-center font-semibold">
+              <Link to="/" className="text-sm text-[#221B2D] hover:opacity-80 transition-opacity">← العودة للرئيسية</Link>
             </div>
           </div>
         </CardContent>

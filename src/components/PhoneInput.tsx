@@ -79,7 +79,7 @@ const PhoneInput = ({ value, onChange, placeholder, className, id }: PhoneInputP
   return (
     <div className={`flex gap-2 ${className}`} dir="ltr">
       <Select value={selectedCode} onValueChange={handleCodeChange}>
-        <SelectTrigger className="w-[120px] h-12 shrink-0">
+        <SelectTrigger className="w-[120px] h-12 shrink-0 border-[rgba(85,63,227,1)]">
           <SelectValue>
             <span className="flex items-center gap-2">
               <span className="text-lg">{selectedCountry?.flag}</span>
@@ -105,7 +105,7 @@ const PhoneInput = ({ value, onChange, placeholder, className, id }: PhoneInputP
         placeholder={placeholder || "7XX XXX XXX"}
         value={phoneNumber}
         onChange={(e) => handleNumberChange(e.target.value)}
-        className="h-12 text-base flex-1"
+        className="h-12 text-base flex-1 border-[rgba(91,63,229,1)]"
         dir="ltr"
       />
     </div>
